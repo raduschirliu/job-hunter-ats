@@ -14,3 +14,9 @@ Instructions for hitting API Endpoints:
 
 Reference for how to create new models:
 https://docs.microsoft.com/en-ca/aspnet/core/tutorials/first-web-api?view=aspnetcore-3.1&tabs=visual-studio
+
+Troubleshooting:
+- You may have to go to Tools > NuGet Package Manager > Manage NuGet Packages For Solution and install the packages listed under "ItemGroup" in cpsc-471-project.csproj
+Current packages:
+- version 3.1.9 of Microsoft.EntityFrameworkCore.Sqlite.Core
+- version 3.1.9 of Microsoft.EntityFrameworkCore.InMemory
