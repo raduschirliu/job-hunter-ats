@@ -11,48 +11,48 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class CompaniesController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public UsersController(JobHunterDBContext context)
+        public CompaniesController(JobHunterDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Users
+        // GET: api/Companies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<Company>>> GetCompany()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Company.ToListAsync();
         }
 
-        // GET: api/Users/5
+        // GET: api/Companies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(long id)
+        public async Task<ActionResult<Company>> GetCompany(long id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var company = await _context.Company.FindAsync(id);
 
-            if (user == null)
+            if (company == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return company;
         }
 
-        // PUT: api/Users/5
+        // PUT: api/Companies/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(long id, User user)
+        public async Task<IActionResult> PutCompany(long id, Company company)
         {
-            if (id != user.UserId)
+            if (id != company.CompanyId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(company).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!CompanyExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace cpsc_471_project.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
+        // POST: api/Companies
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<Company>> PostCompany(Company company)
         {
-            _context.Users.Add(user);
+            _context.Company.Add(company);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/Companies/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(long id)
+        public async Task<ActionResult<Company>> DeleteCompany(long id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var company = await _context.Company.FindAsync(id);
+            if (company == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
+            _context.Company.Remove(company);
             await _context.SaveChangesAsync();
 
-            return user;
+            return company;
         }
 
-        private bool UserExists(long id)
+        private bool CompanyExists(long id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.Company.Any(e => e.CompanyId == id);
         }
     }
 }
