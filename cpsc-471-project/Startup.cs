@@ -25,23 +25,6 @@ namespace cpsc_471_project
         {
             services.AddDbContext<JobHunterDBContext>(opt => opt.UseSqlite(DBLocation));
             services.AddControllers();
-            /*
-#if DEBUG
-            Trying to figure out how to add sample data here
-            var serviceEnumerator = services.GetEnumerator();
-            serviceEnumerator.MoveNext();
-            while( serviceEnumerator != null)
-            {
-                if (serviceEnumerator.Current.ServiceType.Name.Contains( "JobHunterDBContext"))
-                {
-                    var userSampleData = User.SampleData();
-                    JobHunterDBContext database = (JobHunterDBContext) serviceEnumerator.Current;
-                    break;
-                }
-                serviceEnumerator.MoveNext();
-            }
-#endif
-            */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

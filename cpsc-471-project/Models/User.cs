@@ -43,28 +43,12 @@ namespace cpsc_471_project.Models
 
         /*
         [Required]
+        [MinLength(32)]
+        [MaxLength(32)]
         private string Salt { get; set; }
 
         [Required]
         private string Hash { get; set; }
         */
-
-        public static List<User> SampleData()
-        {
-            List<User> returnedUsers = new List<User>();
-
-            User testUser1 = new User()
-            {
-                UserId = 1,
-                Role = UserRole.Admin,
-                FirstName = "Bob",
-                LastName = "Smith",
-                Phone = "555-555-5555",
-            };
-
-            returnedUsers.Add(testUser1);
-
-            return returnedUsers;
-        }
     }
 }

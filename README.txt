@@ -29,7 +29,8 @@ The location can be changed by changing the following code in cpsc-471-project\\
    which will be applied sequentially to create our full, up-to-date database.
    To learn more, go to the "Updating Models and creating Migrations" section.
 
-6. Joel is currently working on automatically adding sample data to ease testing/debugging
+6. Some cample data already exists in the SampleData.cs file in the cpsc-471-project\\cpsc-471-project\\Test directory, visit that file for an easy way
+   to add sample data.
 
 
 **Creating and Upgrading your Database:**
@@ -80,8 +81,15 @@ Note that this will not enforce foreign key constraints on existing data, so you
 
 
 Relevant links:
-Hiding certain fields from items:
+Hiding/protecting certain fields from items:
 https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-3.1&tabs=visual-studio#over-post
 
-Entity relationships:
+Entity relationships info:
 https://docs.microsoft.com/en-us/ef/core/modeling/relationships
+
+Authentication in ASP.NET Web API:
+https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/authentication-and-authorization-in-aspnet-web-api
+https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/individual-accounts-in-web-api
+
+Security if we decide to add a UI:
+https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/preventing-cross-site-request-forgery-csrf-attacks

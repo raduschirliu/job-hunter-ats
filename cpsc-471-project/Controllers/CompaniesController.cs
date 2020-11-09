@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cpsc_471_project.Models;
-using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
@@ -28,7 +27,9 @@ namespace cpsc_471_project.Controllers
         {
             var companies = await _context.Company.ToListAsync();
 
-            // NOTE: the select function here is not querying anything, it is simply converting the values to that only the desired values are output
+            // NOTE: the select function here is not querying anything
+            // it is simply converting the values to another format
+            // i.e. the functional programming map function is named Select in C#
             return companies.Select(x => CompanyToDTO(x)).ToList();
         }
 

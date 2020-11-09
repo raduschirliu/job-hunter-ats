@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cpsc_471_project.Models;
+using cpsc_471_project.Test;
 
 namespace cpsc_471_project.Controllers
 {
@@ -100,6 +101,16 @@ namespace cpsc_471_project.Controllers
 
             return user;
         }
+
+#if DEBUG
+        // POST: api/Users/SampleData
+        [HttpPost("PopulateDB")]
+        public async Task<ActionResult<User>> PopulateDB()
+        {
+            SampleData.AddSampleData(_context);
+            return Ok("Sample data has been added if there was no existing data");
+        }
+#endif
 
         private bool UserExists(long id)
         {
