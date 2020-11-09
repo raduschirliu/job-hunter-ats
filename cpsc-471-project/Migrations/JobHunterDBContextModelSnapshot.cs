@@ -82,7 +82,7 @@ namespace cpsc_471_project.Migrations
             modelBuilder.Entity("cpsc_471_project.Models.Company", b =>
                 {
                     b.HasOne("cpsc_471_project.Models.User", "User")
-                        .WithMany("Companies")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cpsc_471_project.Models;
+using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
@@ -22,14 +24,17 @@ namespace cpsc_471_project.Controllers
 
         // GET: api/Companies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Company>>> GetCompany()
+        public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompany()
         {
-            return await _context.Company.ToListAsync();
+            var companies = await _context.Company.ToListAsync();
+
+            // NOTE: the select function here is not querying anything, it is simply converting the values to that only the desired values are output
+            return companies.Select(x => CompanyToDTO(x)).ToList();
         }
 
         // GET: api/Companies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Company>> GetCompany(long id)
+        public async Task<ActionResult<CompanyDTO>> GetCompany(long id)
         {
             var company = await _context.Company.FindAsync(id);
 
@@ -38,21 +43,30 @@ namespace cpsc_471_project.Controllers
                 return NotFound();
             }
 
-            return company;
+            return CompanyToDTO(company);
         }
 
-        // PUT: api/Companies/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany(long id, Company company)
         {
-            if (id != company.CompanyId)
+            CompanyDTO companyDTO = CompanyToDTO(company);
+            Company sanitizedCompany = DTOToCompany(companyDTO);
+            if (id != sanitizedCompany.CompanyId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(company).State = EntityState.Modified;
+            bool newCompany;
+            if (!CompanyExists(id))
+            {
+                newCompany = true;
+                _context.Company.Add(sanitizedCompany);
+            }
+            else
+            {
+                newCompany = false;
+                _context.Entry(sanitizedCompany).State = EntityState.Modified;
+            }
 
             try
             {
@@ -70,24 +84,30 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return NoContent();
+            if (newCompany)
+            {
+                return CreatedAtAction("PutCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
+            }
+            else
+            {
+                return AcceptedAtAction("PutCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
+            }
         }
 
-        // POST: api/Companies
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Company>> PostCompany(Company company)
+        public async Task<ActionResult<CompanyDTO>> PostCompany(Company company)
         {
-            _context.Company.Add(company);
+            CompanyDTO companyDTO = CompanyToDTO(company);
+            Company sanitizedCompany = DTOToCompany(companyDTO);
+            _context.Company.Add(sanitizedCompany);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
+            return CreatedAtAction("PostCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
         }
 
         // DELETE: api/Companies/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Company>> DeleteCompany(long id)
+        public async Task<ActionResult<CompanyDTO>> DeleteCompany(long id)
         {
             var company = await _context.Company.FindAsync(id);
             if (company == null)
@@ -98,12 +118,35 @@ namespace cpsc_471_project.Controllers
             _context.Company.Remove(company);
             await _context.SaveChangesAsync();
 
-            return company;
+            return CompanyToDTO(company);
         }
 
         private bool CompanyExists(long id)
         {
             return _context.Company.Any(e => e.CompanyId == id);
         }
+
+        private static CompanyDTO CompanyToDTO(Company company) =>
+            new CompanyDTO
+            {
+                CompanyId = company.CompanyId,
+                Size = company.Size,
+                Name = company.Name,
+                Description = company.Description,
+                Industry = company.Industry,
+                UserId = company.UserId
+            };
+
+        private static Company DTOToCompany(CompanyDTO companyDTO) =>
+            new Company
+            {
+                CompanyId = companyDTO.CompanyId,
+                Size = companyDTO.Size,
+                Name = companyDTO.Name,
+                Description = companyDTO.Description,
+                Industry = companyDTO.Industry,
+                UserId = companyDTO.UserId,
+                User = null
+            };
     }
 }

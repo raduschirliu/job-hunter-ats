@@ -41,7 +41,13 @@ namespace cpsc_471_project.Models
         [MaxLength(32)]
         public string Phone { get; set; }
 
-        public List<Company> Companies { get; set; }
+        /*
+        [Required]
+        private string Salt { get; set; }
+
+        [Required]
+        private string Hash { get; set; }
+        */
 
         public static List<User> SampleData()
         {
@@ -59,13 +65,6 @@ namespace cpsc_471_project.Models
             returnedUsers.Add(testUser1);
 
             return returnedUsers;
-    }
-        /*
-        [Required]
-        private string Salt { get; set; }
-
-        [Required]
-        private string Hash { get; set; }
-        */
+        }
     }
 }

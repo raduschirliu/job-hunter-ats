@@ -36,6 +36,10 @@ The location can be changed by changing the following code in cpsc-471-project\\
 1. Go to Tools > NuGet Package Manager > Package Manager Console, then enter command
    > Update-Database
 This will automatically create a database at the "DBLocation = "Data Source='{DESIRED_LOCATION}'" with the current models
+IMPORTANT: In the sqlite command line tool , you must run the following commands upon initially creating the database:
+> .open JobHunterDB.sqlite
+> PRAGMA foreign_keys = ON;
+This enables foreign key/referetial integrity constraint enforcement
 
 
 **Updating Models and creating Migrations**
@@ -46,6 +50,8 @@ This will automatically create a migration for your database under cpsc-471-proj
 If you are updating the models/database schema, make sure to communicate with anyone else that is working on the database models, since
 working on multiple migrations simutaneously can cause requirement conflicts (and worse, these requirement conflicts do not show up as merge conflicts)
 
+Some notes about Migrations:
+- If you want a behaviour upon deletion other than Cascading deletion, then you need to manually go into the migration and change the "onDelete: ReferentialAction.*" to appropriate action 
 
 **Instructions for hitting API Endpoints:**
 1. Download the Postman Desktop App
@@ -65,3 +71,17 @@ If a webpage pops up but you get an error message saying that a table is missing
 
 If the program is building but not running at all:
 If you accidentally click in the cmd windows (including the window that appears when starting this program) it will halt by default (Microsoft is very silly)
+
+If foreign keys not being enforced:
+Open the sqlite command tool and run
+> .open JobHunterDB.sqlite
+> PRAGMA foreign_keys = ON;
+Note that this will not enforce foreign key constraints on existing data, so you have to manually go back and fix any existing errors
+
+
+Relevant links:
+Hiding certain fields from items:
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-3.1&tabs=visual-studio#over-post
+
+Entity relationships:
+https://docs.microsoft.com/en-us/ef/core/modeling/relationships

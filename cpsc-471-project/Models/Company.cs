@@ -28,28 +28,41 @@ namespace cpsc_471_project.Models
     {
         [Key]
         public long CompanyId { get; set; }
-        
-        [Display(Name = "Company Size")]
         public CompanySize Size { get; set; }
-        
-        [Display(Name = "Company Name")]
         [Required]
         [MaxLength(128)]
         public string Name { get; set; }
-
-        [Display(Name = "Description")]
         [MaxLength(1024)]
         public string Description { get; set; }
-
-        [Display(Name = "Industry")]
         [MaxLength(32)]
         public string Industry { get; set; }
-
-        [Display(Name = "Admin Id")]
         [Required]
         [ForeignKey("UserId")]
         public long UserId { get; set; }
-        [Required]
+
+        // this is needed so that the foreign key constraint is automatically enforced
+        // however, it will have a null value in the objects produced by the DB
         public User User { get; set; }
+    }
+    
+    public class CompanyDTO
+    {
+        [Display(Name = "Company ID")]
+        public long CompanyId { get; set; }
+
+        [Display(Name = "Company Size")]
+        public CompanySize Size { get; set; }
+
+        [Display(Name = "Company Name")]
+        public string Name { get; set; }
+
+        [Display(Name = "Description")]
+        public string Description { get; set; }
+
+        [Display(Name = "Industry")]
+        public string Industry { get; set; }
+
+        [Display(Name = "Admin Id")]
+        public long UserId { get; set; }
     }
 }
