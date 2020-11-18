@@ -42,6 +42,14 @@ namespace cpsc_471_project.Test
             {
                 _context.Company.AddRange(SampleCompanyData());
             }
+            if (!_context.JobPost.Any())
+            {
+                _context.JobPost.AddRange(SampleJobPostData());
+            }
+            if (!_context.Application.Any())
+            {
+                _context.Application.AddRange(SampleApplicationData());
+            }
             _context.SaveChanges();
         }
 
@@ -122,6 +130,52 @@ namespace cpsc_471_project.Test
             returnedCompanies.Add(testCompany3);
 
             return returnedCompanies;
+        }
+
+        public static List<JobPost> SampleJobPostData()
+        {
+            List<JobPost> returnedPosts = new List<JobPost>();
+
+            JobPost testPost1 = new JobPost()
+            {
+                CompanyId = 1,
+                Name = "Radu Inc",
+                Description = "A rly good and fun company",
+                Salary = 1000000,
+                ClosingDate = new DateTime(2008, 5, 1, 8, 30, 52),
+                RecruiterId = 1
+            };
+            returnedPosts.Add(testPost1);
+            JobPost testPost2 = new JobPost()
+            {
+                CompanyId = 2,
+                Name = "Jordan co.",
+                Description = ">:(",
+                Salary = 4,
+                ClosingDate = new DateTime(2008, 5, 1, 8, 30, 52),
+                RecruiterId = 1
+            };
+            returnedPosts.Add(testPost2);
+
+            return returnedPosts;
+        }
+
+        public static List<Application> SampleApplicationData()
+        {
+            List<Application> returnedApps = new List<Application>();
+
+            Application testApp1 = new Application()
+            {
+                ApplicationId = 1,
+                JobId = 1,
+                DateSubmitted = new DateTime(2008, 5, 1, 8, 30, 52),
+                Status = Status.Accepted,
+                CoverLetter = "pls give job xo",
+                ResumeId = 0
+            };
+            returnedApps.Add(testApp1);
+
+            return returnedApps;
         }
     }
 }

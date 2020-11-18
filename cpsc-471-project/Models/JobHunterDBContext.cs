@@ -15,5 +15,9 @@ namespace cpsc_471_project.Models
         public DbSet<User> Users { get; set; }
 
         public DbSet<Company> Company { get; set; }
+
+        public DbSet<JobPost> JobPost { get; set; }
+
+        public DbSet<Application> Application { get; set; }
     }
 }

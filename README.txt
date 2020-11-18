@@ -17,7 +17,7 @@ This was based on the ASP.NET Web API Template in Visual Studio. All Models are 
 - Download the command line shell program, sqldiff.exe program, and sqlite3_analyzer.exe program as these will come in handy later
 - You may want to download these to the same directory as the location where your sqlite database will be created
 
-3. The databse of this project is named "JobHunterDb.sqlite" and by default, it will be located in the parent folder of the directory in which this README is located.
+3. The database of this project is named "JobHunterDb.sqlite" and by default, it will be located in the parent folder of the directory in which this README is located.
 The location can be changed by changing the following code in cpsc-471-project\\cpsc-471-project\\Startup.cs
 > public const string DBLocation = "Data Source='{DESIRED_LOCATION}'"
 
