@@ -22,4 +22,11 @@ namespace cpsc_471_project.Models
 
         public User Candidate { get; set; }
     }
+
+    public class ResumeDTO
+    {
+        public long ResumeId { get; set; }
+        public string Name { get; set; }
+        public long CandidateId { get; set; }
+    }
 }
