@@ -48,9 +48,8 @@ namespace cpsc_471_project.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCompany(long id, Company company)
+        public async Task<IActionResult> PutCompany(long id, CompanyDTO companyDTO)
         {
-            CompanyDTO companyDTO = CompanyToDTO(company);
             Company sanitizedCompany = DTOToCompany(companyDTO);
             if (id != sanitizedCompany.CompanyId)
             {
@@ -96,14 +95,13 @@ namespace cpsc_471_project.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CompanyDTO>> PostCompany(Company company)
+        public async Task<ActionResult<CompanyDTO>> PostCompany(CompanyDTO companyDTO)
         {
-            CompanyDTO companyDTO = CompanyToDTO(company);
             Company sanitizedCompany = DTOToCompany(companyDTO);
             _context.Company.Add(sanitizedCompany);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
+            return CreatedAtAction("PostCompany", new { id = sanitizedCompany.CompanyId }, sanitizedCompany);
         }
 
         // DELETE: api/Companies/5
