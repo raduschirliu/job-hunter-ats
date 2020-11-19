@@ -24,6 +24,7 @@ namespace cpsc_471_project.Models
         [Required]
         [ForeignKey("JobPost")] //? "Company" or "CompanyId"?
         public long JobId { get; set; }
+        public JobPost JobPost { get; set; } // for referential integrity 
 
         public DateTime DateSubmitted { get; set; }
 
@@ -33,6 +34,28 @@ namespace cpsc_471_project.Models
         public string CoverLetter { get; set; }
 
         [ForeignKey("Resume")]
+        public long ResumeId { get; set; }
+        //public Resume Resume { get; set; } // for referential integrity 
+    }
+
+    public class ApplicationDTO
+    {
+        [Display(Name = "Application ID")]
+        public long ApplicationId { get; set; }
+
+        [Display(Name = "Job ID")]
+        public long JobId { get; set; }
+
+        [Display(Name = "Date Submitted")]
+        public DateTime DateSubmitted { get; set; }
+
+        [Display(Name = "Status")]
+        public Status Status { get; set; }
+
+        [Display(Name = "Cover Letter")]
+        public string CoverLetter { get; set; }
+
+        [Display(Name = "Resume ID")]
         public long ResumeId { get; set; }
     }
 }

@@ -29,7 +29,7 @@ The location can be changed by changing the following code in cpsc-471-project\\
    which will be applied sequentially to create our full, up-to-date database.
    To learn more, go to the "Updating Models and creating Migrations" section.
 
-6. Some cample data already exists in the SampleData.cs file in the cpsc-471-project\\cpsc-471-project\\Test directory, visit that file for an easy way
+6. Some sample data already exists in the SampleData.cs file in the cpsc-471-project\\cpsc-471-project\\Test directory, visit that file for an easy way
    to add sample data.
 
 

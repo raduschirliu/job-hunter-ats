@@ -37,7 +37,7 @@ namespace cpsc_471_project.Models
         [MaxLength(32)]
         public string Industry { get; set; }
         [Required]
-        [ForeignKey("UserId")]
+        [ForeignKey("User")]
         public long UserId { get; set; }
 
         // this is needed so that the foreign key constraint is automatically enforced

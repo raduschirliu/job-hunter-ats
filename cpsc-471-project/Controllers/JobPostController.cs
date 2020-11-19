@@ -23,14 +23,19 @@ namespace cpsc_471_project.Controllers
 
         // GET: api/JobPost
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JobPost>>> GetJobPost()
+        public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetJobPost()
         {
-            return await _context.JobPost.ToListAsync();
+            var posts = await _context.JobPost.ToListAsync();
+
+            // NOTE: the select function here is not querying anything
+            // it is simply converting the values to another format
+            // i.e. the functional programming map function is named Select in C#
+            return posts.Select(x => JobPostToDTO(x)).ToList();
         }
 
         // GET: api/JobPost/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<JobPost>> GetJobPost(long id)
+        public async Task<ActionResult<JobPostDTO>> GetJobPost(long id)
         {
             var post = await _context.JobPost.FindAsync(id);
 
@@ -39,13 +44,13 @@ namespace cpsc_471_project.Controllers
                 return NotFound();
             }
 
-            return post;
+            return JobPostToDTO(post);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutJobPost(long id, JobPost post)
+        public async Task<IActionResult> PutJobPost(long id, JobPostDTO postDTO)
         {
-            // copied form from UserController, might want to follow form of CompanyController instead??
+            JobPost post = DTOToJobPost(postDTO);
             if (id != post.JobPostId)
             {
                 return BadRequest();
@@ -73,8 +78,9 @@ namespace cpsc_471_project.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<JobPost>> PostJobPost(JobPost post)
+        public async Task<ActionResult<JobPostDTO>> PostJobPost(JobPostDTO postDTO)
         {
+            JobPost post = DTOToJobPost(postDTO);
             _context.JobPost.Add(post);
             await _context.SaveChangesAsync();
 
@@ -83,7 +89,7 @@ namespace cpsc_471_project.Controllers
 
         // DELETE: api/JobPost/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<JobPost>> DeleteJobPost(long id)
+        public async Task<ActionResult<JobPostDTO>> DeleteJobPost(long id)
         {
             var post = await _context.JobPost.FindAsync(id);
             if (post == null)
@@ -94,12 +100,36 @@ namespace cpsc_471_project.Controllers
             _context.JobPost.Remove(post);
             await _context.SaveChangesAsync();
 
-            return post;
+            return JobPostToDTO(post);
         }
 
         private bool JobPostExists(long id)
         {
             return _context.JobPost.Any(e => e.JobPostId == id);
         }
+
+        private static JobPostDTO JobPostToDTO(JobPost post) =>
+            new JobPostDTO
+            {
+                JobPostId = post.JobPostId,
+                CompanyId = post.CompanyId,
+                Name = post.Name,
+                Description = post.Description,
+                ClosingDate = post.ClosingDate,
+                RecruiterId = post.RecruiterId
+            };
+
+        private static JobPost DTOToJobPost(JobPostDTO postDTO) =>
+            new JobPost
+            {
+                JobPostId = postDTO.JobPostId,
+                CompanyId = postDTO.CompanyId,
+                Company = null,
+                Name = postDTO.Name,
+                Description = postDTO.Description,
+                ClosingDate = postDTO.ClosingDate,
+                RecruiterId = postDTO.RecruiterId,
+                User = null
+            };
     }
 }
