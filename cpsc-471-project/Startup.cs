@@ -11,7 +11,7 @@ namespace cpsc_471_project
 { 
     public class Startup
     {
-        public const string DBLocation = "Data Source=..\\..\\JobHunterDB.sqlite";
+        public const string DBLocation = "Data Source=..\\JobHunterDB.sqlite";
 
         public Startup(IConfiguration configuration)
         {
