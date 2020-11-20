@@ -16,6 +16,6 @@ namespace cpsc_471_project.Models
 
         public DbSet<Company> Company { get; set; }
 
-        public DbSet<Resume> Resume { get; set; }
+        public DbSet<Resume> Resumes { get; set; }
     }
 }

@@ -10,28 +10,28 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ResumeController : Controller
+    public class ResumesController : Controller
     {
         private readonly JobHunterDBContext _context;
 
-        public ResumeController(JobHunterDBContext context)
+        public ResumesController(JobHunterDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Resume
+        // GET: api/resumes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ResumeDTO>>> GetAllResumes()
         {
             // TODO: Add auth check so that you only get your own resumes
-            return (await _context.Resume.ToListAsync()).Select(r => ResumeToDTO(r)).ToList();
+            return (await _context.Resumes.ToListAsync()).Select(r => ResumeToDTO(r)).ToList();
         }
 
-        // GET: api/Resume/{id}
+        // GET: api/resumes/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<ResumeDTO>> GetResume(long id)
         {
-            Resume resume = await _context.Resume.FindAsync(id);
+            Resume resume = await _context.Resumes.FindAsync(id);
 
             // TODO: Add auth check to make sure you can't get someone else's resumes unless admin
 
@@ -43,11 +43,11 @@ namespace cpsc_471_project.Controllers
             return ResumeToDTO(resume);
         }
 
-        // GET: api/Resume/{id}
+        // GET: api/resumes/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResumeDTO>> DeleteResume(long id)
         {
-            Resume resume = await _context.Resume.FindAsync(id);
+            Resume resume = await _context.Resumes.FindAsync(id);
 
             // TODO: Add auth check to make sure you can't get someone else's resumes unless admin
 
@@ -56,10 +56,13 @@ namespace cpsc_471_project.Controllers
                 return NotFound();
             }
 
-            return ResumeToDTO(resume);
+            _context.Resumes.Remove(resume);
+            await _context.SaveChangesAsync();
+
+            return Ok(ResumeToDTO(resume));
         }
 
-        // POST: api/Resume
+        // POST: api/resumes
         [HttpPost]
         public async Task<ActionResult<ResumeDTO>> PostResume(ResumeDTO resumeDTO)
         {
@@ -70,14 +73,14 @@ namespace cpsc_471_project.Controllers
 
             // TODO: Add auth check to ensure you're not making resumes for other people???
 
-            _context.Resume.Add(DTOToResume(resumeDTO));
+            _context.Resumes.Add(DTOToResume(resumeDTO));
             await _context.SaveChangesAsync();
 
-            return Ok(resumeDTO);
+            return CreatedAtAction("PostResume", resumeDTO);
         }
 
-        // PATCH: api/Resume/{id}
-        [HttpPatch]
+        // PATCH: api/resumes/{id}
+        [HttpPatch("{id}")]
         public async Task<ActionResult<ResumeDTO>> PatchResume(long id, ResumeDTO resumeDTO)
         {
             if (resumeDTO == null)
@@ -92,13 +95,14 @@ namespace cpsc_471_project.Controllers
 
             // TODO: Add auth check to ensure you're not editing resumes for other people???
 
-            Resume oldResume = await _context.Resume.FindAsync(id);
+            Resume oldResume = _context.Resumes.AsNoTracking().Where(r => r.ResumeId == resumeDTO.ResumeId).FirstOrDefault();
 
             if (oldResume == null)
             {
                 return NotFound();
             }
 
+            _context.Resumes.Update(DTOToResume(resumeDTO));
             await _context.SaveChangesAsync();
 
             return Ok(resumeDTO);

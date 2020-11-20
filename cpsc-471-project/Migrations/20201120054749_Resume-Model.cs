@@ -2,12 +2,12 @@
 
 namespace cpsc_471_project.Migrations
 {
-    public partial class ResumeTable : Migration
+    public partial class ResumeModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Resume",
+                name: "Resumes",
                 columns: table => new
                 {
                     ResumeId = table.Column<long>(nullable: false)
@@ -17,9 +17,9 @@ namespace cpsc_471_project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Resume", x => x.ResumeId);
+                    table.PrimaryKey("PK_Resumes", x => x.ResumeId);
                     table.ForeignKey(
-                        name: "FK_Resume_Users_CandidateId",
+                        name: "FK_Resumes_Users_CandidateId",
                         column: x => x.CandidateId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -27,15 +27,15 @@ namespace cpsc_471_project.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resume_CandidateId",
-                table: "Resume",
+                name: "IX_Resumes_CandidateId",
+                table: "Resumes",
                 column: "CandidateId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Resume");
+                name: "Resumes");
         }
     }
 }

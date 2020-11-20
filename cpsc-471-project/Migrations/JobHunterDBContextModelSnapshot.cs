@@ -65,7 +65,7 @@ namespace cpsc_471_project.Migrations
 
                     b.HasIndex("CandidateId");
 
-                    b.ToTable("Resume");
+                    b.ToTable("Resumes");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.User", b =>

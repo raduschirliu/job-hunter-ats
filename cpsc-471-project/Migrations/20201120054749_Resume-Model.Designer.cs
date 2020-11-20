@@ -8,8 +8,8 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201118183417_Resume-Table")]
-    partial class ResumeTable
+    [Migration("20201120054749_Resume-Model")]
+    partial class ResumeModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -67,7 +67,7 @@ namespace cpsc_471_project.Migrations
 
                     b.HasIndex("CandidateId");
 
-                    b.ToTable("Resume");
+                    b.ToTable("Resumes");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.User", b =>
