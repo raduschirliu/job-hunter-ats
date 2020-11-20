@@ -38,7 +38,7 @@ The location can be changed by changing the following code in `cpsc-471-project\
    ```bash
    > Update-Database
    ```
-   This will automatically create a database at the "DBLocation = "Data Source='{DESIRED_LOCATION}'" with the current models
+   This will automatically create a database at the `"DBLocation = "Data Source='{DESIRED_LOCATION}'"` with the current models
    IMPORTANT: In the sqlite command line tool , you must run the following commands upon initially creating the database:
    ```bash
    > .open JobHunterDB.sqlite
