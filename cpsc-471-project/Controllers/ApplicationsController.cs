@@ -82,6 +82,7 @@ namespace cpsc_471_project.Controllers
         public async Task<ActionResult<ApplicationDTO>> PostApplication(ApplicationDTO appDTO)
         {
             Application app = DTOToApplication(appDTO);
+            app.DateSubmitted = DateTime.Now;
             _context.Application.Add(app);
             await _context.SaveChangesAsync();
 
