@@ -13,7 +13,7 @@ namespace cpsc_471_project.Models
         Sent,
         InReview,
         Accepted,
-        Rejected //:(
+        Rejected
     }
 
     public class Application
@@ -22,10 +22,11 @@ namespace cpsc_471_project.Models
         public long ApplicationId { get; set; }
 
         [Required]
-        [ForeignKey("JobPost")] //? "Company" or "CompanyId"?
+        [ForeignKey("JobPost")] 
         public long JobId { get; set; }
-        public JobPost JobPost { get; set; } // for referential integrity 
+        public JobPost JobPost { get; set; }
 
+        [Required]
         public DateTime DateSubmitted { get; set; }
 
         [Required]
@@ -33,9 +34,9 @@ namespace cpsc_471_project.Models
 
         public string CoverLetter { get; set; }
 
-        [ForeignKey("Resume")]
-        public long ResumeId { get; set; }
-        //public Resume Resume { get; set; } // for referential integrity 
+        //[ForeignKey("Resume")]
+        //public long ResumeId { get; set; }
+        //public Resume Resume { get; set; } 
     }
 
     public class ApplicationDTO
@@ -55,7 +56,7 @@ namespace cpsc_471_project.Models
         [Display(Name = "Cover Letter")]
         public string CoverLetter { get; set; }
 
-        [Display(Name = "Resume ID")]
-        public long ResumeId { get; set; }
+        //[Display(Name = "Resume ID")]
+        //public long ResumeId { get; set; }
     }
 }

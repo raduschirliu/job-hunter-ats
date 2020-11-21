@@ -46,10 +46,12 @@ namespace cpsc_471_project.Test
             {
                 _context.JobPost.AddRange(SampleJobPostData());
             }
+            /*
             if (!_context.Application.Any())
             {
                 _context.Application.AddRange(SampleApplicationData());
             }
+            */
             _context.SaveChanges();
         }
 
@@ -139,20 +141,20 @@ namespace cpsc_471_project.Test
             JobPost testPost1 = new JobPost()
             {
                 CompanyId = 1,
-                Name = "Radu Inc",
-                Description = "A rly good and fun company",
-                Salary = 1000000,
-                ClosingDate = new DateTime(2008, 5, 1, 8, 30, 52),
+                Name = "Software Developer",
+                Description = "Develop software.",
+                Salary = 100000,
+                ClosingDate = DateTime.Now,
                 RecruiterId = 1
             };
             returnedPosts.Add(testPost1);
             JobPost testPost2 = new JobPost()
             {
                 CompanyId = 2,
-                Name = "Jordan co.",
-                Description = ">:(",
-                Salary = 4,
-                ClosingDate = new DateTime(2008, 5, 1, 8, 30, 52),
+                Name = "Vexillologist",
+                Description = "Look at maps.",
+                Salary = 45000,
+                ClosingDate = DateTime.Now,
                 RecruiterId = 1
             };
             returnedPosts.Add(testPost2);
@@ -160,6 +162,7 @@ namespace cpsc_471_project.Test
             return returnedPosts;
         }
 
+        /*
         public static List<Application> SampleApplicationData()
         {
             List<Application> returnedApps = new List<Application>();
@@ -171,12 +174,13 @@ namespace cpsc_471_project.Test
                 DateSubmitted = new DateTime(2008, 5, 1, 8, 30, 52),
                 Status = Status.Accepted,
                 CoverLetter = "pls give job xo",
-                ResumeId = 0
+                //ResumeId = 0
             };
             returnedApps.Add(testApp1);
 
             return returnedApps;
         }
+        */
     }
 }
 #endif

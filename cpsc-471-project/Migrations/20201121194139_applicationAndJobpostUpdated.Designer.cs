@@ -9,8 +9,8 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201118032114_ApplicationAndJobPostAdded")]
-    partial class ApplicationAndJobPostAdded
+    [Migration("20201121194139_applicationAndJobpostUpdated")]
+    partial class applicationAndJobpostUpdated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,13 +33,12 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("JobId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("ResumeId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ApplicationId");
+
+                    b.HasIndex("JobId");
 
                     b.ToTable("Application");
                 });
@@ -105,6 +104,10 @@ namespace cpsc_471_project.Migrations
 
                     b.HasKey("JobPostId");
 
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("RecruiterId");
+
                     b.ToTable("JobPost");
                 });
 
@@ -140,11 +143,35 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("cpsc_471_project.Models.Application", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.JobPost", "JobPost")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("cpsc_471_project.Models.Company", b =>
                 {
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.JobPost", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("cpsc_471_project.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("RecruiterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

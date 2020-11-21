@@ -31,9 +31,6 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("JobId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("ResumeId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 

@@ -12,18 +12,18 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ApplicationController : ControllerBase
+    public class ApplicationsController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public ApplicationController(JobHunterDBContext context)
+        public ApplicationsController(JobHunterDBContext context)
         {
             _context = context;
         }
 
         // GET: api/Application
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetApplication()
+        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetApplications()
         {
             var app = await _context.Application.ToListAsync();
 
@@ -117,7 +117,7 @@ namespace cpsc_471_project.Controllers
                 DateSubmitted = app.DateSubmitted,
                 Status = app.Status,
                 CoverLetter = app.CoverLetter,
-                ResumeId = app.ResumeId
+                //ResumeId = app.ResumeId
             };
 
         private static Application DTOToApplication(ApplicationDTO appDTO) =>
@@ -129,7 +129,7 @@ namespace cpsc_471_project.Controllers
                 DateSubmitted = appDTO.DateSubmitted,
                 Status = appDTO.Status,
                 CoverLetter = appDTO.CoverLetter,
-                ResumeId = appDTO.ResumeId,
+                //ResumeId = appDTO.ResumeId,
                 //Resume = null
             };
     }

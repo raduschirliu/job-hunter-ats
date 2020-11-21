@@ -14,9 +14,9 @@ namespace cpsc_471_project.Models
         public long JobPostId { get; set; }
 
         [Required]
-        [ForeignKey("Company")] //? "Company" or "CompanyId"?
+        [ForeignKey("Company")] 
         public long CompanyId { get; set; }
-        public Company Company { get; set; } // for referential integrity 
+        public Company Company { get; set; }  
 
         [Required]
         [MaxLength(128)]
@@ -31,7 +31,7 @@ namespace cpsc_471_project.Models
 
         [ForeignKey("User")]
         public long RecruiterId { get; set; }
-        public User User { get; set; } // for referential integrity 
+        public User User { get; set; } 
     }
 
     public class JobPostDTO

@@ -12,18 +12,18 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class JobPostController : ControllerBase
+    public class JobPostsController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public JobPostController(JobHunterDBContext context)
+        public JobPostsController(JobHunterDBContext context)
         {
             _context = context;
         }
 
         // GET: api/JobPost
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetJobPost()
+        public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetJobPosts()
         {
             var posts = await _context.JobPost.ToListAsync();
 
