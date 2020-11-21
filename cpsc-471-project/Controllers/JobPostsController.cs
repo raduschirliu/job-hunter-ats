@@ -47,8 +47,8 @@ namespace cpsc_471_project.Controllers
             return JobPostToDTO(post);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutJobPost(long id, JobPostDTO postDTO)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchJobPost(long id, JobPostDTO postDTO)
         {
             JobPost post = DTOToJobPost(postDTO);
             if (id != post.JobPostId)

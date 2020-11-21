@@ -47,11 +47,11 @@ namespace cpsc_471_project.Controllers
             return ApplicationToDTO(application);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutApplication(long id, ApplicationDTO appDTO)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchApplication(long id, ApplicationDTO appDTO)
         {
             Application app = DTOToApplication(appDTO);
-            // copied form from UserController, might want to follow form of CompanyController instead??
+            app.DateSubmitted = DateTime.Now;
             if (id != app.ApplicationId)
             {
                 return BadRequest();
