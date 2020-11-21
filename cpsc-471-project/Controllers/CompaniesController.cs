@@ -133,7 +133,7 @@ namespace cpsc_471_project.Controllers
                 Name = company.Name,
                 Description = company.Description,
                 Industry = company.Industry,
-                UserId = company.UserId
+                AdminId = company.AdminId
             };
 
         private static Company DTOToCompany(CompanyDTO companyDTO) =>
@@ -144,7 +144,7 @@ namespace cpsc_471_project.Controllers
                 Name = companyDTO.Name,
                 Description = companyDTO.Description,
                 Industry = companyDTO.Industry,
-                UserId = companyDTO.UserId,
+                AdminId = companyDTO.AdminId,
                 User = null
             };
     }
