@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cpsc_471_project.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cpsc_471_project.Controllers
 {
@@ -22,6 +23,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/Companies
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompany()
         {
