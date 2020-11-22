@@ -31,34 +31,41 @@ namespace cpsc_471_project
             services.AddDbContext<JobHunterDBContext>(opt => opt.UseSqlite(DBLocation));
             services.AddControllers();
 
-            // For Identity  
-            services.AddIdentity<AppUser, IdentityRole>()
+            // For Identity
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<JobHunterDBContext>()
                 .AddDefaultTokenProviders();
 
-            // Adding Authentication  
+            // Adding Authentication and JWT Bearer
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-
-            // Adding Jwt Bearer  
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     /*
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
                     ValidAudience = Configuration["JWT:ValidAudience"],
                     ValidIssuer = Configuration["JWT:ValidIssuer"],
                     */
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
+            });
+
+            // Configure password policy to be more easy-going
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
             });
         }
 

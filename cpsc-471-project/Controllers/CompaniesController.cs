@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CompaniesController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
@@ -23,7 +23,6 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/Companies
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompany()
         {
@@ -137,7 +136,7 @@ namespace cpsc_471_project.Controllers
                 Name = company.Name,
                 Description = company.Description,
                 Industry = company.Industry,
-                UserId = company.UserId
+                AdminId = company.AdminId
             };
 
         private static Company DTOToCompany(CompanyDTO companyDTO) =>
@@ -148,8 +147,8 @@ namespace cpsc_471_project.Controllers
                 Name = companyDTO.Name,
                 Description = companyDTO.Description,
                 Industry = companyDTO.Industry,
-                UserId = companyDTO.UserId,
-                User = null
+                AdminId = companyDTO.AdminId,
+                Admin = null
             };
     }
 }

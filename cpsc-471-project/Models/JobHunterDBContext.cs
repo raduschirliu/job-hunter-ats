@@ -10,17 +10,12 @@ using cpsc_471_project.Authentication;
 
 namespace cpsc_471_project.Models
 {
-    public class JobHunterDBContext : IdentityDbContext<AppUser>
+    public class JobHunterDBContext : IdentityDbContext<User>
     {
         public JobHunterDBContext(DbContextOptions<JobHunterDBContext> options) : base(options) {}
 
-        public DbSet<User> Users { get; set; }
+        // public DbSet<User> Users { get; set; }
 
         public DbSet<Company> Company { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
     }
 }

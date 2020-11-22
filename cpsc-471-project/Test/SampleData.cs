@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using cpsc_471_project.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Internal;
 
 
@@ -32,94 +33,87 @@ namespace cpsc_471_project.Test
 {
     public class SampleData
     {
-        public static void AddSampleData(JobHunterDBContext _context)
+        public static async Task AddSampleData(JobHunterDBContext _context, UserManager<User> userManager)
         {
-            if( !_context.Users.Any() )
+            if (!_context.Users.Any())
             {
-                _context.Users.AddRange(SampleUserData());
+                await AddSampleUserData(userManager);
             }
-            if ( !_context.Company.Any() )
+
+            if (!_context.Company.Any())
             {
-                _context.Company.AddRange(SampleCompanyData());
+                await _context.Company.AddRangeAsync(SampleCompanyData());
             }
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
         }
 
-        public static List<User> SampleUserData()
+        public static async Task AddSampleUserData(UserManager<User> userManager)
         {
-            List<User> returnedUsers = new List<User>();
-
-            User testUser1 = new User()
+            await userManager.CreateAsync(new User()
             {
-                UserId = 1,
-                Role = UserRole.Admin,
+                Id = "user-1",
                 FirstName = "Bob",
                 LastName = "Smith",
+                UserName = "bob-smith",
                 Email = "bobsmith12345@jgd098suyfvk23jbfjsdv.com",
-                Phone = "555-555-5555",
-            };
-            returnedUsers.Add(testUser1);
+                PhoneNumber = "555-555-5555",
+            }, "password");
 
-            User testUser2 = new User()
+
+            await userManager.CreateAsync(new User()
             {
-                UserId = 2,
-                Role = UserRole.Recruiter,
+                Id = "user-2",
                 FirstName = "Caitlyn",
                 LastName = "Brown",
+                UserName = "caitlyn-brown",
                 Email = "caitlynbrown1@jgd098suyfvk23jbfjsdv.com",
-                Phone = "444-444-4444",
-            };
-            returnedUsers.Add(testUser2);
+                PhoneNumber = "444-444-4444",
+            }, "password");
 
-            User testUser3 = new User()
+            await userManager.CreateAsync(new User()
             {
-                UserId = 3,
-                Role = UserRole.Candidate,
+                Id = "user-3",
                 FirstName = "Evan",
                 LastName = "Johnson",
+                UserName = "evan-johnson",
                 Email = "evanjohnson@jgd098suyfvk23jbfjsdv.com",
-                Phone = "333-333-3333",
-            };
-            returnedUsers.Add(testUser3);
-
-            return returnedUsers;
+                PhoneNumber = "333-333-3333",
+            }, "password");
         }
         public static List<Company> SampleCompanyData()
         {
             List<Company> returnedCompanies = new List<Company>();
 
-            Company testCompany1 = new Company()
+            returnedCompanies.Add(new Company()
             {
                 CompanyId = 1,
                 Size = CompanySize.OneToTen,
                 Name = "Test Company 1",
                 Description = "Test Description 1",
                 Industry = "Technology",
-                UserId = 1
-            };
-            returnedCompanies.Add(testCompany1);
+                AdminId = "user-1"
+            });
 
-            Company testCompany2 = new Company()
+            returnedCompanies.Add(new Company()
             {
                 CompanyId = 2,
                 Size = CompanySize.ElevenToFifty,
                 Name = "Test Company 2",
                 Description = "Test Description 2",
                 Industry = "Retail",
-                UserId = 1
-            };
-            returnedCompanies.Add(testCompany2);
+                AdminId = "user-1",
+            });
 
-            Company testCompany3 = new Company()
+            returnedCompanies.Add(new Company()
             {
                 CompanyId = 3,
                 Size = CompanySize.FiftyOneToTwoFifty,
                 Name = "Test Company 3",
                 Description = "Test Description 3",
                 Industry = "Manufacturing",
-                UserId = 1
-            };
-            returnedCompanies.Add(testCompany3);
+                AdminId = "user-3"
+            });
 
             return returnedCompanies;
         }
