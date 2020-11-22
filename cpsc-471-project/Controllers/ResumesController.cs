@@ -1,6 +1,7 @@
 ﻿using cpsc_471_project.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace cpsc_471_project.Controllers
 
         // GET: api/resumes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ResumeDTO>>> GetAllResumes()
+        public async Task<ActionResult<IEnumerable<ResumeDTO>>> GetResumes()
         {
             // TODO: Add auth check so that you only get your own resumes
             return (await _context.Resumes.ToListAsync()).Select(r => ResumeToDTO(r)).ToList();
@@ -94,10 +95,7 @@ namespace cpsc_471_project.Controllers
             }
 
             // TODO: Add auth check to ensure you're not editing resumes for other people???
-
-            Resume oldResume = _context.Resumes.AsNoTracking().Where(r => r.ResumeId == resumeDTO.ResumeId).FirstOrDefault();
-
-            if (oldResume == null)
+            if (!ResumeExists(id))
             {
                 return NotFound();
             }
@@ -106,6 +104,11 @@ namespace cpsc_471_project.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(resumeDTO);
+        }
+
+        private bool ResumeExists(long resumeId)
+        {
+            return _context.Resumes.Any(r => r.ResumeId == resumeId);
         }
 
         private static ResumeDTO ResumeToDTO(Resume resume) =>

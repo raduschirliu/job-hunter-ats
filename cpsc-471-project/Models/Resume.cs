@@ -13,13 +13,14 @@ namespace cpsc_471_project.Models
         public long ResumeId { get; set; }
 
         [Required]
-        [MaxLength(256)]
+        [MaxLength(64)]
         public string Name { get; set; }
 
         [Required]
         [ForeignKey("Candidate")]
         public long CandidateId { get; set; }
 
+        // Used to enforce referential integrity constraints
         public User Candidate { get; set; }
     }
 
