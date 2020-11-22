@@ -37,5 +37,8 @@ namespace cpsc_471_project.Models
 
         [Display(Name = "First Name")]
         public string LastName { get; set; }
+
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
     }
 }

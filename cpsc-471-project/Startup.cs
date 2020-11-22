@@ -51,7 +51,9 @@ namespace cpsc_471_project
                 {
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    /*
+                    /* Turned off validation for now, cause who needs safety :)
+                    ValidIssuer = true,
+                    ValidAudience = true,
                     ValidAudience = Configuration["JWT:ValidAudience"],
                     ValidIssuer = Configuration["JWT:ValidIssuer"],
                     */
