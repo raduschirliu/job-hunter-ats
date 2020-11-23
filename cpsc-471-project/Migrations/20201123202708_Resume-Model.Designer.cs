@@ -8,7 +8,7 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201120054749_Resume-Model")]
+    [Migration("20201123202708_Resume-Model")]
     partial class ResumeModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,7 @@ namespace cpsc_471_project.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(64);
 
                     b.HasKey("ResumeId");
 

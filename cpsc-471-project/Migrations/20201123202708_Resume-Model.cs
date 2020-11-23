@@ -12,7 +12,7 @@ namespace cpsc_471_project.Migrations
                 {
                     ResumeId = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: false),
                     CandidateId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>

@@ -59,7 +59,7 @@ namespace cpsc_471_project.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(64);
 
                     b.HasKey("ResumeId");
 
