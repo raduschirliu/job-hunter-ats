@@ -42,6 +42,10 @@ namespace cpsc_471_project.Test
             {
                 _context.Company.AddRange(SampleCompanyData());
             }
+            if (!_context.Resumes.Any())
+            {
+                _context.Resumes.AddRange(SampleResumeData());
+            }
             _context.SaveChanges();
         }
 
@@ -122,6 +126,34 @@ namespace cpsc_471_project.Test
             returnedCompanies.Add(testCompany3);
 
             return returnedCompanies;
+        }
+
+        public static List<Resume> SampleResumeData()
+        {
+            List<Resume> resumes = new List<Resume>();
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 1,
+                Name = "Resume #1",
+                CandidateId = 1
+            });
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 2,
+                Name = "Resume #2",
+                CandidateId = 1
+            });
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 3,
+                Name = "Gr8 resume",
+                CandidateId = 3
+            });
+
+            return resumes;
         }
     }
 }
