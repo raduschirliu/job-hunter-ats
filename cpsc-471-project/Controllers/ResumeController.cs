@@ -20,7 +20,7 @@ namespace cpsc_471_project.Controllers
 
         // GET: api/Resume/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CompanyDTO>> GetResume(long id)
+        public async Task<ActionResult<Resume>> GetResume(long id)
         {
             Resume resume = await _context.Resume.FindAsync(id);
 
