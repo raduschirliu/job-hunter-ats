@@ -26,6 +26,11 @@ namespace cpsc_471_project.Controllers
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = config;
+
+            // Create roles if they do not exist
+            CreateRoleIfNotExists(UserRoles.Recruiter);
+            CreateRoleIfNotExists(UserRoles.JobSeeker);
+            CreateRoleIfNotExists(UserRoles.Admin);
         }
 
         // GET: api/auth/test
@@ -42,6 +47,24 @@ namespace cpsc_471_project.Controllers
                 UserName = user.UserName,
                 Roles = roles
             });
+        }
+
+        // POST: api/auth/role
+        [Authorize]
+        [HttpPost("role/{roleName}")]
+        public async Task<ActionResult> Role(string roleName)
+        {
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IdentityRole role = await roleManager.FindByNameAsync(roleName);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            await userManager.AddToRoleAsync(user, roleName);
+
+            return Ok();
         }
 
         // POST: api/auth/login
@@ -122,6 +145,19 @@ namespace cpsc_471_project.Controllers
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
+        }
+
+        public async void CreateRoleIfNotExists(string name)
+        {
+            if (await roleManager.RoleExistsAsync(name))
+            {
+                return;
+            }
+
+            await roleManager.CreateAsync(new IdentityRole()
+            {
+                Name = name
+            });
         }
 
         public UserDTO UserToDTO(User user) => new UserDTO()
