@@ -12,11 +12,11 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public UserController(JobHunterDBContext context)
+        public UsersController(JobHunterDBContext context)
         {
             _context = context;
         }
@@ -25,14 +25,14 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.User.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
         {
-            User user = await _context.User.FindAsync(id);
+            User user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
@@ -85,7 +85,7 @@ namespace cpsc_471_project.Controllers
                 return BadRequest();
             }
 
-            _context.User.Add(user);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
@@ -95,14 +95,14 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(long id)
         {
-            User user = await _context.User.FindAsync(id);
+            User user = await _context.Users.FindAsync(id);
             
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.User.Remove(user);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return user;
@@ -120,7 +120,7 @@ namespace cpsc_471_project.Controllers
 
         private bool UserExists(long id)
         {
-            return _context.User.Any(e => e.UserId == id);
+            return _context.Users.Any(e => e.UserId == id);
         }
     }
 }
