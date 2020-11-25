@@ -47,6 +47,27 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
+                {
+                    b.Property<long>("ResumeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CandidateId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(64);
+
+                    b.HasKey("ResumeId");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("Resumes");
+                });
+
             modelBuilder.Entity("cpsc_471_project.Models.User", b =>
                 {
                     b.Property<long>("UserId")
@@ -84,6 +105,15 @@ namespace cpsc_471_project.Migrations
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.User", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
