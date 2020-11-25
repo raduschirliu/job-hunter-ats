@@ -24,7 +24,7 @@ namespace cpsc_471_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Company",
+                name: "Companies",
                 columns: table => new
                 {
                     CompanyId = table.Column<long>(nullable: false)
@@ -37,9 +37,9 @@ namespace cpsc_471_project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Company", x => x.CompanyId);
+                    table.PrimaryKey("PK_Companies", x => x.CompanyId);
                     table.ForeignKey(
-                        name: "FK_Company_Users_UserId",
+                        name: "FK_Companies_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -47,15 +47,15 @@ namespace cpsc_471_project.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Company_UserId",
-                table: "Company",
+                name: "IX_Companies_UserId",
+                table: "Companies",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Company");
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "Users");

@@ -44,7 +44,7 @@ namespace cpsc_471_project.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Company");
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
