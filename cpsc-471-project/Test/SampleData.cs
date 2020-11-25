@@ -38,9 +38,9 @@ namespace cpsc_471_project.Test
             {
                 _context.Users.AddRange(SampleUserData());
             }
-            if ( !_context.Company.Any() )
+            if ( !_context.Companies.Any() )
             {
-                _context.Company.AddRange(SampleCompanyData());
+                _context.Companies.AddRange(SampleCompanyData());
             }
             if (!_context.Resumes.Any())
             {
