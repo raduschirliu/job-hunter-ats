@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace cpsc_471_project.Migrations
 {
-    public partial class applicationAndJobpostUpdated : Migration
+    public partial class applicationResumeJobpostUpdated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,6 +48,26 @@ namespace cpsc_471_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Resumes",
+                columns: table => new
+                {
+                    ResumeId = table.Column<long>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    CandidateId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resumes", x => x.ResumeId);
+                    table.ForeignKey(
+                        name: "FK_Resumes_Users_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JobPost",
                 columns: table => new
                 {
@@ -86,7 +106,8 @@ namespace cpsc_471_project.Migrations
                     JobId = table.Column<long>(nullable: false),
                     DateSubmitted = table.Column<DateTime>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    CoverLetter = table.Column<string>(nullable: true)
+                    CoverLetter = table.Column<string>(nullable: true),
+                    ResumeId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,12 +118,23 @@ namespace cpsc_471_project.Migrations
                         principalTable: "JobPost",
                         principalColumn: "JobPostId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Application_Resumes_ResumeId",
+                        column: x => x.ResumeId,
+                        principalTable: "Resumes",
+                        principalColumn: "ResumeId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Application_JobId",
                 table: "Application",
                 column: "JobId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Application_ResumeId",
+                table: "Application",
+                column: "ResumeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Company_UserId",
@@ -118,6 +150,11 @@ namespace cpsc_471_project.Migrations
                 name: "IX_JobPost_RecruiterId",
                 table: "JobPost",
                 column: "RecruiterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Resumes_CandidateId",
+                table: "Resumes",
+                column: "CandidateId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -127,6 +164,9 @@ namespace cpsc_471_project.Migrations
 
             migrationBuilder.DropTable(
                 name: "JobPost");
+
+            migrationBuilder.DropTable(
+                name: "Resumes");
 
             migrationBuilder.DropTable(
                 name: "Company");

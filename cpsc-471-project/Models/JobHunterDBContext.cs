@@ -19,5 +19,7 @@ namespace cpsc_471_project.Models
         public DbSet<JobPost> JobPost { get; set; }
 
         public DbSet<Application> Application { get; set; }
+
+        public DbSet<Resume> Resumes { get; set; }
     }
 }

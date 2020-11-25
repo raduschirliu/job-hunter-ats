@@ -14,6 +14,12 @@
     <Compile Remove="Migrations\20201119182338_jobpostDTOadded.Designer.cs" />
     <Compile Remove="Migrations\20201119184240_AppDTO.cs" />
     <Compile Remove="Migrations\20201119184240_AppDTO.Designer.cs" />
+    <Compile Remove="Migrations\20201121194139_applicationAndJobpostUpdated.cs" />
+    <Compile Remove="Migrations\20201121194139_applicationAndJobpostUpdated.Designer.cs" />
+    <Compile Remove="Migrations\20201123202708_Resume-Model.cs" />
+    <Compile Remove="Migrations\20201123202708_Resume-Model.Designer.cs" />
+    <Compile Remove="Migrations\20201125033939_resume-app-jobpost.cs" />
+    <Compile Remove="Migrations\20201125033939_resume-app-jobpost.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

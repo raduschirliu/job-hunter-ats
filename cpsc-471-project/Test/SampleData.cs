@@ -42,16 +42,18 @@ namespace cpsc_471_project.Test
             {
                 _context.Company.AddRange(SampleCompanyData());
             }
+            if (!_context.Resumes.Any())
+            {
+                _context.Resumes.AddRange(SampleResumeData());
+            }
             if (!_context.JobPost.Any())
             {
                 _context.JobPost.AddRange(SampleJobPostData());
             }
-            /*
             if (!_context.Application.Any())
             {
                 _context.Application.AddRange(SampleApplicationData());
             }
-            */
             _context.SaveChanges();
         }
 
@@ -134,12 +136,41 @@ namespace cpsc_471_project.Test
             return returnedCompanies;
         }
 
+        public static List<Resume> SampleResumeData()
+        {
+            List<Resume> resumes = new List<Resume>();
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 1,
+                Name = "Resume #1",
+                CandidateId = 1
+            });
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 2,
+                Name = "Resume #2",
+                CandidateId = 1
+            });
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 3,
+                Name = "Gr8 resume",
+                CandidateId = 3
+            });
+
+            return resumes;
+        }
+
         public static List<JobPost> SampleJobPostData()
         {
             List<JobPost> returnedPosts = new List<JobPost>();
 
             JobPost testPost1 = new JobPost()
             {
+                JobPostId = 1,
                 CompanyId = 1,
                 Name = "Software Developer",
                 Description = "Develop software.",
@@ -148,11 +179,13 @@ namespace cpsc_471_project.Test
                 RecruiterId = 1
             };
             returnedPosts.Add(testPost1);
+
             JobPost testPost2 = new JobPost()
             {
+                JobPostId = 2,
                 CompanyId = 2,
                 Name = "Vexillologist",
-                Description = "Look at maps.",
+                Description = "Makes flags.",
                 Salary = 45000,
                 ClosingDate = DateTime.Now,
                 RecruiterId = 1
@@ -162,7 +195,6 @@ namespace cpsc_471_project.Test
             return returnedPosts;
         }
 
-        /*
         public static List<Application> SampleApplicationData()
         {
             List<Application> returnedApps = new List<Application>();
@@ -172,15 +204,13 @@ namespace cpsc_471_project.Test
                 ApplicationId = 1,
                 JobId = 1,
                 DateSubmitted = new DateTime(2008, 5, 1, 8, 30, 52),
-                Status = Status.Accepted,
+                Status = StatusEnum.Accepted,
                 CoverLetter = "pls give job xo",
-                //ResumeId = 0
+                ResumeId = 2
             };
             returnedApps.Add(testApp1);
-
             return returnedApps;
         }
-        */
     }
 }
 #endif

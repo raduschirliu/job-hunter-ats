@@ -118,7 +118,7 @@ namespace cpsc_471_project.Controllers
                 DateSubmitted = app.DateSubmitted,
                 Status = app.Status,
                 CoverLetter = app.CoverLetter,
-                //ResumeId = app.ResumeId
+                ResumeId = app.ResumeId
             };
 
         private static Application DTOToApplication(ApplicationDTO appDTO) =>
@@ -130,8 +130,8 @@ namespace cpsc_471_project.Controllers
                 DateSubmitted = appDTO.DateSubmitted,
                 Status = appDTO.Status,
                 CoverLetter = appDTO.CoverLetter,
-                //ResumeId = appDTO.ResumeId,
-                //Resume = null
+                ResumeId = appDTO.ResumeId,
+                Resume = null
             };
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace cpsc_471_project.Models
 {
-    public enum Status
+    public enum StatusEnum
     {
         Sent,
         InReview,
@@ -24,19 +24,19 @@ namespace cpsc_471_project.Models
         [Required]
         [ForeignKey("JobPost")] 
         public long JobId { get; set; }
-        public JobPost JobPost { get; set; }
+        public JobPost JobPost { get; set; } // Enforces referential integrity
 
         [Required]
         public DateTime DateSubmitted { get; set; }
 
         [Required]
-        public Status Status { get; set; }
+        public StatusEnum Status { get; set; }
 
         public string CoverLetter { get; set; }
 
-        //[ForeignKey("Resume")]
-        //public long ResumeId { get; set; }
-        //public Resume Resume { get; set; } 
+        [ForeignKey("Resume")]
+        public long ResumeId { get; set; }
+        public Resume Resume { get; set; } // Enforces referential integrity
     }
 
     public class ApplicationDTO
@@ -51,12 +51,12 @@ namespace cpsc_471_project.Models
         public DateTime DateSubmitted { get; set; }
 
         [Display(Name = "Status")]
-        public Status Status { get; set; }
+        public StatusEnum Status { get; set; }
 
         [Display(Name = "Cover Letter")]
         public string CoverLetter { get; set; }
 
-        //[Display(Name = "Resume ID")]
-        //public long ResumeId { get; set; }
+        [Display(Name = "Resume ID")]
+        public long ResumeId { get; set; }
     }
 }
