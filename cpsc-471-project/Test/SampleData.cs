@@ -38,21 +38,21 @@ namespace cpsc_471_project.Test
             {
                 _context.Users.AddRange(SampleUserData());
             }
-            if ( !_context.Company.Any() )
+            if ( !_context.Companies.Any() )
             {
-                _context.Company.AddRange(SampleCompanyData());
+                _context.Companies.AddRange(SampleCompanyData());
             }
             if (!_context.Resumes.Any())
             {
                 _context.Resumes.AddRange(SampleResumeData());
             }
-            if (!_context.JobPost.Any())
+            if (!_context.JobPosts.Any())
             {
-                _context.JobPost.AddRange(SampleJobPostData());
+                _context.JobPosts.AddRange(SampleJobPostData());
             }
-            if (!_context.Application.Any())
+            if (!_context.Applications.Any())
             {
-                _context.Application.AddRange(SampleApplicationData());
+                _context.Applications.AddRange(SampleApplicationData());
             }
             _context.SaveChanges();
         }
@@ -107,7 +107,7 @@ namespace cpsc_471_project.Test
                 Name = "Test Company 1",
                 Description = "Test Description 1",
                 Industry = "Technology",
-                UserId = 1
+                AdminId = 1
             };
             returnedCompanies.Add(testCompany1);
 
@@ -118,7 +118,7 @@ namespace cpsc_471_project.Test
                 Name = "Test Company 2",
                 Description = "Test Description 2",
                 Industry = "Retail",
-                UserId = 1
+                AdminId = 1
             };
             returnedCompanies.Add(testCompany2);
 
@@ -129,7 +129,7 @@ namespace cpsc_471_project.Test
                 Name = "Test Company 3",
                 Description = "Test Description 3",
                 Industry = "Manufacturing",
-                UserId = 1
+                AdminId = 1
             };
             returnedCompanies.Add(testCompany3);
 

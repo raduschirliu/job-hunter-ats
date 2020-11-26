@@ -25,7 +25,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetJobPosts()
         {
-            var posts = await _context.JobPost.ToListAsync();
+            var posts = await _context.JobPosts.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<JobPostDTO>> GetJobPost(long id)
         {
-            var post = await _context.JobPost.FindAsync(id);
+            var post = await _context.JobPosts.FindAsync(id);
 
             if (post == null)
             {
@@ -81,7 +81,7 @@ namespace cpsc_471_project.Controllers
         public async Task<ActionResult<JobPostDTO>> PostJobPost(JobPostDTO postDTO)
         {
             JobPost post = DTOToJobPost(postDTO);
-            _context.JobPost.Add(post);
+            _context.JobPosts.Add(post);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetJobPost", new { id = post.JobPostId }, post);
@@ -91,13 +91,13 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<JobPostDTO>> DeleteJobPost(long id)
         {
-            var post = await _context.JobPost.FindAsync(id);
+            var post = await _context.JobPosts.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
 
-            _context.JobPost.Remove(post);
+            _context.JobPosts.Remove(post);
             await _context.SaveChangesAsync();
 
             return JobPostToDTO(post);
@@ -105,7 +105,7 @@ namespace cpsc_471_project.Controllers
 
         private bool JobPostExists(long id)
         {
-            return _context.JobPost.Any(e => e.JobPostId == id);
+            return _context.JobPosts.Any(e => e.JobPostId == id);
         }
 
         private static JobPostDTO JobPostToDTO(JobPost post) =>

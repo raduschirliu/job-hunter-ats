@@ -25,7 +25,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetApplications()
         {
-            var app = await _context.Application.ToListAsync();
+            var app = await _context.Applications.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ApplicationDTO>> GetApplication(long id)
         {
-            var application = await _context.Application.FindAsync(id);
+            var application = await _context.Applications.FindAsync(id);
 
             if (application == null)
             {
@@ -83,7 +83,7 @@ namespace cpsc_471_project.Controllers
         {
             Application app = DTOToApplication(appDTO);
             app.DateSubmitted = DateTime.Now;
-            _context.Application.Add(app);
+            _context.Applications.Add(app);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetApplication", new { id = app.ApplicationId }, app);
@@ -93,13 +93,13 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ApplicationDTO>> DeleteApplication(long id)
         {
-            var app = await _context.Application.FindAsync(id);
+            var app = await _context.Applications.FindAsync(id);
             if (app == null)
             {
                 return NotFound();
             }
 
-            _context.Application.Remove(app);
+            _context.Applications.Remove(app);
             await _context.SaveChangesAsync();
 
             return ApplicationToDTO(app);
@@ -107,7 +107,7 @@ namespace cpsc_471_project.Controllers
 
         private bool ApplicationExists(long id)
         {
-            return _context.Application.Any(e => e.ApplicationId == id);
+            return _context.Applications.Any(e => e.ApplicationId == id);
         }
 
         private static ApplicationDTO ApplicationToDTO(Application app) =>

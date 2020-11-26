@@ -38,7 +38,7 @@ namespace cpsc_471_project.Models
         public string Industry { get; set; }
         [Required]
         [ForeignKey("User")]
-        public long UserId { get; set; }
+        public long AdminId { get; set; }
 
         // this is needed so that the foreign key constraint is automatically enforced
         // however, it will have a null value in the objects produced by the DB
@@ -63,6 +63,6 @@ namespace cpsc_471_project.Models
         public string Industry { get; set; }
 
         [Display(Name = "Admin Id")]
-        public long UserId { get; set; }
+        public long AdminId { get; set; }
     }
 }
