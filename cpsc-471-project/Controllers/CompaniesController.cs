@@ -25,7 +25,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompany()
         {
-            var companies = await _context.Company.ToListAsync();
+            var companies = await _context.Companies.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CompanyDTO>> GetCompany(long id)
         {
-            var company = await _context.Company.FindAsync(id);
+            var company = await _context.Companies.FindAsync(id);
 
             if (company == null)
             {
@@ -60,7 +60,7 @@ namespace cpsc_471_project.Controllers
             if (!CompanyExists(id))
             {
                 newCompany = true;
-                _context.Company.Add(sanitizedCompany);
+                _context.Companies.Add(sanitizedCompany);
             }
             else
             {
@@ -98,7 +98,7 @@ namespace cpsc_471_project.Controllers
         public async Task<ActionResult<CompanyDTO>> PostCompany(CompanyDTO companyDTO)
         {
             Company sanitizedCompany = DTOToCompany(companyDTO);
-            _context.Company.Add(sanitizedCompany);
+            _context.Companies.Add(sanitizedCompany);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostCompany", new { id = sanitizedCompany.CompanyId }, sanitizedCompany);
@@ -108,13 +108,13 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<CompanyDTO>> DeleteCompany(long id)
         {
-            var company = await _context.Company.FindAsync(id);
+            var company = await _context.Companies.FindAsync(id);
             if (company == null)
             {
                 return NotFound();
             }
 
-            _context.Company.Remove(company);
+            _context.Companies.Remove(company);
             await _context.SaveChangesAsync();
 
             return CompanyToDTO(company);
@@ -122,7 +122,7 @@ namespace cpsc_471_project.Controllers
 
         private bool CompanyExists(long id)
         {
-            return _context.Company.Any(e => e.CompanyId == id);
+            return _context.Companies.Any(e => e.CompanyId == id);
         }
 
         private static CompanyDTO CompanyToDTO(Company company) =>

@@ -16,6 +16,12 @@
     <Compile Remove="Migrations\20201119202147_userIdToAdminId2.Designer.cs" />
     <Compile Remove="Migrations\20201119202206_userIdToAdminId.cs" />
     <Compile Remove="Migrations\20201119202206_userIdToAdminId.Designer.cs" />
+    <Compile Remove="Migrations\20201121185524_adminIdFromUserId.cs" />
+    <Compile Remove="Migrations\20201121185524_adminIdFromUserId.Designer.cs" />
+    <Compile Remove="Migrations\20201123202708_Resume-Model.cs" />
+    <Compile Remove="Migrations\20201123202708_Resume-Model.Designer.cs" />
+    <Compile Remove="Migrations\20201126194609_combined-schema.cs" />
+    <Compile Remove="Migrations\20201126194609_combined-schema.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +34,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 
