@@ -39,10 +39,21 @@ namespace cpsc_471_project.Test
             {
                 await AddSampleUserData(userManager);
             }
-
-            if (!_context.Company.Any())
+            if ( !_context.Companies.Any() )
             {
-                await _context.Company.AddRangeAsync(SampleCompanyData());
+                _context.Companies.AddRange(SampleCompanyData());
+            }
+            if (!_context.Resumes.Any())
+            {
+                _context.Resumes.AddRange(SampleResumeData());
+            }
+            if (!_context.JobPosts.Any())
+            {
+                _context.JobPosts.AddRange(SampleJobPostData());
+            }
+            if (!_context.Applications.Any())
+            {
+                _context.Applications.AddRange(SampleApplicationData());
             }
 
             await _context.SaveChangesAsync();
@@ -116,6 +127,82 @@ namespace cpsc_471_project.Test
             });
 
             return returnedCompanies;
+        }
+
+        public static List<Resume> SampleResumeData()
+        {
+            List<Resume> resumes = new List<Resume>();
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 1,
+                Name = "Resume #1",
+                CandidateId = "user-1"
+            });
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 2,
+                Name = "Resume #2",
+                CandidateId = "user-1"
+            });
+
+            resumes.Add(new Resume()
+            {
+                ResumeId = 3,
+                Name = "Gr8 resume",
+                CandidateId = "user-3"
+            });
+
+            return resumes;
+        }
+
+        public static List<JobPost> SampleJobPostData()
+        {
+            List<JobPost> returnedPosts = new List<JobPost>();
+
+            JobPost testPost1 = new JobPost()
+            {
+                JobPostId = 1,
+                CompanyId = 1,
+                Name = "Software Developer",
+                Description = "Develop software.",
+                Salary = 100000,
+                ClosingDate = DateTime.Now,
+                RecruiterId = "user-1"
+            };
+            returnedPosts.Add(testPost1);
+
+            JobPost testPost2 = new JobPost()
+            {
+                JobPostId = 2,
+                CompanyId = 2,
+                Name = "Vexillologist",
+                Description = "Makes flags.",
+                Salary = 45000,
+                ClosingDate = DateTime.Now,
+                RecruiterId = "user-1"
+            };
+            returnedPosts.Add(testPost2);
+
+            return returnedPosts;
+        }
+
+        public static List<Application> SampleApplicationData()
+        {
+            List<Application> returnedApps = new List<Application>();
+
+            Application testApp1 = new Application()
+            {
+                ApplicationId = 1,
+                JobId = 1,
+                DateSubmitted = new DateTime(2008, 5, 1, 8, 30, 52),
+                Status = StatusEnum.Accepted,
+                CoverLetter = "pls give job xo",
+                ResumeId = 2
+            };
+            returnedApps.Add(testApp1);
+            return returnedApps;
         }
     }
 }

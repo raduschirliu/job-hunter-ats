@@ -15,7 +15,7 @@ namespace cpsc_471_project.Models
         [MaxLength(128)]
         public string FirstName { get; set; }
 
-        [Display(Name = "First Name")]
+        [Display(Name = "Last Name")]
         [Required]
         [MaxLength(128)]
         public string LastName { get; set; }
