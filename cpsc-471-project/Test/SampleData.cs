@@ -99,7 +99,7 @@ namespace cpsc_471_project.Test
                 Name = "Test Company 1",
                 Description = "Test Description 1",
                 Industry = "Technology",
-                UserId = 1
+                AdminId = 1
             };
             returnedCompanies.Add(testCompany1);
 
@@ -110,7 +110,7 @@ namespace cpsc_471_project.Test
                 Name = "Test Company 2",
                 Description = "Test Description 2",
                 Industry = "Retail",
-                UserId = 1
+                AdminId = 1
             };
             returnedCompanies.Add(testCompany2);
 
@@ -121,7 +121,7 @@ namespace cpsc_471_project.Test
                 Name = "Test Company 3",
                 Description = "Test Description 3",
                 Industry = "Manufacturing",
-                UserId = 1
+                AdminId = 1
             };
             returnedCompanies.Add(testCompany3);
 

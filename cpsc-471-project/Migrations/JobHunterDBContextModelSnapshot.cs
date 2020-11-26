@@ -21,6 +21,9 @@ namespace cpsc_471_project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<long>("AdminId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT")
                         .HasMaxLength(1024);
@@ -37,12 +40,9 @@ namespace cpsc_471_project.Migrations
                     b.Property<int>("Size")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("CompanyId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AdminId");
 
                     b.ToTable("Companies");
                 });
@@ -104,7 +104,7 @@ namespace cpsc_471_project.Migrations
                 {
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

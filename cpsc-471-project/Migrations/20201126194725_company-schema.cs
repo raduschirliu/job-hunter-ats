@@ -2,7 +2,7 @@
 
 namespace cpsc_471_project.Migrations
 {
-    public partial class InitialSchema : Migration
+    public partial class companyschema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,29 +33,57 @@ namespace cpsc_471_project.Migrations
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 1024, nullable: true),
                     Industry = table.Column<string>(maxLength: 32, nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    AdminId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.CompanyId);
                     table.ForeignKey(
-                        name: "FK_Companies_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Companies_Users_AdminId",
+                        column: x => x.AdminId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Resumes",
+                columns: table => new
+                {
+                    ResumeId = table.Column<long>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    CandidateId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resumes", x => x.ResumeId);
+                    table.ForeignKey(
+                        name: "FK_Resumes_Users_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Companies_UserId",
+                name: "IX_Companies_AdminId",
                 table: "Companies",
-                column: "UserId");
+                column: "AdminId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Resumes_CandidateId",
+                table: "Resumes",
+                column: "CandidateId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Companies");
+
+            migrationBuilder.DropTable(
+                name: "Resumes");
 
             migrationBuilder.DropTable(
                 name: "Users");

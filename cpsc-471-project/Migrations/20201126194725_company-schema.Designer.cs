@@ -8,8 +8,8 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201109235325_Initial-Schema")]
-    partial class InitialSchema
+    [Migration("20201126194725_company-schema")]
+    partial class companyschema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,6 +21,9 @@ namespace cpsc_471_project.Migrations
                 {
                     b.Property<long>("CompanyId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("AdminId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -39,14 +42,32 @@ namespace cpsc_471_project.Migrations
                     b.Property<int>("Size")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("CompanyId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AdminId");
 
-                    b.ToTable("Company");
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
+                {
+                    b.Property<long>("ResumeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CandidateId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(64);
+
+                    b.HasKey("ResumeId");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("Resumes");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.User", b =>
@@ -85,7 +106,16 @@ namespace cpsc_471_project.Migrations
                 {
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.User", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
