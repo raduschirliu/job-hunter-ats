@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -61,6 +61,18 @@ namespace cpsc_471_project.Test
 
         public static async Task AddSampleUserData(UserManager<User> userManager)
         {
+            User adminUser = new User()
+            {
+                Id = "admin-user",
+                FirstName = "Bob",
+                LastName = "Ross",
+                UserName = "bob-ross",
+                Email = "bobross@12asgaetrfasfasf.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(adminUser, "password");
+            await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
+
             await userManager.CreateAsync(new User()
             {
                 Id = "user-1",
@@ -70,7 +82,6 @@ namespace cpsc_471_project.Test
                 Email = "bobsmith12345@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "555-555-5555",
             }, "password");
-
 
             await userManager.CreateAsync(new User()
             {
