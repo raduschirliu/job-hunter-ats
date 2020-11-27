@@ -73,6 +73,18 @@ namespace cpsc_471_project.Test
             await userManager.CreateAsync(adminUser, "password");
             await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
 
+            User recruiterUser = new User()
+            {
+                Id = "recruiter-user-1",
+                FirstName = "Recruiter",
+                LastName = "Person",
+                UserName = "recruiter-1",
+                Email = "recruiter@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser, "password");
+            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Recruiter);
+
             await userManager.CreateAsync(new User()
             {
                 Id = "user-1",
