@@ -21,14 +21,14 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        // GET: api/Users
+        // GET: api/users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/Users/5
+        // GET: api/users/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
         {
@@ -42,39 +42,24 @@ namespace cpsc_471_project.Controllers
             return user;
         }
 
-        // PUT: api/Users/5
+        // PATCH: api/users/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(long id, User user)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchUser(long id, User user)
         {
             if (id != user.UserId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/Users
+        // POST: api/users
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
@@ -86,7 +71,7 @@ namespace cpsc_471_project.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/users/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(long id)
         {
@@ -103,7 +88,7 @@ namespace cpsc_471_project.Controllers
         }
 
 #if DEBUG
-        // POST: api/Users/SampleData
+        // POST: api/users/populatedb
         [HttpPost("PopulateDB")]
         public async Task<ActionResult<User>> PopulateDB()
         {
