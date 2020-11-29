@@ -71,9 +71,9 @@ _Some notes about Migrations:_
 5. Enter the desired endpoint URL in Postman and add the authorization info (more info in the [Authorizing Requests](#Authorizing-Requests) section)
 6. Enter the relevant parameters in the body section of Postman. For example, the POST endpoint `https://localhost:5001/api/companies` requires information in the following form
 {
-    "CompanyId": 1,
-    "Name": "Test Company 1",
-    "AdminId": "admin-user"
+    "companyid": 1,
+    "name": "Test Company 1",
+    "adminid": "admin-user"
 }
 7. Hit Send!
    - Note that since SSL certificate is turned off, you should see a "Warning: Unable to verify the first certificate" that you can ignore during development if the server is on your local machine (obviously don't ignore this if you are hitting public endpoints though)
@@ -84,13 +84,30 @@ _Some notes about Migrations:_
 2. We are authenticating requests using Bearer Tokens. To get a bearer token, hit the endpoint `api/auth/login` with a request of the form:
 ```json
 {
-    username: "your-username-here",
-    password: "your-password-here"
+    "username": "your-username-here",
+    "password": "your-password-here"
 }
 ```
 3. The endpoint will return a Bearer Token and its expiration date.
 4. To use the bearer token in Postman, go to Authorization and select Bearer Token, then paste the bearer token
 5. You can then make an API call as described in line 5 and beyond in [Updating the Database Schema](#Instructions-for-hitting-API-Endpoints)
+
+
+### Adding New Users
+1. To add a new user, use the `api/auth/register` endpoint via Postman
+2. The body of your request should be of the form:
+```json
+{
+    "username": "newusername",
+    "password": "newpassword",
+    "firstname": "newfirstname"
+    "lastname": "newlastname"
+}
+```
+3. The new user will automatically be created with the candidate role and a Bearer Token will be returned.
+
+Note that there are several other functions in `AuthController.cs` that allow you to change user roles, test user validity, etc.
+
 
 ### Troubleshooting
 - If a webpage pops up but you get an error message saying that a table is missing or that a certain field of the table does not exist:
