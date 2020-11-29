@@ -86,9 +86,9 @@ namespace cpsc_471_project
             app.UseAuthorization();
 
             // Create roles if they do not exist
-            CreateRoleIfNotExists(roleManager, UserRoles.Recruiter);
-            CreateRoleIfNotExists(roleManager, UserRoles.JobSeeker);
             CreateRoleIfNotExists(roleManager, UserRoles.Admin);
+            CreateRoleIfNotExists(roleManager, UserRoles.Recruiter);
+            CreateRoleIfNotExists(roleManager, UserRoles.Candidate);
 
             app.UseEndpoints(endpoints =>
             {
