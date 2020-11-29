@@ -44,22 +44,50 @@ namespace cpsc_471_project.Controllers
             });
         }
 
-        // POST: api/auth/role
-        [Authorize]
-        [HttpPost("role/{roleName}")]
-        public async Task<ActionResult> Role(string roleName)
+        // POST: api/auth/addrole
+        [Authorize(Roles=UserRoles.Admin)]
+        [HttpPost("addrole")]
+        public async Task<ActionResult> AddRole(RoleChangeClass roleChange)
         {
-            User user = await userManager.FindByNameAsync(User.Identity.Name);
-            IdentityRole role = await roleManager.FindByNameAsync(roleName);
+            User user = await userManager.FindByNameAsync(roleChange.UserName);
+            IdentityRole role = await roleManager.FindByNameAsync(roleChange.Role);
 
             if (role == null)
             {
-                return NotFound();
+                return NotFound("Role not found");
             }
 
-            await userManager.AddToRoleAsync(user, roleName);
+            if (await userManager.IsInRoleAsync(user, roleChange.Role))
+            {
+                return BadRequest($"{roleChange.UserName} already has role {roleChange.Role}");
+            }
 
-            return Ok();
+            await userManager.AddToRoleAsync(user, roleChange.Role);
+
+            return Ok($"Successfully added {roleChange.UserName} to role {roleChange.Role}");
+        }
+
+        // POST: api/auth/removerole
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpPost("removerole")]
+        public async Task<ActionResult> RemoveRole(RoleChangeClass roleChange)
+        {
+            User user = await userManager.FindByNameAsync(roleChange.UserName);
+            IdentityRole role = await roleManager.FindByNameAsync(roleChange.Role);
+
+            if (role == null)
+            {
+                return NotFound("Role not found");
+            }
+
+            if (!(await userManager.IsInRoleAsync(user, roleChange.Role)))
+            {
+                return BadRequest($"{roleChange.UserName} does not have role {roleChange.Role}");
+            }
+
+            await userManager.RemoveFromRoleAsync(user, roleChange.Role);
+
+            return Ok($"Successfully removed {roleChange.UserName} from role {roleChange.Role}");
         }
 
         // POST: api/auth/login

@@ -66,10 +66,31 @@ _Some notes about Migrations:_
 1. Download the Postman Desktop App
 2. Sign in to the app (create an account if you haven't already)
 3. Turn off SSL certificate verification via File > Settings > SSL Certificate Verification 
-   - Since the SSL certificate is local, it can't be verified. make sure to turn this setting back on if you are hitting public endpoints (we won't be for this project))
+   - Since the SSL certificate is local, it can't be verified. make sure to turn this setting back on if you are hitting public endpoints (we won't be for this project)
 4. Run cpsc_471_project using the play button in the 2nd toolbar (beside "Any CPU"). If the button is not visible, you may have to switch to Solution View in the Solution Explorer
-5. Enter the desired endpoint in Postman and hit "Send" (sample endpoint: https://localhost:44397/weatherforecast)
+5. Enter the desired endpoint URL in Postman and add the authorization info (more info in the [Authorizing Requests](#Authorizing-Requests) section)
+6. Enter the relevant parameters in the body section of Postman. For example, the POST endpoint `https://localhost:5001/api/companies` requires information in the following form
+{
+    "CompanyId": 1,
+    "Name": "Test Company 1",
+    "AdminId": "admin-user"
+}
+7. Hit Send!
+   - Note that since SSL certificate is turned off, you should see a "Warning: Unable to verify the first certificate" that you can ignore during development if the server is on your local machine (obviously don't ignore this if you are hitting public endpoints though)
 
+### Authorizing Requests
+1. Upon startup, three roles will be created: Admin, Recruiter, and User
+    (1.1. You can add some sample users to the roles via the instructions in the file in the `cpsc-471-project\cpsc-471-project\Test\SampleData.cs` files)
+2. We are authenticating requests using Bearer Tokens. To get a bearer token, hit the endpoint `api/auth/login` with a request of the form:
+```json
+{
+    username: "your-username-here",
+    password: "your-password-here"
+}
+```
+3. The endpoint will return a Bearer Token and its expiration date.
+4. To use the bearer token in Postman, go to Authorization and select Bearer Token, then paste the bearer token
+5. You can then make an API call as described in line 5 and beyond in [Updating the Database Schema](#Instructions-for-hitting-API-Endpoints)
 
 ### Troubleshooting
 - If a webpage pops up but you get an error message saying that a table is missing or that a certain field of the table does not exist:
