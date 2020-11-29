@@ -106,6 +106,8 @@ namespace cpsc_471_project.Controllers
             }
 
             User user = await userManager.FindByNameAsync(register.UserName);
+            await userManager.AddToRoleAsync(user, UserRoles.Candidate);
+
             JwtSecurityToken token = await GenerateToken(user);
 
             return Ok(new RegistrationResponse()
