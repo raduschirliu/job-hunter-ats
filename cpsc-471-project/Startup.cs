@@ -71,7 +71,7 @@ namespace cpsc_471_project
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -81,13 +81,31 @@ namespace cpsc_471_project
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Create roles if they do not exist
+            CreateRoleIfNotExists(roleManager, UserRoles.Recruiter);
+            CreateRoleIfNotExists(roleManager, UserRoles.JobSeeker);
+            CreateRoleIfNotExists(roleManager, UserRoles.Admin);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        public async void CreateRoleIfNotExists(RoleManager<IdentityRole> roleManager, string name)
+        {
+            if (await roleManager.RoleExistsAsync(name))
+            {
+                return;
+            }
+
+            await roleManager.CreateAsync(new IdentityRole()
+            {
+                Name = name
             });
         }
     }

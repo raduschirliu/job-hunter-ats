@@ -36,21 +36,12 @@ namespace cpsc_471_project.Test
     {
         public static async Task AddSampleData(JobHunterDBContext _context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            // Create roles if they do not exist
-            await CreateRoleIfNotExists(roleManager, UserRoles.Recruiter);
-            await CreateRoleIfNotExists(roleManager, UserRoles.JobSeeker);
-            await CreateRoleIfNotExists(roleManager, UserRoles.Admin);
-
             if (!_context.Users.Any())
             {
                 await AddSampleUserData(userManager);
             }
             if ( !_context.Companies.Any() )
             {
-                foreach (User user in await userManager.Users.ToListAsync())
-                {
-                    Console.WriteLine(user.Id);
-                }
                 _context.Companies.AddRange(SampleCompanyData());
             }
             if (!_context.Resumes.Any())
@@ -67,19 +58,6 @@ namespace cpsc_471_project.Test
             }
 
             await _context.SaveChangesAsync();
-        }
-
-        public static async Task CreateRoleIfNotExists(RoleManager<IdentityRole> roleManager, string name)
-        {
-            if (await roleManager.RoleExistsAsync(name))
-            {
-                return;
-            }
-
-            await roleManager.CreateAsync(new IdentityRole()
-            {
-                Name = name
-            });
         }
 
         public static async Task AddSampleUserData(UserManager<User> userManager)
