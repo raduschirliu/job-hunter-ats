@@ -16,11 +16,13 @@ namespace cpsc_471_project.Controllers
     {
         private readonly JobHunterDBContext _context;
         private readonly UserManager<User> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public UsersController(JobHunterDBContext context, UserManager<User> userManager)
+        public UsersController(JobHunterDBContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         // GET: api/users
@@ -97,7 +99,7 @@ namespace cpsc_471_project.Controllers
         [HttpPost("PopulateDB")]
         public async Task<ActionResult<User>> PopulateDB()
         {
-            await SampleData.AddSampleData(_context, userManager);
+            await SampleData.AddSampleData(_context, userManager, roleManager);
             return Ok("Sample data has been added if there was no existing data");
         }
 #endif

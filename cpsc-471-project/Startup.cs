@@ -17,13 +17,12 @@ namespace cpsc_471_project
     public class Startup
     {
         public const string DBLocation = "Data Source=..\\JobHunterDB.sqlite";
+        public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
