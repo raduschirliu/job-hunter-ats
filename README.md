@@ -70,13 +70,15 @@ _Some notes about Migrations:_
 4. Run cpsc_471_project using the play button in the 2nd toolbar (beside "Any CPU"). If the button is not visible, you may have to switch to Solution View in the Solution Explorer
 5. Enter the desired endpoint URL in Postman and add the authorization info (more info in the [Authorizing Requests](#Authorizing-Requests) section)
 6. Enter the relevant parameters in the body section of Postman. For example, the POST endpoint `https://localhost:5001/api/companies` requires information in the following form
+```json
 {
     "companyid": 1,
     "name": "Test Company 1",
     "adminid": "admin-user"
 }
+```
 7. Hit Send!
-   - Note that since SSL certificate is turned off, you should see a "Warning: Unable to verify the first certificate" that you can ignore during development if the server is on your local machine (obviously don't ignore this if you are hitting public endpoints though)
+   - Note that since SSL certificate is turned off, you should see a "Warning: Unable to verify the first certificate" that you can ignore during development if the server is on your local machine (obviously don't ignore this if you are hitting non-local endpoints though)
 
 ### Authorizing Requests
 1. Upon startup, three roles will be created: Admin, Recruiter, and User
@@ -84,8 +86,8 @@ _Some notes about Migrations:_
 2. We are authenticating requests using Bearer Tokens. To get a bearer token, hit the endpoint `api/auth/login` with a request of the form:
 ```json
 {
-    "username": "your-username-here",
-    "password": "your-password-here"
+    "username": "yourusername",
+    "password": "yourpassword"
 }
 ```
 3. The endpoint will return a Bearer Token and its expiration date.
@@ -100,7 +102,7 @@ _Some notes about Migrations:_
 {
     "username": "newusername",
     "password": "newpassword",
-    "firstname": "newfirstname"
+    "firstname": "newfirstname",
     "lastname": "newlastname"
 }
 ```

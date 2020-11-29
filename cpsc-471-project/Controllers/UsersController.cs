@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
 using cpsc_471_project.Test;
-using Microsoft.AspNetCore.Identity;
 
 namespace cpsc_471_project.Controllers
 {
@@ -26,13 +29,15 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/users
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/users/5
+        // GET: api/users/test-user
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
@@ -46,9 +51,8 @@ namespace cpsc_471_project.Controllers
             return user;
         }
 
-        // PUT: api/users/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // PUT: api/users/test-user
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(string id, User user)
         {
@@ -78,7 +82,8 @@ namespace cpsc_471_project.Controllers
             return NoContent();
         }
 
-        // DELETE: api/users/5
+        // DELETE: api/users/test-user
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(string id)
         {

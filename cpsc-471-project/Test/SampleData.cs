@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using cpsc_471_project.Authentication;
-using cpsc_471_project.Models;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+
+using cpsc_471_project.Authentication;
+using cpsc_471_project.Models;
 
 
 /*

@@ -115,6 +115,10 @@ namespace cpsc_471_project.Controllers
 
             // Assign resume to logged in user
             Resume resume = DTOToResume(resumeDTO);
+            if ((resume.CandidateId != user.Id) && !(await userManager.IsInRoleAsync(user, UserRoles.Admin)))
+            {
+                return Unauthorized("Cannot create a resume for another candidate");
+            }
             resume.CandidateId = user.Id;
 
             _context.Resumes.Add(resume);
@@ -152,7 +156,7 @@ namespace cpsc_471_project.Controllers
                 
                 if (resume.CandidateId != user.Id)
                 {
-                    return Unauthorized();
+                    return Unauthorized("Cannot change the candidate of a resume");
                 }
             }
 

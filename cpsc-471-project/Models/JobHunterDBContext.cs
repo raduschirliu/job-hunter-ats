@@ -14,8 +14,6 @@ namespace cpsc_471_project.Models
     {
         public JobHunterDBContext(DbContextOptions<JobHunterDBContext> options) : base(options) {}
 
-        // public DbSet<User> Users { get; set; }
-
         public DbSet<Company> Companies { get; set; }
 
         public DbSet<JobPost> JobPosts { get; set; }

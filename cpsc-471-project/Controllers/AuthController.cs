@@ -16,7 +16,7 @@ namespace cpsc_471_project.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
         private readonly UserManager<User> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
@@ -28,11 +28,12 @@ namespace cpsc_471_project.Controllers
             _configuration = config;
         }
 
-        // GET: api/auth/test
+        // GET: api/auth/listroles
         [Authorize]
-        [HttpGet("test")]
-        public async Task<ActionResult> Test()
+        [HttpGet("listroles")]
+        public async Task<ActionResult> ListRoles()
         {
+            // Lists roles of the current user
             User user = await userManager.FindByNameAsync(User.Identity.Name);
             IList<string> roles = await userManager.GetRolesAsync(user);
 
