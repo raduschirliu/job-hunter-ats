@@ -30,7 +30,7 @@ namespace cpsc_471_project.Models
         public DateTime ClosingDate { get; set; }
 
         [ForeignKey("User")]
-        public long RecruiterId { get; set; }
+        public string RecruiterId { get; set; }
         public User User { get; set; } // Enforces referential integrity
     }
 
@@ -55,6 +55,6 @@ namespace cpsc_471_project.Models
         public DateTime ClosingDate { get; set; }
 
         [Display(Name = "Recruiter ID")]
-        public long RecruiterId { get; set; }
+        public string RecruiterId { get; set; }
     }
 }

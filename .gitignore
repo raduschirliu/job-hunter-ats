@@ -1,5 +1,11 @@
 .vs
 
 *.sqlite
+*.sqlite-shm
+*.sqlite-wal
+sqldiff.exe
+sqlite3.exe
+sqlite3_analyzer.exe
+
 cpsc-471-project/bin
 cpsc-471-project/obj

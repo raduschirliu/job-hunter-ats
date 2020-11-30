@@ -18,7 +18,7 @@ namespace cpsc_471_project.Models
 
         [Required]
         [ForeignKey("Candidate")]
-        public long CandidateId { get; set; }
+        public string CandidateId { get; set; }
 
         // Used to enforce referential integrity constraints
         public User Candidate { get; set; }
@@ -28,6 +28,6 @@ namespace cpsc_471_project.Models
     {
         public long ResumeId { get; set; }
         public string Name { get; set; }
-        public long CandidateId { get; set; }
+        public string CandidateId { get; set; }
     }
 }
