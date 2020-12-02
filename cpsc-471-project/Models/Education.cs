@@ -22,8 +22,12 @@ namespace cpsc_471_project.Models
 
 
         public string Major { get; set; }
+        [Key, Column(Order = 2)]
+
+        public long Order { get; set; }
 
         public Resume Resume { get; set; }
+
     }
 
     public class EducationDTO
@@ -40,6 +44,8 @@ namespace cpsc_471_project.Models
         public DateTime EndDate { get; set; }
         [Display(Name = "Major")]
         public string Major { get; set; }
+        [Display(Name = "Order")]
+        public long Order { get; set; }
 
     }
 }

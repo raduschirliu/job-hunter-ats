@@ -21,6 +21,9 @@ namespace cpsc_471_project.Models
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        [Key, Column(Order = 2)]
+        public long Order { get; set; }
+
         public Resume Resume { get; set; }
     }
 
@@ -36,5 +39,7 @@ namespace cpsc_471_project.Models
         public DateTime StartDate { get; set; }
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
+        [Display(Name = "Order")]
+        public long Order { get; set; }
     }
 }

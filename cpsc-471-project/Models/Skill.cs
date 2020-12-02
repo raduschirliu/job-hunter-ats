@@ -18,6 +18,8 @@ namespace cpsc_471_project.Models
         [Key, Column(Order = 1)]
         public string Name { get; set; }
         public string Proficiency { get; set; }
+        [Key, Column(Order = 2)]
+        public long Order { get; set; }
 
         public Resume Resume { get; set; }
     }
@@ -29,6 +31,9 @@ namespace cpsc_471_project.Models
         public string Name { get; set; }
         [Display(Name = "Proficiency")]
         public string Proficiency { get; set; }
+
+        [Display(Name = "Order")]
+        public long Order { get; set; }
 
     }
 }

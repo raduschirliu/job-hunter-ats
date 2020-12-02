@@ -22,6 +22,8 @@ namespace cpsc_471_project.Models
         public DateTime DateReceived { get; set; }
         public string value { get; set; }
         public Resume Resume { get; set; }
+        [Key, Column(Order = 2)]
+        public long Order { get; set; }
 
 
     }
@@ -35,6 +37,8 @@ namespace cpsc_471_project.Models
         public DateTime DateReceived { get; set; }
         [Display(Name = "value")]
         public string value { get; set; }
+        [Display(Name = "Order")]
+        public long Order { get; set; }
 
     }
 }

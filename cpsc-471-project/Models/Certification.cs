@@ -20,6 +20,9 @@ namespace cpsc_471_project.Models
 
 		[Key, Column(Order = 1)]
 		public string Name { get; set; }
+		[Key, Column(Order = 2)]
+		public long Order { get; set; }
+
 
 		public string Source { get; set; }
 
@@ -36,6 +39,10 @@ namespace cpsc_471_project.Models
 
 		[Display(Name = "Certification Name")]
 		public string Name { get; set; }
+
+		[Display(Name = "Order")]
+		public long Order { get; set; }
+
 
 		[Display(Name = "Certification Source")]
 		public string Source { get; set; }
