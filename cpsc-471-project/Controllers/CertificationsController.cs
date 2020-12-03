@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/resumes")]
     [ApiController]
     public class CertificationsController : ControllerBase
     {
@@ -21,44 +21,22 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        // GET: api/Certification
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CertificationDTO>>> GetCertification()
+        [HttpPut("{id}/Certifications/{order}")]
+        public async Task<IActionResult> PutCertification(long id, long order, CertificationDTO certificationDTO)
         {
-            var Certification = await _context.Certifications.ToListAsync();
-
-            // NOTE: the select function here is not querying anything
-            // it is simply converting the values to another format
-            // i.e. the functional programming map function is named Select in C#
-            return Certification.Select(x => CertificationToDTO(x)).ToList();
-        }
-
-        // GET: api/Certification/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CertificationDTO>> GetCertification(long id)
-        {
-            var Certification = await _context.Certifications.FindAsync(id);
-
-            if (Certification == null)
-            {
-                return NotFound();
-            }
-
-            return CertificationToDTO(Certification);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCertification(long id, Certification Certification)
-        {
-            CertificationDTO CertificationDTO = CertificationToDTO(Certification);
-            Certification sanitizedCertification = DTOToCertification(CertificationDTO);
+            Certification sanitizedCertification = DTOToCertification(certificationDTO);
             if (id != sanitizedCertification.ResumeId)
             {
                 return BadRequest();
             }
 
+            if (order != sanitizedCertification.Order)
+            {
+                return BadRequest();
+            }
+
             bool newCertification;
-            if (!CertificationExists(id))
+            if (!CertificationExists(id, order))
             {
                 newCertification = true;
                 _context.Certifications.Add(sanitizedCertification);
@@ -75,7 +53,7 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CertificationExists(id))
+                if (!CertificationExists(id, order))
                 {
                     return NotFound();
                 }
@@ -87,64 +65,62 @@ namespace cpsc_471_project.Controllers
 
             if (newCertification)
             {
-                return CreatedAtAction("PutCertification", new { id = sanitizedCertification.ResumeId }, CertificationDTO);
+                return CreatedAtAction("PutCertification", new { id = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
             }
             else
             {
-                return AcceptedAtAction("PutCertification", new { id = sanitizedCertification.ResumeId }, CertificationDTO);
+                return AcceptedAtAction("PutCertification", new { id = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<CertificationDTO>> PostCertification(Certification Certification)
+        [HttpPost("{id}/Certifications")]
+        public async Task<ActionResult<CertificationDTO>> PostCertification(CertificationDTO certificationDTO)
         {
-            CertificationDTO CertificationDTO = CertificationToDTO(Certification);
-            Certification sanitizedCertification = DTOToCertification(CertificationDTO);
+            Certification sanitizedCertification = DTOToCertification(certificationDTO);
             _context.Certifications.Add(sanitizedCertification);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostCertification", new { id = sanitizedCertification.ResumeId }, CertificationDTO);
+            return CreatedAtAction("PostCertification", new { id = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
         }
 
         // DELETE: api/Certification/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<CertificationDTO>> DeleteCertification(long id)
+        [HttpDelete("{id}/Certifications/{order}")]
+        public async Task<ActionResult<CertificationDTO>> DeleteCertification(long id, long order)
         {
-            var Certification = await _context.Certifications.FindAsync(id);
-            if (Certification == null)
+            var certification = await _context.Certifications.FindAsync(id, order);
+            if (certification == null)
             {
                 return NotFound();
             }
 
-            _context.Certifications.Remove(Certification);
+            _context.Certifications.Remove(certification);
             await _context.SaveChangesAsync();
 
-            return CertificationToDTO(Certification);
+            return CertificationToDTO(certification);
         }
 
-        private bool CertificationExists(long id)
+        private bool CertificationExists(long id, long order)
         {
-            return _context.Certifications.Any(e => e.ResumeId == id);
+            return _context.Certifications.Any(e => (e.ResumeId == id) && (e.Order == order));
         }
 
-        private static CertificationDTO CertificationToDTO(Certification Certification) =>
+        private static CertificationDTO CertificationToDTO(Certification certification) =>
             new CertificationDTO
             {
-                ResumeId = Certification.ResumeId,
-                Order = Certification.Order,
-                Name = Certification.Name,
-                Source = Certification.Source
+                ResumeId = certification.ResumeId,
+                Order = certification.Order,
+                Name = certification.Name,
+                Source = certification.Source
             };
 
-        private static Certification DTOToCertification(CertificationDTO CertificationDTO) =>
+        private static Certification DTOToCertification(CertificationDTO certificationDTO) =>
             new Certification
             {
-               ResumeId = CertificationDTO.ResumeId,
-                Order = CertificationDTO.Order,
-                Name = CertificationDTO.Name,
-                Source = CertificationDTO.Source,
+                ResumeId = certificationDTO.ResumeId,
+                Order = certificationDTO.Order,
+                Name = certificationDTO.Name,
+                Source = certificationDTO.Source,
                 Resume = null
-                //Had user = null here Idk what that is for ask radu
             };
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace cpsc_471_project.Migrations
 {
-    public partial class tables : Migration
+    public partial class Auth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -228,111 +228,6 @@ namespace cpsc_471_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Awards",
-                columns: table => new
-                {
-                    ResumeId = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    DateReceived = table.Column<DateTime>(nullable: false),
-                    value = table.Column<string>(nullable: true),
-                    Order = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Awards", x => new { x.ResumeId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_Awards_Resumes_ResumeId",
-                        column: x => x.ResumeId,
-                        principalTable: "Resumes",
-                        principalColumn: "ResumeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Certifications",
-                columns: table => new
-                {
-                    ResumeId = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Order = table.Column<long>(nullable: false),
-                    Source = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Certifications", x => new { x.ResumeId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_Certifications_Resumes_ResumeId",
-                        column: x => x.ResumeId,
-                        principalTable: "Resumes",
-                        principalColumn: "ResumeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Education",
-                columns: table => new
-                {
-                    ResumeId = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    Major = table.Column<string>(nullable: true),
-                    Order = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Education", x => new { x.ResumeId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_Education_Resumes_ResumeId",
-                        column: x => x.ResumeId,
-                        principalTable: "Resumes",
-                        principalColumn: "ResumeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Experiences",
-                columns: table => new
-                {
-                    ResumeId = table.Column<long>(nullable: false),
-                    Company = table.Column<string>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    Order = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Experiences", x => new { x.ResumeId, x.Company });
-                    table.ForeignKey(
-                        name: "FK_Experiences_Resumes_ResumeId",
-                        column: x => x.ResumeId,
-                        principalTable: "Resumes",
-                        principalColumn: "ResumeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Skills",
-                columns: table => new
-                {
-                    ResumeId = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Proficiency = table.Column<string>(nullable: true),
-                    Order = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Skills", x => new { x.ResumeId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_Skills_Resumes_ResumeId",
-                        column: x => x.ResumeId,
-                        principalTable: "Resumes",
-                        principalColumn: "ResumeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Applications",
                 columns: table => new
                 {
@@ -450,28 +345,13 @@ namespace cpsc_471_project.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Awards");
-
-            migrationBuilder.DropTable(
-                name: "Certifications");
-
-            migrationBuilder.DropTable(
-                name: "Education");
-
-            migrationBuilder.DropTable(
-                name: "Experiences");
-
-            migrationBuilder.DropTable(
-                name: "Skills");
-
-            migrationBuilder.DropTable(
                 name: "JobPosts");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Resumes");
 
             migrationBuilder.DropTable(
-                name: "Resumes");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Companies");

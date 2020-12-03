@@ -179,19 +179,19 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("ResumeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Order")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateReceived")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("value")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ResumeId", "Name");
+                    b.HasKey("ResumeId", "Order");
 
                     b.ToTable("Awards");
                 });
@@ -201,16 +201,16 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("ResumeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
                     b.Property<long>("Order")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Source")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ResumeId", "Name");
+                    b.HasKey("ResumeId", "Order");
 
                     b.ToTable("Certifications");
                 });
@@ -253,8 +253,8 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("ResumeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Order")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("TEXT");
@@ -262,13 +262,13 @@ namespace cpsc_471_project.Migrations
                     b.Property<string>("Major")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ResumeId", "Name");
+                    b.HasKey("ResumeId", "Order");
 
                     b.ToTable("Education");
                 });
@@ -278,14 +278,14 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("ResumeId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long>("Order")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Company")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
@@ -293,7 +293,7 @@ namespace cpsc_471_project.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ResumeId", "Company");
+                    b.HasKey("ResumeId", "Order");
 
                     b.ToTable("Experiences");
                 });
@@ -334,6 +334,31 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("JobPosts");
                 });
 
+            modelBuilder.Entity("cpsc_471_project.Models.Project", b =>
+                {
+                    b.Property<long>("ResumeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Order")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ResumeId", "Order");
+
+                    b.ToTable("Projects");
+                });
+
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
                 {
                     b.Property<long>("ResumeId")
@@ -361,16 +386,16 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("ResumeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
                     b.Property<long>("Order")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Proficiency")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ResumeId", "Name");
+                    b.HasKey("ResumeId", "Order");
 
                     b.ToTable("Skills");
                 });
@@ -571,6 +596,15 @@ namespace cpsc_471_project.Migrations
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("RecruiterId");
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Project", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.Resume", "Resume")
+                        .WithMany()
+                        .HasForeignKey("ResumeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>

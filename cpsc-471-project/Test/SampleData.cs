@@ -219,6 +219,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 1,
                 Name = "coding",
                 Proficiency = "weak",
+                Order = 1,
             };
             returnedSkills.Add(testSkill1);
 
@@ -227,6 +228,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 2,
                 Name = "codingggg",
                 Proficiency = "weakkkk",
+                Order = 1,
             };
             returnedSkills.Add(testSkill2);
 
@@ -235,6 +237,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 3,
                 Name = "cccccoding",
                 Proficiency = "wwwwweak",
+                Order = 1,
             };
             returnedSkills.Add(testSkill3);
 
@@ -249,6 +252,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 1,
                 Name = "coding",
                 Source = "weak",
+                Order = 1,
             };
             returnedCertifications.Add(testCertification1);
 
@@ -257,6 +261,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 2,
                 Name = "codingggg",
                 Source = "weakkkk",
+                Order = 1,
             };
             returnedCertifications.Add(testCertification2);
 
@@ -265,6 +270,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 3,
                 Name = "cccccoding",
                 Source = "wwwwweak",
+                Order = 1,
             };
             returnedCertifications.Add(testCertification3);
 
@@ -282,7 +288,9 @@ namespace cpsc_471_project.Test
                 Name = "coding",
                 StartDate = d,
                 EndDate = d,
-                Major = "watermelon"
+                Major = "watermelon",
+                Order = 1,
+
             };
             returnedEducations.Add(testEducation);
 
@@ -292,7 +300,8 @@ namespace cpsc_471_project.Test
                 Name = "codingggggg",
                 StartDate = d,
                 EndDate = d,
-                Major = "waterdddddmelon"
+                Major = "waterdddddmelon",
+                Order = 1,
             };
             returnedEducations.Add(testEducation1);
 
@@ -309,7 +318,8 @@ namespace cpsc_471_project.Test
                 Company = "coding",
                 StartDate = d,
                 EndDate = d,
-                Title = "watermelon"
+                Title = "watermelon",
+                Order = 1,
             };
             returnedExperience.Add(testExperience);
 
@@ -319,7 +329,8 @@ namespace cpsc_471_project.Test
                 Company = "codddddddding",
                 StartDate = d,
                 EndDate = d,
-                Title = "waterrrrrrmelon"
+                Title = "waterrrrrrmelon",
+                Order = 1,
             };
             returnedExperience.Add(testExperience1);
 
@@ -335,7 +346,8 @@ namespace cpsc_471_project.Test
                 ResumeId = 1,
                 Name = "coding",
                 DateReceived = d,
-                value = "watermelon"
+                value = "watermelon",
+                Order = 1,
             };
             returnedAwards.Add(testAward);
 
@@ -344,7 +356,8 @@ namespace cpsc_471_project.Test
                 ResumeId = 2,
                 Name = "codiiiing",
                 DateReceived = d,
-                value = "watermmmmmelon"
+                value = "watermmmmmelon",
+                Order = 1,
             };
             returnedAwards.Add(testAward1);
 

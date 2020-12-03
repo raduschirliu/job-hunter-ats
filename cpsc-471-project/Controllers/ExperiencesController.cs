@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/resumes")]
     [ApiController]
     public class ExperiencesController : ControllerBase
     {
@@ -21,44 +21,22 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        // GET: api/Experience
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ExperienceDTO>>> GetExperience()
+        [HttpPut("{id}/Experiences/{order}")]
+        public async Task<IActionResult> PutExperience(long id, long order, ExperienceDTO experienceDTO)
         {
-            var Experience = await _context.Experiences.ToListAsync();
-
-            // NOTE: the select function here is not querying anything
-            // it is simply converting the values to another format
-            // i.e. the functional programming map function is named Select in C#
-            return Experience.Select(x => ExperienceToDTO(x)).ToList();
-        }
-
-        // GET: api/Experience/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ExperienceDTO>> GetExperience(long id)
-        {
-            var Experience = await _context.Experiences.FindAsync(id);
-
-            if (Experience == null)
-            {
-                return NotFound();
-            }
-
-            return ExperienceToDTO(Experience);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutExperience(long id, Experience Experience)
-        {
-            ExperienceDTO ExperienceDTO = ExperienceToDTO(Experience);
-            Experience sanitizedExperience = DTOToExperience(ExperienceDTO);
+            Experience sanitizedExperience = DTOToExperience(experienceDTO);
             if (id != sanitizedExperience.ResumeId)
             {
                 return BadRequest();
             }
 
+            if (order != sanitizedExperience.Order)
+            {
+                return BadRequest();
+            }
+
             bool newExperience;
-            if (!ExperienceExists(id))
+            if (!ExperienceExists(id, order))
             {
                 newExperience = true;
                 _context.Experiences.Add(sanitizedExperience);
@@ -75,7 +53,7 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ExperienceExists(id))
+                if (!ExperienceExists(id, order))
                 {
                     return NotFound();
                 }
@@ -87,66 +65,65 @@ namespace cpsc_471_project.Controllers
 
             if (newExperience)
             {
-                return CreatedAtAction("PutExperience", new { id = sanitizedExperience.ResumeId }, ExperienceDTO);
+                return CreatedAtAction("PutExperience", new { id = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
             }
             else
             {
-                return AcceptedAtAction("PutExperience", new { id = sanitizedExperience.ResumeId }, ExperienceDTO);
+                return AcceptedAtAction("PutExperience", new { id = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ExperienceDTO>> PostExperience(Experience Experience)
+        [HttpPost("{id}/Experiences")]
+        public async Task<ActionResult<ExperienceDTO>> PostExperience(ExperienceDTO experienceDTO)
         {
-            ExperienceDTO ExperienceDTO = ExperienceToDTO(Experience);
-            Experience sanitizedExperience = DTOToExperience(ExperienceDTO);
+            Experience sanitizedExperience = DTOToExperience(experienceDTO);
             _context.Experiences.Add(sanitizedExperience);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostExperience", new { id = sanitizedExperience.ResumeId }, ExperienceDTO);
+            return CreatedAtAction("PostExperience", new { id = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
         }
 
         // DELETE: api/Experience/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ExperienceDTO>> DeleteExperience(long id)
+        [HttpDelete("{id}/Experiences/{order}")]
+        public async Task<ActionResult<ExperienceDTO>> DeleteExperience(long id, long order)
         {
-            var Experience = await _context.Experiences.FindAsync(id);
-            if (Experience == null)
+            var experience = await _context.Experiences.FindAsync(id, order);
+            if (experience == null)
             {
                 return NotFound();
             }
 
-            _context.Experiences.Remove(Experience);
+            _context.Experiences.Remove(experience);
             await _context.SaveChangesAsync();
 
-            return ExperienceToDTO(Experience);
+            return ExperienceToDTO(experience);
         }
 
-        private bool ExperienceExists(long id)
+        private bool ExperienceExists(long id, long order)
         {
-            return _context.Experiences.Any(e => e.ResumeId == id);
+            return _context.Experiences.Any(e => (e.ResumeId == id) && (e.Order == order));
         }
 
-        private static ExperienceDTO ExperienceToDTO(Experience Experience) =>
+        private static ExperienceDTO ExperienceToDTO(Experience experience) =>
             new ExperienceDTO
             {
-                ResumeId = Experience.ResumeId,
-                Order = Experience.Order,
-                Title = Experience.Title,
-                StartDate = Experience.StartDate,
-                EndDate = Experience.EndDate,
-                Company = Experience.Company
+                ResumeId = experience.ResumeId,
+                Order = experience.Order,
+                Title = experience.Title,
+                Company = experience.Company,
+                StartDate = experience.StartDate,
+                EndDate = experience.EndDate
             };
 
-        private static Experience DTOToExperience(ExperienceDTO ExperienceDTO) =>
+        private static Experience DTOToExperience(ExperienceDTO experienceDTO) =>
             new Experience
             {
-                ResumeId = ExperienceDTO.ResumeId,
-                Order = ExperienceDTO.Order,
-                Title = ExperienceDTO.Title,
-                StartDate = ExperienceDTO.StartDate,
-                EndDate = ExperienceDTO.EndDate,
-                Company = ExperienceDTO.Company,
+                ResumeId = experienceDTO.ResumeId,
+                Order = experienceDTO.Order,
+                Title = experienceDTO.Title,
+                Company = experienceDTO.Company,
+                StartDate = experienceDTO.StartDate,
+                EndDate = experienceDTO.EndDate,
                 Resume = null
             };
     }

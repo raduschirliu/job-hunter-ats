@@ -10,55 +10,33 @@ using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/resumes")]
     [ApiController]
-    public class EducationController : ControllerBase
+    public class EducationsController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public EducationController(JobHunterDBContext context)
+        public EducationsController(JobHunterDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Education
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<EducationDTO>>> GetEducation()
+        [HttpPut("{id}/Educations/{order}")]
+        public async Task<IActionResult> PutEducation(long id, long order, EducationDTO educationDTO)
         {
-            var Education = await _context.Education.ToListAsync();
-
-            // NOTE: the select function here is not querying anything
-            // it is simply converting the values to another format
-            // i.e. the functional programming map function is named Select in C#
-            return Education.Select(x => EducationToDTO(x)).ToList();
-        }
-
-        // GET: api/Education/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<EducationDTO>> GetEducation(long id)
-        {
-            var Education = await _context.Education.FindAsync(id);
-
-            if (Education == null)
-            {
-                return NotFound();
-            }
-
-            return EducationToDTO(Education);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEducation(long id, Education Education)
-        {
-            EducationDTO EducationDTO = EducationToDTO(Education);
-            Education sanitizedEducation = DTOToEducation(EducationDTO);
+            Education sanitizedEducation = DTOToEducation(educationDTO);
             if (id != sanitizedEducation.ResumeId)
             {
                 return BadRequest();
             }
 
+            if (order != sanitizedEducation.Order)
+            {
+                return BadRequest();
+            }
+
             bool newEducation;
-            if (!EducationExists(id))
+            if (!EducationExists(id, order))
             {
                 newEducation = true;
                 _context.Education.Add(sanitizedEducation);
@@ -75,7 +53,7 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EducationExists(id))
+                if (!EducationExists(id, order))
                 {
                     return NotFound();
                 }
@@ -87,66 +65,65 @@ namespace cpsc_471_project.Controllers
 
             if (newEducation)
             {
-                return CreatedAtAction("PutEducation", new { id = sanitizedEducation.ResumeId }, EducationDTO);
+                return CreatedAtAction("PutEducation", new { id = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
             }
             else
             {
-                return AcceptedAtAction("PutEducation", new { id = sanitizedEducation.ResumeId }, EducationDTO);
+                return AcceptedAtAction("PutEducation", new { id = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<EducationDTO>> PostEducation(Education Education)
+        [HttpPost("{id}/Educations")]
+        public async Task<ActionResult<EducationDTO>> PostEducation(EducationDTO educationDTO)
         {
-            EducationDTO EducationDTO = EducationToDTO(Education);
-            Education sanitizedEducation = DTOToEducation(EducationDTO);
+            Education sanitizedEducation = DTOToEducation(educationDTO);
             _context.Education.Add(sanitizedEducation);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostEducation", new { id = sanitizedEducation.ResumeId }, EducationDTO);
+            return CreatedAtAction("PostEducation", new { id = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
         }
 
         // DELETE: api/Education/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<EducationDTO>> DeleteEducation(long id)
+        [HttpDelete("{id}/Educations/{order}")]
+        public async Task<ActionResult<EducationDTO>> DeleteEducation(long id, long order)
         {
-            var Education = await _context.Education.FindAsync(id);
-            if (Education == null)
+            var education = await _context.Education.FindAsync(id, order);
+            if (education == null)
             {
                 return NotFound();
             }
 
-            _context.Education.Remove(Education);
+            _context.Education.Remove(education);
             await _context.SaveChangesAsync();
 
-            return EducationToDTO(Education);
+            return EducationToDTO(education);
         }
 
-        private bool EducationExists(long id)
+        private bool EducationExists(long id, long order)
         {
-            return _context.Education.Any(e => e.ResumeId == id);
+            return _context.Education.Any(e => (e.ResumeId == id) && (e.Order == order));
         }
 
-        private static EducationDTO EducationToDTO(Education Education) =>
+        private static EducationDTO EducationToDTO(Education education) =>
             new EducationDTO
             {
-                ResumeId = Education.ResumeId,
-                Order = Education.Order,
-                Name = Education.Name,
-                StartDate = Education.StartDate,
-                EndDate = Education.EndDate,
-                Major = Education.Major
+                ResumeId = education.ResumeId,
+                Order = education.Order,
+                Name = education.Name,
+                StartDate = education.StartDate,
+                EndDate = education.EndDate,
+                Major = education.Major
             };
 
-        private static Education DTOToEducation(EducationDTO EducationDTO) =>
+        private static Education DTOToEducation(EducationDTO educationDTO) =>
             new Education
             {
-                ResumeId = EducationDTO.ResumeId,
-                Order = EducationDTO.Order,
-                Name = EducationDTO.Name,
-                StartDate = EducationDTO.StartDate,
-                EndDate = EducationDTO.EndDate,
-                Major = EducationDTO.Major,
+                ResumeId = educationDTO.ResumeId,
+                Order = educationDTO.Order,
+                Name = educationDTO.Name,
+                StartDate = educationDTO.StartDate,
+                EndDate = educationDTO.EndDate,
+                Major = educationDTO.Major,
                 Resume = null
             };
     }

@@ -9,8 +9,8 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201202225200_tables")]
-    partial class tables
+    [Migration("20201126204529_Auth")]
+    partial class Auth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -176,47 +176,6 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("Applications");
                 });
 
-            modelBuilder.Entity("cpsc_471_project.Models.Award", b =>
-                {
-                    b.Property<long>("ResumeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateReceived")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ResumeId", "Name");
-
-                    b.ToTable("Awards");
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Certification", b =>
-                {
-                    b.Property<long>("ResumeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Source")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ResumeId", "Name");
-
-                    b.ToTable("Certifications");
-                });
-
             modelBuilder.Entity("cpsc_471_project.Models.Company", b =>
                 {
                     b.Property<long>("CompanyId")
@@ -248,56 +207,6 @@ namespace cpsc_471_project.Migrations
                     b.HasIndex("AdminId");
 
                     b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Education", b =>
-                {
-                    b.Property<long>("ResumeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Major")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ResumeId", "Name");
-
-                    b.ToTable("Education");
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Experience", b =>
-                {
-                    b.Property<long>("ResumeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Company")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ResumeId", "Company");
-
-                    b.ToTable("Experiences");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.JobPost", b =>
@@ -356,25 +265,6 @@ namespace cpsc_471_project.Migrations
                     b.HasIndex("CandidateId");
 
                     b.ToTable("Resumes");
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Skill", b =>
-                {
-                    b.Property<long>("ResumeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Proficiency")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ResumeId", "Name");
-
-                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.User", b =>
@@ -517,47 +407,11 @@ namespace cpsc_471_project.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("cpsc_471_project.Models.Award", b =>
-                {
-                    b.HasOne("cpsc_471_project.Models.Resume", "Resume")
-                        .WithMany()
-                        .HasForeignKey("ResumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Certification", b =>
-                {
-                    b.HasOne("cpsc_471_project.Models.Resume", "Resume")
-                        .WithMany()
-                        .HasForeignKey("ResumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("cpsc_471_project.Models.Company", b =>
                 {
                     b.HasOne("cpsc_471_project.Models.User", "Admin")
                         .WithMany()
                         .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Education", b =>
-                {
-                    b.HasOne("cpsc_471_project.Models.Resume", "Resume")
-                        .WithMany()
-                        .HasForeignKey("ResumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Experience", b =>
-                {
-                    b.HasOne("cpsc_471_project.Models.Resume", "Resume")
-                        .WithMany()
-                        .HasForeignKey("ResumeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -580,15 +434,6 @@ namespace cpsc_471_project.Migrations
                     b.HasOne("cpsc_471_project.Models.User", "Candidate")
                         .WithMany()
                         .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Skill", b =>
-                {
-                    b.HasOne("cpsc_471_project.Models.Resume", "Resume")
-                        .WithMany()
-                        .HasForeignKey("ResumeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

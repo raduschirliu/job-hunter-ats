@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/resumes")]
     [ApiController]
     public class SkillsController : ControllerBase
     {
@@ -21,44 +21,22 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        // GET: api/Skill
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<SkillDTO>>> GetSkill()
+        [HttpPut("{id}/Skills/{order}")]
+        public async Task<IActionResult> PutSkill(long id, long order, SkillDTO skillDTO)
         {
-            var Skill = await _context.Skills.ToListAsync();
-
-            // NOTE: the select function here is not querying anything
-            // it is simply converting the values to another format
-            // i.e. the functional programming map function is named Select in C#
-            return Skill.Select(x => SkillToDTO(x)).ToList();
-        }
-
-        // GET: api/Skill/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SkillDTO>> GetSkill(long id)
-        {
-            var Skill = await _context.Skills.FindAsync(id);
-
-            if (Skill == null)
-            {
-                return NotFound();
-            }
-
-            return SkillToDTO(Skill);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSkill(long id, Skill Skill)
-        {
-            SkillDTO SkillDTO = SkillToDTO(Skill);
-            Skill sanitizedSkill = DTOToSkill(SkillDTO);
+            Skill sanitizedSkill = DTOToSkill(skillDTO);
             if (id != sanitizedSkill.ResumeId)
             {
                 return BadRequest();
             }
 
+            if (order != sanitizedSkill.Order)
+            {
+                return BadRequest();
+            }
+
             bool newSkill;
-            if (!SkillExists(id))
+            if (!SkillExists(id, order))
             {
                 newSkill = true;
                 _context.Skills.Add(sanitizedSkill);
@@ -75,7 +53,7 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SkillExists(id))
+                if (!SkillExists(id, order))
                 {
                     return NotFound();
                 }
@@ -87,62 +65,61 @@ namespace cpsc_471_project.Controllers
 
             if (newSkill)
             {
-                return CreatedAtAction("PutSkill", new { id = sanitizedSkill.ResumeId }, SkillDTO);
+                return CreatedAtAction("PutSkill", new { id = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
             }
             else
             {
-                return AcceptedAtAction("PutSkill", new { id = sanitizedSkill.ResumeId }, SkillDTO);
+                return AcceptedAtAction("PutSkill", new { id = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<SkillDTO>> PostSkill(Skill Skill)
+        [HttpPost("{id}/Skills")]
+        public async Task<ActionResult<SkillDTO>> PostSkill(SkillDTO skillDTO)
         {
-            SkillDTO SkillDTO = SkillToDTO(Skill);
-            Skill sanitizedSkill = DTOToSkill(SkillDTO);
+            Skill sanitizedSkill = DTOToSkill(skillDTO);
             _context.Skills.Add(sanitizedSkill);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostSkill", new { id = sanitizedSkill.ResumeId }, SkillDTO);
+            return CreatedAtAction("PostSkill", new { id = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
         }
 
         // DELETE: api/Skill/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<SkillDTO>> DeleteSkill(long id)
+        [HttpDelete("{id}/Skills/{order}")]
+        public async Task<ActionResult<SkillDTO>> DeleteSkill(long id, long order)
         {
-            var Skill = await _context.Skills.FindAsync(id);
-            if (Skill == null)
+            var skill = await _context.Skills.FindAsync(id, order);
+            if (skill == null)
             {
                 return NotFound();
             }
 
-            _context.Skills.Remove(Skill);
+            _context.Skills.Remove(skill);
             await _context.SaveChangesAsync();
 
-            return SkillToDTO(Skill);
+            return SkillToDTO(skill);
         }
 
-        private bool SkillExists(long id)
+        private bool SkillExists(long id, long order)
         {
-            return _context.Skills.Any(e => e.ResumeId == id);
+            return _context.Skills.Any(e => (e.ResumeId == id) && (e.Order == order));
         }
 
-        private static SkillDTO SkillToDTO(Skill Skill) =>
+        private static SkillDTO SkillToDTO(Skill skill) =>
             new SkillDTO
             {
-                ResumeId = Skill.ResumeId,
-                Order = Skill.Order,
-                Name = Skill.Name,
-                Proficiency = Skill.Proficiency
+                ResumeId = skill.ResumeId,
+                Order = skill.Order,
+                Name = skill.Name,
+                Proficiency = skill.Proficiency
             };
 
-        private static Skill DTOToSkill(SkillDTO SkillDTO) =>
+        private static Skill DTOToSkill(SkillDTO skillDTO) =>
             new Skill
             {
-                ResumeId = SkillDTO.ResumeId,
-                Order = SkillDTO.Order,
-                Name = SkillDTO.Name,
-                Proficiency = SkillDTO.Proficiency,
+                ResumeId = skillDTO.ResumeId,
+                Order = skillDTO.Order,
+                Name = skillDTO.Name,
+                Proficiency = skillDTO.Proficiency,
                 Resume = null
             };
     }
