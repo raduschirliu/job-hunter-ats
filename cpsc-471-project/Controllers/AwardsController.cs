@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/resumes")]
     [ApiController]
     public class AwardsController : ControllerBase
     {
@@ -21,44 +21,22 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        // GET: api/Award
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AwardDTO>>> GetAward()
+        [HttpPut("{id}/awards/{order}")]
+        public async Task<IActionResult> PutAward(long id, long order, AwardDTO awardDTO)
         {
-            var Award = await _context.Awards.ToListAsync();
-
-            // NOTE: the select function here is not querying anything
-            // it is simply converting the values to another format
-            // i.e. the functional programming map function is named Select in C#
-            return Award.Select(x => AwardToDTO(x)).ToList();
-        }
-
-        // GET: api/Award/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AwardDTO>> GetAward(long id)
-        {
-            var Award = await _context.Awards.FindAsync(id);
-
-            if (Award == null)
-            {
-                return NotFound();
-            }
-
-            return AwardToDTO(Award);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAward(long id, Award Award)
-        {
-            AwardDTO AwardDTO = AwardToDTO(Award);
-            Award sanitizedAward = DTOToAward(AwardDTO);
+            Award sanitizedAward = DTOToAward(awardDTO);
             if (id != sanitizedAward.ResumeId)
             {
                 return BadRequest();
             }
 
+            if (order != sanitizedAward.Order)
+            {
+                return BadRequest();
+            }
+
             bool newAward;
-            if (!AwardExists(id))
+            if (!AwardExists(id, order))
             {
                 newAward = true;
                 _context.Awards.Add(sanitizedAward);
@@ -75,7 +53,7 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AwardExists(id))
+                if (!AwardExists(id, order))
                 {
                     return NotFound();
                 }
@@ -87,64 +65,63 @@ namespace cpsc_471_project.Controllers
 
             if (newAward)
             {
-                return CreatedAtAction("PutAward", new { id = sanitizedAward.ResumeId }, AwardDTO);
+                return CreatedAtAction("PutAward", new { id = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
             }
             else
             {
-                return AcceptedAtAction("PutAward", new { id = sanitizedAward.ResumeId }, AwardDTO);
+                return AcceptedAtAction("PutAward", new { id = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<AwardDTO>> PostAward(Award Award)
+        [HttpPost("{id}/awards")]
+        public async Task<ActionResult<AwardDTO>> PostAward(AwardDTO awardDTO)
         {
-            AwardDTO AwardDTO = AwardToDTO(Award);
-            Award sanitizedAward = DTOToAward(AwardDTO);
+            Award sanitizedAward = DTOToAward(awardDTO);
             _context.Awards.Add(sanitizedAward);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostAward", new { id = sanitizedAward.ResumeId }, AwardDTO);
+            return CreatedAtAction("PostAward", new { id = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
         }
 
         // DELETE: api/Award/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<AwardDTO>> DeleteAward(long id)
+        [HttpDelete("{id}/awards/{order}")]
+        public async Task<ActionResult<AwardDTO>> DeleteAward(long id, long order)
         {
-            var Award = await _context.Awards.FindAsync(id);
-            if (Award == null)
+            var award = await _context.Awards.FindAsync(id, order);
+            if (award == null)
             {
                 return NotFound();
             }
 
-            _context.Awards.Remove(Award);
+            _context.Awards.Remove(award);
             await _context.SaveChangesAsync();
 
-            return AwardToDTO(Award);
+            return AwardToDTO(award);
         }
 
-        private bool AwardExists(long id)
+        private bool AwardExists(long id, long order)
         {
-            return _context.Awards.Any(e => e.ResumeId == id);
+            return _context.Awards.Any(e => (e.ResumeId == id) && (e.Order == order));
         }
 
-        private static AwardDTO AwardToDTO(Award Award) =>
+        private static AwardDTO AwardToDTO(Award award) =>
             new AwardDTO
             {
-                ResumeId = Award.ResumeId,
-                Order = Award.Order,
-                Name = Award.Name,
-                DateReceived = Award.DateReceived,
-                value = Award.value
+                ResumeId = award.ResumeId,
+                Order = award.Order,
+                Name = award.Name,
+                DateReceived = award.DateReceived,
+                value = award.value
             };
 
-        private static Award DTOToAward(AwardDTO AwardDTO) =>
+        private static Award DTOToAward(AwardDTO awardDTO) =>
             new Award
             {
-                ResumeId = AwardDTO.ResumeId,
-                Order = AwardDTO.Order,
-                Name = AwardDTO.Name,
-                DateReceived = AwardDTO.DateReceived,
-                value = AwardDTO.value,
+                ResumeId = awardDTO.ResumeId,
+                Order = awardDTO.Order,
+                Name = awardDTO.Name,
+                DateReceived = awardDTO.DateReceived,
+                value = awardDTO.value,
                 Resume = null
             };
     }

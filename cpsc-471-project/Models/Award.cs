@@ -18,12 +18,11 @@ namespace cpsc_471_project.Models
         [Key, Column(Order = 0)]
         public long ResumeId { get; set; }
         [Key, Column(Order = 1)]
+        public long Order { get; set; }
         public string Name { get; set; }
         public DateTime DateReceived { get; set; }
         public string value { get; set; }
         public Resume Resume { get; set; }
-        [Key, Column(Order = 2)]
-        public long Order { get; set; }
 
 
     }
@@ -31,14 +30,14 @@ namespace cpsc_471_project.Models
     {
         [Display(Name = "Resume Id")]
         public long ResumeId { get; set; }
+        [Display(Name = "Order")]
+        public long Order { get; set; }
         [Display(Name = "Award Name")]
         public string Name { get; set; }
         [Display(Name = "Date Received")]
         public DateTime DateReceived { get; set; }
         [Display(Name = "value")]
         public string value { get; set; }
-        [Display(Name = "Order")]
-        public long Order { get; set; }
 
     }
 }
