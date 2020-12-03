@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/companies
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompany()
         {
@@ -35,6 +37,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/companies/{id}
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<CompanyDTO>> GetCompany(long id)
         {
@@ -49,6 +52,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // PATCH: api/companies/{id}
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchCompany(long id, CompanyDTO companyDTO)
         {
@@ -71,6 +75,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // POST: api/companies
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<CompanyDTO>> PostCompany(CompanyDTO companyDTO)
         {
@@ -82,6 +87,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // DELETE: api/companies/{id}
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<CompanyDTO>> DeleteCompany(long id)
         {
