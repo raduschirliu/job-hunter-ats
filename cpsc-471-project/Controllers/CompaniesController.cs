@@ -22,7 +22,7 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        // GET: api/Companies
+        // GET: api/companies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompany()
         {
@@ -34,7 +34,7 @@ namespace cpsc_471_project.Controllers
             return companies.Select(x => CompanyToDTO(x)).ToList();
         }
 
-        // GET: api/Companies/5
+        // GET: api/companies/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<CompanyDTO>> GetCompany(long id)
         {
@@ -48,53 +48,29 @@ namespace cpsc_471_project.Controllers
             return CompanyToDTO(company);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCompany(long id, CompanyDTO companyDTO)
+        // PATCH: api/companies/{id}
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchCompany(long id, CompanyDTO companyDTO)
         {
             Company sanitizedCompany = DTOToCompany(companyDTO);
+
             if (id != sanitizedCompany.CompanyId)
             {
                 return BadRequest();
             }
 
-            bool newCompany;
             if (!CompanyExists(id))
             {
-                newCompany = true;
-                _context.Companies.Add(sanitizedCompany);
-            }
-            else
-            {
-                newCompany = false;
-                _context.Entry(sanitizedCompany).State = EntityState.Modified;
+                return NotFound();
             }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CompanyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.Update(sanitizedCompany);
+            await _context.SaveChangesAsync();
 
-            if (newCompany)
-            {
-                return CreatedAtAction("PutCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
-            }
-            else
-            {
-                return AcceptedAtAction("PutCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
-            }
+            return AcceptedAtAction("PatchCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
         }
 
+        // POST: api/companies
         [HttpPost]
         public async Task<ActionResult<CompanyDTO>> PostCompany(CompanyDTO companyDTO)
         {
@@ -105,7 +81,7 @@ namespace cpsc_471_project.Controllers
             return CreatedAtAction("PostCompany", new { id = sanitizedCompany.CompanyId }, sanitizedCompany);
         }
 
-        // DELETE: api/Companies/5
+        // DELETE: api/companies/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult<CompanyDTO>> DeleteCompany(long id)
         {
