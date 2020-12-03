@@ -69,7 +69,7 @@ namespace cpsc_471_project.Test
                 Id = "admin-user",
                 FirstName = "Bob",
                 LastName = "Ross",
-                UserName = "bob-ross",
+                UserName = "admin-user",
                 Email = "bobross@12asgaetrfasfasf.com",
                 PhoneNumber = "555-555-5555",
             };
@@ -78,7 +78,7 @@ namespace cpsc_471_project.Test
 
             User recruiterUser = new User()
             {
-                Id = "recruiter-user-1",
+                Id = "recruiter-1",
                 FirstName = "Recruiter",
                 LastName = "Person",
                 UserName = "recruiter-1",
@@ -90,33 +90,36 @@ namespace cpsc_471_project.Test
 
             await userManager.CreateAsync(new User()
             {
-                Id = "user-1",
+                Id = "bob-smith",
                 FirstName = "Bob",
                 LastName = "Smith",
                 UserName = "bob-smith",
                 Email = "bobsmith12345@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "555-555-5555",
             }, "password");
+            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Candidate);
 
             await userManager.CreateAsync(new User()
             {
-                Id = "user-2",
+                Id = "caitlyn-brown",
                 FirstName = "Caitlyn",
                 LastName = "Brown",
                 UserName = "caitlyn-brown",
                 Email = "caitlynbrown1@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "444-444-4444",
             }, "password");
+            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Candidate);
 
             await userManager.CreateAsync(new User()
             {
-                Id = "user-3",
+                Id = "evan-johnson",
                 FirstName = "Evan",
                 LastName = "Johnson",
                 UserName = "evan-johnson",
                 Email = "evanjohnson@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "333-333-3333",
             }, "password");
+            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Candidate);
         }
         public static List<Company> SampleCompanyData()
         {
