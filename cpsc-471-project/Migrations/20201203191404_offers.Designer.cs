@@ -9,8 +9,8 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201126204529_Auth")]
-    partial class Auth
+    [Migration("20201203191404_offers")]
+    partial class offers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -245,6 +245,26 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("JobPosts");
                 });
 
+            modelBuilder.Entity("cpsc_471_project.Models.Offer", b =>
+                {
+                    b.Property<long>("ApplicationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("OfferId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AcceptanceEndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(1024);
+
+                    b.HasKey("ApplicationId", "OfferId");
+
+                    b.ToTable("Offers");
+                });
+
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
                 {
                     b.Property<long>("ResumeId")
@@ -427,6 +447,15 @@ namespace cpsc_471_project.Migrations
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("RecruiterId");
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Offer", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
