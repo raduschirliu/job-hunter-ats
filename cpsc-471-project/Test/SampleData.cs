@@ -88,7 +88,7 @@ namespace cpsc_471_project.Test
             await userManager.CreateAsync(recruiterUser, "password");
             await userManager.AddToRoleAsync(recruiterUser, UserRoles.Recruiter);
 
-            await userManager.CreateAsync(new User()
+            User candidateUser1 = new User()
             {
                 Id = "bob-smith",
                 FirstName = "Bob",
@@ -96,10 +96,11 @@ namespace cpsc_471_project.Test
                 UserName = "bob-smith",
                 Email = "bobsmith12345@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "555-555-5555",
-            }, "password");
-            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Candidate);
+            };
+            await userManager.CreateAsync(candidateUser1, "password");
+            await userManager.AddToRoleAsync(candidateUser1, UserRoles.Candidate);
 
-            await userManager.CreateAsync(new User()
+            User candidateUser2 = new User()
             {
                 Id = "caitlyn-brown",
                 FirstName = "Caitlyn",
@@ -107,19 +108,20 @@ namespace cpsc_471_project.Test
                 UserName = "caitlyn-brown",
                 Email = "caitlynbrown1@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "444-444-4444",
-            }, "password");
-            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Candidate);
+            };
+            await userManager.CreateAsync(candidateUser2, "password");
+            await userManager.AddToRoleAsync(candidateUser2, UserRoles.Candidate);
 
-            await userManager.CreateAsync(new User()
-            {
+            User candidateUser3 = new User() {
                 Id = "evan-johnson",
                 FirstName = "Evan",
                 LastName = "Johnson",
                 UserName = "evan-johnson",
                 Email = "evanjohnson@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "333-333-3333",
-            }, "password");
-            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Candidate);
+            };
+            await userManager.CreateAsync(candidateUser3, "password");
+            await userManager.AddToRoleAsync(candidateUser3, UserRoles.Candidate);
         }
         public static List<Company> SampleCompanyData()
         {
