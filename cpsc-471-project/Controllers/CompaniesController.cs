@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cpsc_471_project.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CompaniesController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
@@ -121,7 +122,7 @@ namespace cpsc_471_project.Controllers
                 Description = companyDTO.Description,
                 Industry = companyDTO.Industry,
                 AdminId = companyDTO.AdminId,
-                User = null
+                Admin = null
             };
     }
 }

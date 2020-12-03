@@ -66,9 +66,49 @@ _Some notes about Migrations:_
 1. Download the Postman Desktop App
 2. Sign in to the app (create an account if you haven't already)
 3. Turn off SSL certificate verification via File > Settings > SSL Certificate Verification 
-   - Since the SSL certificate is local, it can't be verified. make sure to turn this setting back on if you are hitting public endpoints (we won't be for this project))
+   - Since the SSL certificate is local, it can't be verified. make sure to turn this setting back on if you are hitting public endpoints (we won't be for this project)
 4. Run cpsc_471_project using the play button in the 2nd toolbar (beside "Any CPU"). If the button is not visible, you may have to switch to Solution View in the Solution Explorer
-5. Enter the desired endpoint in Postman and hit "Send" (sample endpoint: https://localhost:44397/weatherforecast)
+5. Enter the desired endpoint URL in Postman and add the authorization info (more info in the [Authorizing Requests](#Authorizing-Requests) section)
+6. Enter the relevant parameters in the body section of Postman. For example, the POST endpoint `https://localhost:5001/api/companies` requires information in the following form
+```json
+{
+    "companyid": 1,
+    "name": "Test Company 1",
+    "adminid": "admin-user"
+}
+```
+7. Hit Send!
+   - Note that since SSL certificate is turned off, you should see a "Warning: Unable to verify the first certificate" that you can ignore during development if the server is on your local machine (obviously don't ignore this if you are hitting non-local endpoints though)
+
+### Authorizing Requests
+1. Upon startup, three roles will be created: Admin, Recruiter, and User
+    (1.1. You can add some sample users to the roles via the instructions in the file in the `cpsc-471-project\cpsc-471-project\Test\SampleData.cs` files)
+2. We are authenticating requests using Bearer Tokens. To get a bearer token, hit the endpoint `api/auth/login` with a request of the form:
+```json
+{
+    "username": "yourusername",
+    "password": "yourpassword"
+}
+```
+3. The endpoint will return a Bearer Token and its expiration date.
+4. To use the bearer token in Postman, go to Authorization and select Bearer Token, then paste the bearer token
+5. You can then make an API call as described in line 5 and beyond in [Updating the Database Schema](#Instructions-for-hitting-API-Endpoints)
+
+
+### Adding New Users
+1. To add a new user, use the `api/auth/register` endpoint via Postman
+2. The body of your request should be of the form:
+```json
+{
+    "username": "newusername",
+    "password": "newpassword",
+    "firstname": "newfirstname",
+    "lastname": "newlastname"
+}
+```
+3. The new user will automatically be created with the candidate role and a Bearer Token will be returned.
+
+Note that there are several other functions in `AuthController.cs` that allow you to change user roles, test user validity, etc.
 
 
 ### Troubleshooting

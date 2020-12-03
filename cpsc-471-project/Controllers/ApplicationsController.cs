@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using cpsc_471_project.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.EntityFrameworkCore;
+
+using cpsc_471_project.Models;
 
 namespace cpsc_471_project.Controllers
 {
@@ -14,10 +16,12 @@ namespace cpsc_471_project.Controllers
     [ApiController]
     public class ApplicationsController : ControllerBase
     {
+        UserManager<User> userManager;
         private readonly JobHunterDBContext _context;
 
-        public ApplicationsController(JobHunterDBContext context)
+        public ApplicationsController(JobHunterDBContext context, UserManager<User> userManager)
         {
+            this.userManager = userManager;
             _context = context;
         }
 
