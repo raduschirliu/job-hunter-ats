@@ -12,11 +12,11 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SkillController : ControllerBase
+    public class SkillsController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public SkillController(JobHunterDBContext context)
+        public SkillsController(JobHunterDBContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SkillDTO>>> GetSkill()
         {
-            var Skill = await _context.Skill.ToListAsync();
+            var Skill = await _context.Skills.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<SkillDTO>> GetSkill(long id)
         {
-            var Skill = await _context.Skill.FindAsync(id);
+            var Skill = await _context.Skills.FindAsync(id);
 
             if (Skill == null)
             {
@@ -61,7 +61,7 @@ namespace cpsc_471_project.Controllers
             if (!SkillExists(id))
             {
                 newSkill = true;
-                _context.Skill.Add(sanitizedSkill);
+                _context.Skills.Add(sanitizedSkill);
             }
             else
             {
@@ -100,7 +100,7 @@ namespace cpsc_471_project.Controllers
         {
             SkillDTO SkillDTO = SkillToDTO(Skill);
             Skill sanitizedSkill = DTOToSkill(SkillDTO);
-            _context.Skill.Add(sanitizedSkill);
+            _context.Skills.Add(sanitizedSkill);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostSkill", new { id = sanitizedSkill.ResumeId }, SkillDTO);
@@ -110,13 +110,13 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<SkillDTO>> DeleteSkill(long id)
         {
-            var Skill = await _context.Skill.FindAsync(id);
+            var Skill = await _context.Skills.FindAsync(id);
             if (Skill == null)
             {
                 return NotFound();
             }
 
-            _context.Skill.Remove(Skill);
+            _context.Skills.Remove(Skill);
             await _context.SaveChangesAsync();
 
             return SkillToDTO(Skill);
@@ -124,7 +124,7 @@ namespace cpsc_471_project.Controllers
 
         private bool SkillExists(long id)
         {
-            return _context.Skill.Any(e => e.ResumeId == id);
+            return _context.Skills.Any(e => e.ResumeId == id);
         }
 
         private static SkillDTO SkillToDTO(Skill Skill) =>

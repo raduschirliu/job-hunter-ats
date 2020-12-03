@@ -12,11 +12,11 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AwardController : ControllerBase
+    public class AwardsController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public AwardController(JobHunterDBContext context)
+        public AwardsController(JobHunterDBContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AwardDTO>>> GetAward()
         {
-            var Award = await _context.Award.ToListAsync();
+            var Award = await _context.Awards.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AwardDTO>> GetAward(long id)
         {
-            var Award = await _context.Award.FindAsync(id);
+            var Award = await _context.Awards.FindAsync(id);
 
             if (Award == null)
             {
@@ -61,7 +61,7 @@ namespace cpsc_471_project.Controllers
             if (!AwardExists(id))
             {
                 newAward = true;
-                _context.Award.Add(sanitizedAward);
+                _context.Awards.Add(sanitizedAward);
             }
             else
             {
@@ -100,7 +100,7 @@ namespace cpsc_471_project.Controllers
         {
             AwardDTO AwardDTO = AwardToDTO(Award);
             Award sanitizedAward = DTOToAward(AwardDTO);
-            _context.Award.Add(sanitizedAward);
+            _context.Awards.Add(sanitizedAward);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostAward", new { id = sanitizedAward.ResumeId }, AwardDTO);
@@ -110,13 +110,13 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<AwardDTO>> DeleteAward(long id)
         {
-            var Award = await _context.Award.FindAsync(id);
+            var Award = await _context.Awards.FindAsync(id);
             if (Award == null)
             {
                 return NotFound();
             }
 
-            _context.Award.Remove(Award);
+            _context.Awards.Remove(Award);
             await _context.SaveChangesAsync();
 
             return AwardToDTO(Award);
@@ -124,7 +124,7 @@ namespace cpsc_471_project.Controllers
 
         private bool AwardExists(long id)
         {
-            return _context.Award.Any(e => e.ResumeId == id);
+            return _context.Awards.Any(e => e.ResumeId == id);
         }
 
         private static AwardDTO AwardToDTO(Award Award) =>

@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using cpsc_471_project.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+
+using cpsc_471_project.Authentication;
+using cpsc_471_project.Models;
 
 
 /*
@@ -32,120 +36,144 @@ namespace cpsc_471_project.Test
 {
     public class SampleData
     {
-        public static void AddSampleData(JobHunterDBContext _context)
+        public static async Task AddSampleData(JobHunterDBContext _context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if(!_context.Resume.Any())
+            if (!_context.Users.Any())
             {
-                _context.Resume.AddRange(SampleResumeData());
+                await AddSampleUserData(userManager);
             }
-            if( !_context.Users.Any() )
+            if ( !_context.Companies.Any() )
             {
-                _context.Users.AddRange(SampleUserData());
+                _context.Companies.AddRange(SampleCompanyData());
             }
-            if ( !_context.Company.Any() )
+            if (!_context.Resumes.Any())
             {
-                _context.Company.AddRange(SampleCompanyData());
+                _context.Resumes.AddRange(SampleResumeData());
             }
-            if (!_context.Skill.Any())
+            if (!_context.JobPosts.Any())
             {
-                _context.Skill.AddRange(SampleSkillData());
+                _context.JobPosts.AddRange(SampleJobPostData());
+            }
+            if (!_context.Skills.Any())
+            {
+                _context.Skills.AddRange(SampleSkillData());
             }
             
-            if (!_context.Certification.Any())
+            if (!_context.Certifications.Any())
             {
-                _context.Certification.AddRange(SampleCertificationData());
+                _context.Certifications.AddRange(SampleCertificationData());
             }
             if (!_context.Education.Any())
             {
                 _context.Education.AddRange(SampleEducationData());
             }
-            if (!_context.Experience.Any())
+            if (!_context.Experiences.Any())
             {
-                _context.Experience.AddRange(SampleExperienceData());
+                _context.Experiences.AddRange(SampleExperienceData());
             }
-            if (!_context.Award.Any())
+            if (!_context.Awards.Any())
             {
-                _context.Award.AddRange(SampleAwardData());
+                _context.Awards.AddRange(SampleAwardData());
             }
             
             _context.SaveChanges();
+            if (!_context.Applications.Any())
+            {
+                _context.Applications.AddRange(SampleApplicationData());
+            }
+
+            await _context.SaveChangesAsync();
         }
 
-        public static List<User> SampleUserData()
+        public static async Task AddSampleUserData(UserManager<User> userManager)
         {
-            List<User> returnedUsers = new List<User>();
-
-            User testUser1 = new User()
+            User adminUser = new User()
             {
-                UserId = 1,
-                Role = UserRole.Admin,
+                Id = "admin-user",
+                FirstName = "Bob",
+                LastName = "Ross",
+                UserName = "bob-ross",
+                Email = "bobross@12asgaetrfasfasf.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(adminUser, "password");
+            await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
+
+            User recruiterUser = new User()
+            {
+                Id = "recruiter-user-1",
+                FirstName = "Recruiter",
+                LastName = "Person",
+                UserName = "recruiter-1",
+                Email = "recruiter@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser, "password");
+            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Recruiter);
+
+            await userManager.CreateAsync(new User()
+            {
+                Id = "user-1",
                 FirstName = "Bob",
                 LastName = "Smith",
+                UserName = "bob-smith",
                 Email = "bobsmith12345@jgd098suyfvk23jbfjsdv.com",
-                Phone = "555-555-5555",
-            };
-            returnedUsers.Add(testUser1);
+                PhoneNumber = "555-555-5555",
+            }, "password");
 
-            User testUser2 = new User()
+            await userManager.CreateAsync(new User()
             {
-                UserId = 2,
-                Role = UserRole.Recruiter,
+                Id = "user-2",
                 FirstName = "Caitlyn",
                 LastName = "Brown",
+                UserName = "caitlyn-brown",
                 Email = "caitlynbrown1@jgd098suyfvk23jbfjsdv.com",
-                Phone = "444-444-4444",
-            };
-            returnedUsers.Add(testUser2);
+                PhoneNumber = "444-444-4444",
+            }, "password");
 
-            User testUser3 = new User()
+            await userManager.CreateAsync(new User()
             {
-                UserId = 3,
-                Role = UserRole.Candidate,
+                Id = "user-3",
                 FirstName = "Evan",
                 LastName = "Johnson",
+                UserName = "evan-johnson",
                 Email = "evanjohnson@jgd098suyfvk23jbfjsdv.com",
-                Phone = "333-333-3333",
-            };
-            returnedUsers.Add(testUser3);
-
-            return returnedUsers;
+                PhoneNumber = "333-333-3333",
+            }, "password");
         }
         public static List<Company> SampleCompanyData()
         {
             List<Company> returnedCompanies = new List<Company>();
 
-            Company testCompany1 = new Company()
+            returnedCompanies.Add(new Company()
             {
                 CompanyId = 1,
                 Size = CompanySize.OneToTen,
                 Name = "Test Company 1",
                 Description = "Test Description 1",
                 Industry = "Technology",
-                UserId = 1
-            };
-            returnedCompanies.Add(testCompany1);
+                AdminId = "admin-user"
+            });
 
-            Company testCompany2 = new Company()
+            returnedCompanies.Add(new Company()
             {
                 CompanyId = 2,
                 Size = CompanySize.ElevenToFifty,
                 Name = "Test Company 2",
                 Description = "Test Description 2",
                 Industry = "Retail",
-                UserId = 1
-            };
-            returnedCompanies.Add(testCompany2);
+                AdminId = "admin-user",
+            });
 
-            Company testCompany3 = new Company()
+            returnedCompanies.Add(new Company()
             {
                 CompanyId = 3,
                 Size = CompanySize.FiftyOneToTwoFifty,
                 Name = "Test Company 3",
                 Description = "Test Description 3",
                 Industry = "Manufacturing",
-                UserId = 1
-            };
-            returnedCompanies.Add(testCompany3);
+                AdminId = "admin-user"
+            });
 
             return returnedCompanies;
         }
@@ -156,7 +184,7 @@ namespace cpsc_471_project.Test
             Resume testResume1 = new Resume()
             {
                 ResumeId = 1,
-                CandidateId = 1,
+                CandidateId = "user-1",
                 Name = "resume1"
 
             };
@@ -165,7 +193,7 @@ namespace cpsc_471_project.Test
             Resume testResume2 = new Resume()
             {
                 ResumeId = 2,
-                CandidateId = 2,
+                CandidateId = "user-2",
                 Name = "resume2"
 
             };
@@ -174,7 +202,7 @@ namespace cpsc_471_project.Test
             Resume testResume3 = new Resume()
             {
                 ResumeId = 3,
-                CandidateId = 3,
+                CandidateId = "user-3",
                 Name = "resume3"
 
             };
@@ -323,6 +351,82 @@ namespace cpsc_471_project.Test
             return returnedAwards;
         }
 
+
+        // public static List<Resume> SampleResumeData()
+        // {
+        //     List<Resume> resumes = new List<Resume>();
+
+        //     resumes.Add(new Resume()
+        //     {
+        //         ResumeId = 1,
+        //         Name = "Resume #1",
+        //         CandidateId = "user-1"
+        //     });
+
+        //     resumes.Add(new Resume()
+        //     {
+        //         ResumeId = 2,
+        //         Name = "Resume #2",
+        //         CandidateId = "user-1"
+        //     });
+
+        //     resumes.Add(new Resume()
+        //     {
+        //         ResumeId = 3,
+        //         Name = "Gr8 resume",
+        //         CandidateId = "user-3"
+        //     });
+
+        //     return resumes;
+        // }
+
+        public static List<JobPost> SampleJobPostData()
+        {
+            List<JobPost> returnedPosts = new List<JobPost>();
+
+            JobPost testPost1 = new JobPost()
+            {
+                JobPostId = 1,
+                CompanyId = 1,
+                Name = "Software Developer",
+                Description = "Develop software.",
+                Salary = 100000,
+                ClosingDate = DateTime.Now,
+                RecruiterId = "user-1"
+            };
+            returnedPosts.Add(testPost1);
+
+            JobPost testPost2 = new JobPost()
+            {
+                JobPostId = 2,
+                CompanyId = 2,
+                Name = "Vexillologist",
+                Description = "Makes flags.",
+                Salary = 45000,
+                ClosingDate = DateTime.Now,
+                RecruiterId = "user-1"
+            };
+            returnedPosts.Add(testPost2);
+
+            return returnedPosts;
+        }
+
+        public static List<Application> SampleApplicationData()
+        {
+            List<Application> returnedApps = new List<Application>();
+
+            Application testApp1 = new Application()
+            {
+                ApplicationId = 1,
+                JobId = 1,
+                DateSubmitted = new DateTime(2008, 5, 1, 8, 30, 52),
+                Status = StatusEnum.Accepted,
+                CoverLetter = "pls give job xo",
+                ResumeId = 2
+            };
+            returnedApps.Add(testApp1);
+            return returnedApps;
+        }
     }
 }
 #endif

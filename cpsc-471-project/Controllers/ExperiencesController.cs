@@ -12,11 +12,11 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExperienceController : ControllerBase
+    public class ExperiencesController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public ExperienceController(JobHunterDBContext context)
+        public ExperiencesController(JobHunterDBContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExperienceDTO>>> GetExperience()
         {
-            var Experience = await _context.Experience.ToListAsync();
+            var Experience = await _context.Experiences.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ExperienceDTO>> GetExperience(long id)
         {
-            var Experience = await _context.Experience.FindAsync(id);
+            var Experience = await _context.Experiences.FindAsync(id);
 
             if (Experience == null)
             {
@@ -61,7 +61,7 @@ namespace cpsc_471_project.Controllers
             if (!ExperienceExists(id))
             {
                 newExperience = true;
-                _context.Experience.Add(sanitizedExperience);
+                _context.Experiences.Add(sanitizedExperience);
             }
             else
             {
@@ -100,7 +100,7 @@ namespace cpsc_471_project.Controllers
         {
             ExperienceDTO ExperienceDTO = ExperienceToDTO(Experience);
             Experience sanitizedExperience = DTOToExperience(ExperienceDTO);
-            _context.Experience.Add(sanitizedExperience);
+            _context.Experiences.Add(sanitizedExperience);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostExperience", new { id = sanitizedExperience.ResumeId }, ExperienceDTO);
@@ -110,13 +110,13 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ExperienceDTO>> DeleteExperience(long id)
         {
-            var Experience = await _context.Experience.FindAsync(id);
+            var Experience = await _context.Experiences.FindAsync(id);
             if (Experience == null)
             {
                 return NotFound();
             }
 
-            _context.Experience.Remove(Experience);
+            _context.Experiences.Remove(Experience);
             await _context.SaveChangesAsync();
 
             return ExperienceToDTO(Experience);
@@ -124,7 +124,7 @@ namespace cpsc_471_project.Controllers
 
         private bool ExperienceExists(long id)
         {
-            return _context.Experience.Any(e => e.ResumeId == id);
+            return _context.Experiences.Any(e => e.ResumeId == id);
         }
 
         private static ExperienceDTO ExperienceToDTO(Experience Experience) =>

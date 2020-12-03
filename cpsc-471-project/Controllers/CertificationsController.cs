@@ -12,11 +12,11 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CertificationController : ControllerBase
+    public class CertificationsController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public CertificationController(JobHunterDBContext context)
+        public CertificationsController(JobHunterDBContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CertificationDTO>>> GetCertification()
         {
-            var Certification = await _context.Certification.ToListAsync();
+            var Certification = await _context.Certifications.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CertificationDTO>> GetCertification(long id)
         {
-            var Certification = await _context.Certification.FindAsync(id);
+            var Certification = await _context.Certifications.FindAsync(id);
 
             if (Certification == null)
             {
@@ -61,7 +61,7 @@ namespace cpsc_471_project.Controllers
             if (!CertificationExists(id))
             {
                 newCertification = true;
-                _context.Certification.Add(sanitizedCertification);
+                _context.Certifications.Add(sanitizedCertification);
             }
             else
             {
@@ -100,7 +100,7 @@ namespace cpsc_471_project.Controllers
         {
             CertificationDTO CertificationDTO = CertificationToDTO(Certification);
             Certification sanitizedCertification = DTOToCertification(CertificationDTO);
-            _context.Certification.Add(sanitizedCertification);
+            _context.Certifications.Add(sanitizedCertification);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostCertification", new { id = sanitizedCertification.ResumeId }, CertificationDTO);
@@ -110,13 +110,13 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<CertificationDTO>> DeleteCertification(long id)
         {
-            var Certification = await _context.Certification.FindAsync(id);
+            var Certification = await _context.Certifications.FindAsync(id);
             if (Certification == null)
             {
                 return NotFound();
             }
 
-            _context.Certification.Remove(Certification);
+            _context.Certifications.Remove(Certification);
             await _context.SaveChangesAsync();
 
             return CertificationToDTO(Certification);
@@ -124,7 +124,7 @@ namespace cpsc_471_project.Controllers
 
         private bool CertificationExists(long id)
         {
-            return _context.Certification.Any(e => e.ResumeId == id);
+            return _context.Certifications.Any(e => e.ResumeId == id);
         }
 
         private static CertificationDTO CertificationToDTO(Certification Certification) =>
