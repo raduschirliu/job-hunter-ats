@@ -61,6 +61,12 @@ namespace cpsc_471_project.Controllers
                 return BadRequest();
             }
 
+
+            if (!UserExists(id))
+            {
+                return NotFound();
+            }
+
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
