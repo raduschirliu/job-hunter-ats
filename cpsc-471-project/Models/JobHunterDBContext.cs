@@ -21,13 +21,5 @@ namespace cpsc_471_project.Models
         public DbSet<Application> Applications { get; set; }
 
         public DbSet<Resume> Resumes { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Referral>().HasKey(x => new { x.ApplicationId, x.Name });
-        }
-
-        public DbSet<Referral> Referrals { get; set; }
     }
 }

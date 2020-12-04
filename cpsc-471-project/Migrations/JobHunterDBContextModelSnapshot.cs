@@ -243,35 +243,6 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("JobPosts");
                 });
 
-            modelBuilder.Entity("cpsc_471_project.Models.Referral", b =>
-                {
-                    b.Property<long>("ApplicationId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Company")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("Phone")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Position")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
-
-                    b.HasKey("ApplicationId", "Name");
-
-                    b.ToTable("Referrals");
-                });
-
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
                 {
                     b.Property<long>("ResumeId")
@@ -454,15 +425,6 @@ namespace cpsc_471_project.Migrations
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("RecruiterId");
-                });
-
-            modelBuilder.Entity("cpsc_471_project.Models.Referral", b =>
-                {
-                    b.HasOne("cpsc_471_project.Models.Application", "Application")
-                        .WithMany()
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
