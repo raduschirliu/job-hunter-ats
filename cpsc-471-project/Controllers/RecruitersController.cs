@@ -89,6 +89,8 @@ namespace cpsc_471_project.Controllers
             _context.Recruiters.Add(recruiter);
             await _context.SaveChangesAsync();
 
+            await userManager.AddToRoleAsync(user, UserRoles.Recruiter);
+
             return Ok();
         }
     }

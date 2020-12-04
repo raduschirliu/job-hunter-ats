@@ -58,6 +58,10 @@ namespace cpsc_471_project.Test
             {
                 _context.Applications.AddRange(SampleApplicationData());
             }
+            if (!_context.Recruiters.Any())
+            {
+                _context.Recruiters.AddRange(SampleRecruiterData());
+            }
 
             await _context.SaveChangesAsync();
         }
@@ -229,6 +233,18 @@ namespace cpsc_471_project.Test
             };
             returnedApps.Add(testApp1);
             return returnedApps;
+        }
+
+        public static List<Recruiter> SampleRecruiterData()
+        {
+            return new List<Recruiter>()
+            {
+                new Recruiter()
+                {
+                    UserId = "recruiter-user-1",
+                    CompanyId = 1,
+                }
+            };
         }
     }
 }
