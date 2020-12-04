@@ -27,6 +27,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/applications
+        // Returns all applications, depending on your role
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetApplications()
@@ -42,7 +43,12 @@ namespace cpsc_471_project.Controllers
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // TODO: ?? ? ?? ?? Likely return all applications to jobs they manage? ??????
+                // Return all applications only for jobs they manage
+                var query = from app in _context.Applications
+                            join jobPost in _context.JobPosts on app.JobId equals jobPost.JobPostId
+                            where jobPost.RecruiterId == user.Id
+                            select app;
+                applications = await query.ToListAsync();
             }
             else
             {
@@ -59,6 +65,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/applications/{id}
+        // Returns an application with a given ID, depending on your role
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<ApplicationDTO>> GetApplication(long id)
@@ -69,22 +76,44 @@ namespace cpsc_471_project.Controllers
 
             if (roles.Contains(UserRoles.Admin))
             {
-                // Display all applications for admin
+                // Display any application for admin
                 application = await _context.Applications.FindAsync(id);
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // TODO: ?? ? ?? ?? Likely allowed to see if if only it's for a job they manage ??????
+                // Return application only for jobs they manage
+                var query = from app in _context.Applications
+                            join jobPost in _context.JobPosts on app.JobId equals jobPost.JobPostId
+                            where app.ApplicationId == id && jobPost.RecruiterId == user.Id
+                            select new Application()
+                            {
+                                ApplicationId = app.ApplicationId,
+                                CoverLetter = app.CoverLetter,
+                                DateSubmitted = app.DateSubmitted,
+                                JobId = app.JobId,
+                                JobPost = jobPost,
+                                Resume = app.Resume,
+                                ResumeId = app.ResumeId
+                            };
+                application = await query.FirstOrDefaultAsync();
             }
             else
             {
-                // Display all of your own applications
+                // Display your own application
                 var query = from app in _context.Applications
                             join resume in _context.Resumes on app.ResumeId equals resume.ResumeId
                             where resume.CandidateId == user.Id && app.ApplicationId == id
                             select app;
 
                 application = await query.FirstOrDefaultAsync();
+
+                if (application != null)
+                {
+                    if (application.JobPost.RecruiterId != user.Id)
+                    {
+                        return Unauthorized("Cannot view an application for a job that you do not manage");
+                    }
+                }
             }
 
             if (application == null)
@@ -96,6 +125,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // PATCH: api/applications/{id}
+        // Updates an existing application
         [Authorize]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchApplication(long id, ApplicationDTO appDTO)
@@ -130,6 +160,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // POST: api/applications
+        // Creates a new application
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<ApplicationDTO>> PostApplication(ApplicationDTO appDTO)
@@ -162,6 +193,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // DELETE: api/applications/{id}
+        // Deletes an existing application, depending on your role
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ApplicationDTO>> DeleteApplication(long id)
@@ -177,7 +209,29 @@ namespace cpsc_471_project.Controllers
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // TODO: ?? ? ?? ?? Likely allowed to delete if only it's for a job they manage ??????
+                // Recruiter can only delete applications for jobs that they own
+                var query = from app in _context.Applications
+                            join jobPost in _context.JobPosts on app.JobId equals jobPost.JobPostId
+                            where app.ApplicationId == id
+                            select new Application()
+                            {
+                                ApplicationId = app.ApplicationId,
+                                CoverLetter = app.CoverLetter,
+                                DateSubmitted = app.DateSubmitted,
+                                JobId = app.JobId,
+                                JobPost = jobPost,
+                                Resume = app.Resume,
+                                ResumeId = app.ResumeId
+                            };
+                application = await query.FirstOrDefaultAsync();
+
+                if (application != null)
+                {
+                    if (application.JobPost.RecruiterId != user.Id)
+                    {
+                        return Unauthorized("Cannot delete an application for a job that you do not manage");
+                    }
+                }
             }
             else
             {
