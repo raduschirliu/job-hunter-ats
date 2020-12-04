@@ -38,9 +38,9 @@ namespace cpsc_471_project.Controllers
         }
 
         [HttpGet("{appId}/Referrals/{name}")]
-        public async Task<ActionResult<ReferralDTO>> GetReferral(long appId, string name)
+        public async Task<ActionResult<ReferralDTO>> GetReferral(long appId, long refId)
         {
-            var referral = await _context.Referrals.FindAsync(appId, name);
+            var referral = await _context.Referrals.FindAsync(appId, refId);
 
             if (referral == null)
             {
@@ -51,10 +51,10 @@ namespace cpsc_471_project.Controllers
         }
 
         [HttpPatch("{appId}/Referrals/{name}")]
-        public async Task<IActionResult> PatchReferral(long appId, string name, ReferralDTO referralDTO)
+        public async Task<IActionResult> PatchReferral(long appId, long refId, ReferralDTO referralDTO)
         {
             Referral referral = DTOToReferral(referralDTO);
-            if (appId != referralDTO.ApplicationId || name != referralDTO.Name)
+            if (appId != referralDTO.ApplicationId || refId != referralDTO.ReferralId)
             {
                 return BadRequest();
             }
@@ -67,7 +67,7 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ReferralExists(appId, name))
+                if (!ReferralExists(appId, refId))
                 {
                     return NotFound();
                 }
@@ -77,7 +77,7 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return NoContent();
+            return AcceptedAtAction("PatchOffer", new { ApplicationId = referral.ApplicationId, ReferralId = referral.ReferralId }, referralDTO);
         }
 
         [HttpPost("{appId}/Referrals")] // should this potentially just be "Referrals"?
@@ -87,15 +87,15 @@ namespace cpsc_471_project.Controllers
             _context.Referrals.Add(referral);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostReferral", new { AppliationId = referral.ApplicationId, name = referral.Name }, referral);
+            return CreatedAtAction("PostReferral", new { AppliationId = referral.ApplicationId, ReferralId = referral.ReferralId }, referralDTO);
 
         }
 
         // DELETE: api/Skill/5
         [HttpDelete("{appId}/Referrals/{name}")]
-        public async Task<ActionResult<ReferralDTO>> DeleteReferral(long appId, string name)
+        public async Task<ActionResult<ReferralDTO>> DeleteReferral(long appId, long refId)
         {
-            var referral = await _context.Referrals.FindAsync(appId, name);
+            var referral = await _context.Referrals.FindAsync(appId, refId);
             if (referral == null)
             {
                 return NotFound();
@@ -107,15 +107,16 @@ namespace cpsc_471_project.Controllers
             return ReferralToDTO(referral);
         }
 
-        private bool ReferralExists(long appId, string name)
+        private bool ReferralExists(long appId, long refId)
         {
-            return _context.Referrals.Any(e => (e.Name == name && e.ApplicationId == appId));
+            return _context.Referrals.Any(e => (e.ReferralId == refId && e.ApplicationId == appId));
         }
 
         private static ReferralDTO ReferralToDTO(Referral r) =>
             new ReferralDTO
             {
                 ApplicationId = r.ApplicationId,
+                ReferralId = r.ReferralId,
                 Name = r.Name,
                 Email = r.Email,
                 Position = r.Position,
@@ -128,6 +129,7 @@ namespace cpsc_471_project.Controllers
             {
                 ApplicationId = rDTO.ApplicationId,
                 Application = null,
+                ReferralId = rDTO.ReferralId,
                 Name = rDTO.Name,
                 Email = rDTO.Email,
                 Position = rDTO.Position,

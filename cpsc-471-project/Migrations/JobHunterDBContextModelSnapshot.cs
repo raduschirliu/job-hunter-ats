@@ -268,6 +268,9 @@ namespace cpsc_471_project.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
 
+                    b.Property<long>("ReferralId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ApplicationId", "Name");
 
                     b.ToTable("Referrals");

@@ -16,6 +16,8 @@ namespace cpsc_471_project.Models
         public Application Application { get; set; } // Enforces referential integrity
 
         [Key, Column(Order = 1)]
+        public long ReferralId { get; set; }
+
         [MaxLength(255)]
         public string Name { get; set; }
 
@@ -36,6 +38,9 @@ namespace cpsc_471_project.Models
     {
         [Display(Name = "Application ID")]
         public long ApplicationId { get; set; }
+
+        [Display(Name = "Referral ID")]
+        public long ReferralId { get; set; }
 
         [Display(Name = "Name")]
         public string Name { get; set; }

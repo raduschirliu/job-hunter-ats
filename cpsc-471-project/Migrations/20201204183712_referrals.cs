@@ -12,6 +12,7 @@ namespace cpsc_471_project.Migrations
                 {
                     ApplicationId = table.Column<long>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
+                    ReferralId = table.Column<long>(nullable: false),
                     Email = table.Column<string>(maxLength: 255, nullable: true),
                     Position = table.Column<string>(maxLength: 255, nullable: true),
                     Company = table.Column<string>(maxLength: 255, nullable: true),

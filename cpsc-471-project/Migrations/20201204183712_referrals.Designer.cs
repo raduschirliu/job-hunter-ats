@@ -9,7 +9,7 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201204014918_referrals")]
+    [Migration("20201204183712_referrals")]
     partial class referrals
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -269,6 +269,9 @@ namespace cpsc_471_project.Migrations
                     b.Property<string>("Position")
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
+
+                    b.Property<long>("ReferralId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ApplicationId", "Name");
 
