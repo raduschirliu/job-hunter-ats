@@ -12,7 +12,7 @@ namespace cpsc_471_project.Models
 {
     public class JobHunterDBContext : IdentityDbContext<User>
     {
-        public JobHunterDBContext(DbContextOptions<JobHunterDBContext> options) : base(options) {}
+        public JobHunterDBContext(DbContextOptions<JobHunterDBContext> options) : base(options) { }
 
         public DbSet<Company> Companies { get; set; }
 
@@ -23,5 +23,11 @@ namespace cpsc_471_project.Models
         public DbSet<Resume> Resumes { get; set; }
 
         public DbSet<Recruiter> Recruiters { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Recruiter>().HasKey(x => new { x.UserId, x.CompanyId });
+        }
     }
 }

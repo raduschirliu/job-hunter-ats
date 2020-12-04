@@ -243,6 +243,21 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("JobPosts");
                 });
 
+            modelBuilder.Entity("cpsc_471_project.Models.Recruiter", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("UserId", "CompanyId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Recruiters");
+                });
+
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
                 {
                     b.Property<long>("ResumeId")
@@ -425,6 +440,21 @@ namespace cpsc_471_project.Migrations
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("RecruiterId");
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Recruiter", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("cpsc_471_project.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
