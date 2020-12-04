@@ -58,7 +58,10 @@ namespace cpsc_471_project.Test
             {
                 _context.Applications.AddRange(SampleApplicationData());
             }
-
+            if (!_context.Offers.Any())
+            {
+                _context.Offers.AddRange(SampleOfferData());
+            }
             await _context.SaveChangesAsync();
         }
 
@@ -229,6 +232,31 @@ namespace cpsc_471_project.Test
             };
             returnedApps.Add(testApp1);
             return returnedApps;
+        }
+
+        public static List<Offer> SampleOfferData()
+        {
+            List<Offer> returnedOffers = new List<Offer>();
+
+            Offer testOffer1 = new Offer()
+            {
+                ApplicationId = 1,
+                OfferId = 1,
+                AcceptanceEndDate = new DateTime(2020, 12, 1, 8, 30, 52),
+                Text = "We are extending an offer as a contract salesperson for $20.25/hr."
+            };
+            returnedOffers.Add(testOffer1);
+
+            Offer testOffer2 = new Offer()
+            {
+                ApplicationId = 1,
+                OfferId = 2,
+                AcceptanceEndDate = new DateTime(2008, 5, 1, 8, 30, 52),
+                Text = "We are extending an offer as a lifeguard."
+            };
+            returnedOffers.Add(testOffer2);
+
+            return returnedOffers;
         }
     }
 }
