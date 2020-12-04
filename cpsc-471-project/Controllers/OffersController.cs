@@ -26,7 +26,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/Offers
-        [HttpGet("applications/offers")]
+        [HttpGet("offers")]
         public async Task<ActionResult<IEnumerable<OfferDTO>>> GetOffers()
         {
             var app = await _context.Offers.ToListAsync();

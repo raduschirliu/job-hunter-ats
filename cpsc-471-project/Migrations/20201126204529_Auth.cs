@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace cpsc_471_project.Migrations
 {
-    public partial class offers : Migration
+    public partial class Auth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -256,26 +256,6 @@ namespace cpsc_471_project.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Offers",
-                columns: table => new
-                {
-                    ApplicationId = table.Column<long>(nullable: false),
-                    OfferId = table.Column<long>(nullable: false),
-                    AcceptanceEndDate = table.Column<DateTime>(nullable: false),
-                    Text = table.Column<string>(maxLength: 1024, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Offers", x => new { x.ApplicationId, x.OfferId });
-                    table.ForeignKey(
-                        name: "FK_Offers_Applications_ApplicationId",
-                        column: x => x.ApplicationId,
-                        principalTable: "Applications",
-                        principalColumn: "ApplicationId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_JobId",
                 table: "Applications",
@@ -347,6 +327,9 @@ namespace cpsc_471_project.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Applications");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -362,19 +345,13 @@ namespace cpsc_471_project.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Offers");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Applications");
-
-            migrationBuilder.DropTable(
                 name: "JobPosts");
 
             migrationBuilder.DropTable(
                 name: "Resumes");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Companies");

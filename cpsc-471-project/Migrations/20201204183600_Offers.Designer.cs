@@ -9,8 +9,8 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201203191404_offers")]
-    partial class offers
+    [Migration("20201204183600_Offers")]
+    partial class Offers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
