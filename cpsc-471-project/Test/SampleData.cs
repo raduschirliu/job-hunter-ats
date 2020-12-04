@@ -243,6 +243,7 @@ namespace cpsc_471_project.Test
             {
                 ApplicationId = 1,
                 Application = null,
+                ReferralId = 0,
                 Name = "Jane Doe",
                 Email = "jane@gmail.com",
                 Position = "HR Manager",
@@ -255,6 +256,7 @@ namespace cpsc_471_project.Test
             {
                 ApplicationId = 1,
                 Application = null,
+                ReferralId = 1,
                 Name = "Dua Lipa",
                 Email = "dua@lipa.com",
                 Position = "Pop Icon",

@@ -12,7 +12,7 @@ using cpsc_471_project.Models;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/applications")]
+    [Route("api")]
     [ApiController]
     public class ReferralsController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/Referrals
-        [HttpGet("Referrals")]
+        [HttpGet("referrals")]
         public async Task<ActionResult<IEnumerable<ReferralDTO>>> GetReferrals()
         {
             var app = await _context.Referrals.ToListAsync();
@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
             return app.Select(x => ReferralToDTO(x)).ToList();
         }
 
-        [HttpGet("{appId}/Referrals/{name}")]
+        [HttpGet("applications/{appId}/referrals/{name}")]
         public async Task<ActionResult<ReferralDTO>> GetReferral(long appId, long refId)
         {
             var referral = await _context.Referrals.FindAsync(appId, refId);
@@ -50,7 +50,7 @@ namespace cpsc_471_project.Controllers
             return ReferralToDTO(referral);
         }
 
-        [HttpPatch("{appId}/Referrals/{name}")]
+        [HttpPatch("applications/{appId}/referrals/{name}")]
         public async Task<IActionResult> PatchReferral(long appId, long refId, ReferralDTO referralDTO)
         {
             Referral referral = DTOToReferral(referralDTO);
@@ -80,7 +80,7 @@ namespace cpsc_471_project.Controllers
             return AcceptedAtAction("PatchOffer", new { ApplicationId = referral.ApplicationId, ReferralId = referral.ReferralId }, referralDTO);
         }
 
-        [HttpPost("{appId}/Referrals")] // should this potentially just be "Referrals"?
+        [HttpPost("applications/{appId}/referrals")] // should this potentially just be "Referrals"?
         public async Task<ActionResult<ReferralDTO>> PostReferral(ReferralDTO referralDTO)
         {
             Referral referral = DTOToReferral(referralDTO);
@@ -92,7 +92,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // DELETE: api/Skill/5
-        [HttpDelete("{appId}/Referrals/{name}")]
+        [HttpDelete("applications/{appId}/referrals/{name}")]
         public async Task<ActionResult<ReferralDTO>> DeleteReferral(long appId, long refId)
         {
             var referral = await _context.Referrals.FindAsync(appId, refId);

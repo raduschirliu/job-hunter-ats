@@ -25,7 +25,7 @@ namespace cpsc_471_project.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Referral>().HasKey(x => new { x.ApplicationId, x.Name });
+            modelBuilder.Entity<Referral>().HasKey(x => new { x.ApplicationId, x.ReferralId });
         }
 
         public DbSet<Referral> Referrals { get; set; }

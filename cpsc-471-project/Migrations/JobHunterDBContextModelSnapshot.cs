@@ -248,15 +248,18 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("ApplicationId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                    b.Property<long>("ReferralId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Company")
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
 
                     b.Property<string>("Email")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
 
@@ -268,10 +271,7 @@ namespace cpsc_471_project.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
 
-                    b.Property<long>("ReferralId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ApplicationId", "Name");
+                    b.HasKey("ApplicationId", "ReferralId");
 
                     b.ToTable("Referrals");
                 });
