@@ -21,5 +21,7 @@ namespace cpsc_471_project.Models
         public DbSet<Application> Applications { get; set; }
 
         public DbSet<Resume> Resumes { get; set; }
+
+        public DbSet<Recruiter> Recruiters { get; set; }
     }
 }
