@@ -59,6 +59,11 @@ namespace cpsc_471_project.Test
                 _context.Applications.AddRange(SampleApplicationData());
             }
 
+            if (!_context.Referrals.Any())
+            {
+                _context.Referrals.AddRange(SampleReferralData());
+            }
+
             await _context.SaveChangesAsync();
         }
 
@@ -229,6 +234,37 @@ namespace cpsc_471_project.Test
             };
             returnedApps.Add(testApp1);
             return returnedApps;
+        }
+
+        public static List<Referral> SampleReferralData()
+        {
+            List<Referral> returnedRefs = new List<Referral>();
+
+            Referral testRef1 = new Referral()
+            {
+                ApplicationId = 1,
+                Application = null,
+                Name = "Jane Doe",
+                Email = "jane@gmail.com",
+                Position = "HR Manager",
+                Company = "Google",
+                Phone = "555-123-5555"
+            };
+            returnedRefs.Add(testRef1);
+
+            Referral testRef2 = new Referral()
+            {
+                ApplicationId = 1,
+                Application = null,
+                Name = "Dua Lipa",
+                Email = "dua@lipa.com",
+                Position = "Pop Icon",
+                Company = "Billboard",
+                Phone = "555-123-1234"
+            };
+            returnedRefs.Add(testRef2);
+
+            return returnedRefs;
         }
     }
 }
