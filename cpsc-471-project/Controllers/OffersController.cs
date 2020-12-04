@@ -12,7 +12,7 @@ using cpsc_471_project.Models;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/applications")]
+    [Route("api")]
     [ApiController]
     public class OffersController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/Offers
-        [HttpGet("Offers")]
+        [HttpGet("applications/offers")]
         public async Task<ActionResult<IEnumerable<OfferDTO>>> GetOffers()
         {
             var app = await _context.Offers.ToListAsync();
@@ -38,7 +38,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/Applications/{applicationid}/Offers/{offerid}
-        [HttpGet("{appId}/Offers/{offerId}")]
+        [HttpGet("applications/{appId}/offers/{offerId}")]
         public async Task<ActionResult<OfferDTO>> GetOffer(long appId, long offerId)
         {
             var offer = await _context.Offers.FindAsync(appId, offerId);
@@ -51,7 +51,7 @@ namespace cpsc_471_project.Controllers
             return OfferToDTO(offer);
         }
 
-        [HttpPatch("{appId}/Offers/{offerId}")]
+        [HttpPatch("applications/{appId}/offers/{offerId}")]
         public async Task<IActionResult> PatchOffer(long appId, long offerId, OfferDTO offerDTO)
         {
             Offer offer = DTOToOffer(offerDTO);
@@ -78,22 +78,22 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return NoContent();
+            return AcceptedAtAction("PatchOffer", new { ApplicationId = offer.ApplicationId, OfferId = offer.OfferId }, offerDTO);
         }
 
-        [HttpPost("{appId}/Offers")]
+        [HttpPost("applications/{appId}/offers")]
         public async Task<ActionResult<OfferDTO>> PostOffer(OfferDTO offerDTO)
         {
             Offer offer = DTOToOffer(offerDTO);
             _context.Offers.Add(offer);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostOffer", new { AppliationId = offer.ApplicationId, OfferId = offer.OfferId }, offer);
+            return CreatedAtAction("PostOffer", new { ApplicationId = offer.ApplicationId, OfferId = offer.OfferId }, offerDTO);
 
         }
 
         // DELETE: api/Skill/5
-        [HttpDelete("{appId}/Offers/{offerId}")]
+        [HttpDelete("applications/{appId}/offers/{offerId}")]
         public async Task<ActionResult<OfferDTO>> DeleteOffer(long appId, long offerId)
         {
             var offer = await _context.Offers.FindAsync(appId, offerId);
