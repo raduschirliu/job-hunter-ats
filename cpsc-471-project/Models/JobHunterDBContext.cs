@@ -12,7 +12,7 @@ namespace cpsc_471_project.Models
 {
     public class JobHunterDBContext : IdentityDbContext<User>
     {
-        public JobHunterDBContext(DbContextOptions<JobHunterDBContext> options) : base(options) { }
+        public JobHunterDBContext(DbContextOptions<JobHunterDBContext> options) : base(options) {}
 
         public DbSet<Company> Companies { get; set; }
 
