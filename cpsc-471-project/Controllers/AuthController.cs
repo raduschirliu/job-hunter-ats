@@ -124,6 +124,7 @@ namespace cpsc_471_project.Controllers
 
             IdentityResult res = await userManager.CreateAsync(new User()
             {
+                Id = register.UserName,
                 UserName = register.UserName,
                 FirstName = register.FirstName,
                 LastName = register.LastName

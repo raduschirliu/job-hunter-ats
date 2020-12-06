@@ -75,13 +75,24 @@ namespace cpsc_471_project.Test
             {
                 _context.Awards.AddRange(SampleAwardData());
             }
-            
-            _context.SaveChanges();
+            if(!_context.Projects.Any())
+            {
+                _context.Projects.AddRange(SampleProjectData());
+            }
+
             if (!_context.Applications.Any())
             {
                 _context.Applications.AddRange(SampleApplicationData());
             }
+            if (!_context.Recruiters.Any())
+            {
+                _context.Recruiters.AddRange(SampleRecruiterData());
+            }
 
+            if (!_context.Offers.Any())
+            {
+                _context.Offers.AddRange(SampleOfferData());
+            }
             await _context.SaveChangesAsync();
         }
 
@@ -92,54 +103,83 @@ namespace cpsc_471_project.Test
                 Id = "admin-user",
                 FirstName = "Bob",
                 LastName = "Ross",
-                UserName = "bob-ross",
+                UserName = "admin-user",
                 Email = "bobross@12asgaetrfasfasf.com",
                 PhoneNumber = "555-555-5555",
             };
             await userManager.CreateAsync(adminUser, "password");
             await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
 
-            User recruiterUser = new User()
+            User recruiterUser1 = new User()
             {
-                Id = "recruiter-user-1",
+                Id = "recruiter-1",
                 FirstName = "Recruiter",
                 LastName = "Person",
                 UserName = "recruiter-1",
                 Email = "recruiter@afjaasdidaoifmasfa.com",
                 PhoneNumber = "555-555-5555",
             };
-            await userManager.CreateAsync(recruiterUser, "password");
-            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Recruiter);
+            await userManager.CreateAsync(recruiterUser1, "password");
+            await userManager.AddToRoleAsync(recruiterUser1, UserRoles.Recruiter);
 
-            await userManager.CreateAsync(new User()
+            User recruiterUser2 = new User()
             {
-                Id = "user-1",
+                Id = "recruiter-2",
+                FirstName = "Recruiter2",
+                LastName = "Person2",
+                UserName = "recruiter-2",
+                Email = "recruiter2@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser2, "password");
+            await userManager.AddToRoleAsync(recruiterUser2, UserRoles.Recruiter);
+
+            User recruiterUser3 = new User()
+            {
+                Id = "recruiter-3",
+                FirstName = "Recruiter3",
+                LastName = "Person3",
+                UserName = "recruiter-3",
+                Email = "recruiter3@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser3, "password");
+            await userManager.AddToRoleAsync(recruiterUser3, UserRoles.Recruiter);
+
+            User candidateUser1 = new User()
+            {
+                Id = "bob-smith",
                 FirstName = "Bob",
                 LastName = "Smith",
                 UserName = "bob-smith",
                 Email = "bobsmith12345@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "555-555-5555",
-            }, "password");
+            };
+            await userManager.CreateAsync(candidateUser1, "password");
+            await userManager.AddToRoleAsync(candidateUser1, UserRoles.Candidate);
 
-            await userManager.CreateAsync(new User()
+            User candidateUser2 = new User()
             {
-                Id = "user-2",
+                Id = "caitlyn-brown",
                 FirstName = "Caitlyn",
                 LastName = "Brown",
                 UserName = "caitlyn-brown",
                 Email = "caitlynbrown1@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "444-444-4444",
-            }, "password");
+            };
+            await userManager.CreateAsync(candidateUser2, "password");
+            await userManager.AddToRoleAsync(candidateUser2, UserRoles.Candidate);
 
-            await userManager.CreateAsync(new User()
-            {
-                Id = "user-3",
+            User candidateUser3 = new User() {
+                Id = "evan-johnson",
                 FirstName = "Evan",
                 LastName = "Johnson",
                 UserName = "evan-johnson",
                 Email = "evanjohnson@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "333-333-3333",
-            }, "password");
+            };
+            await userManager.CreateAsync(candidateUser3, "password");
+            await userManager.AddToRoleAsync(candidateUser3, UserRoles.Candidate);
         }
         public static List<Company> SampleCompanyData()
         {
@@ -184,27 +224,25 @@ namespace cpsc_471_project.Test
             Resume testResume1 = new Resume()
             {
                 ResumeId = 1,
-                CandidateId = "user-1",
-                Name = "resume1"
-
+                Name = "Resume #1",
+                CandidateId = "bob-smith"
             };
+
             returnedResumes.Add(testResume1);
 
             Resume testResume2 = new Resume()
             {
                 ResumeId = 2,
-                CandidateId = "user-2",
-                Name = "resume2"
-
+                Name = "Resume #2",
+                CandidateId = "bob-smith"
             };
             returnedResumes.Add(testResume2);
 
             Resume testResume3 = new Resume()
             {
                 ResumeId = 3,
-                CandidateId = "user-3",
-                Name = "resume3"
-
+                Name = "Resume #3",
+                CandidateId = "caitlyn-brown",
             };
             returnedResumes.Add(testResume3);
 
@@ -217,29 +255,38 @@ namespace cpsc_471_project.Test
             Skill testSkill1 = new Skill()
             {
                 ResumeId = 1,
-                Name = "coding",
-                Proficiency = "weak",
+                Name = "Python",
+                Proficiency = "Experienced",
                 Order = 1,
             };
             returnedSkills.Add(testSkill1);
 
             Skill testSkill2 = new Skill()
             {
-                ResumeId = 2,
-                Name = "codingggg",
-                Proficiency = "weakkkk",
-                Order = 1,
+                ResumeId = 1,
+                Name = "Java",
+                Proficiency = "Strong",
+                Order = 2,
             };
             returnedSkills.Add(testSkill2);
 
             Skill testSkill3 = new Skill()
             {
-                ResumeId = 3,
-                Name = "cccccoding",
-                Proficiency = "wwwwweak",
+                ResumeId = 2,
+                Name = "C#",
+                Proficiency = "Experienced",
                 Order = 1,
             };
             returnedSkills.Add(testSkill3);
+
+            Skill testSkill4 = new Skill()
+            {
+                ResumeId = 3,
+                Name = "Rust",
+                Proficiency = "Fluent",
+                Order = 1,
+            };
+            returnedSkills.Add(testSkill4);
 
             return returnedSkills;
         }
@@ -250,26 +297,26 @@ namespace cpsc_471_project.Test
             Certification testCertification1 = new Certification()
             {
                 ResumeId = 1,
-                Name = "coding",
-                Source = "weak",
+                Name = "Python Fundamentals",
+                Source = "Python 101 Studios",
                 Order = 1,
             };
             returnedCertifications.Add(testCertification1);
 
             Certification testCertification2 = new Certification()
             {
-                ResumeId = 2,
-                Name = "codingggg",
-                Source = "weakkkk",
-                Order = 1,
+                ResumeId = 1,
+                Name = "First Aid",
+                Source = "First Aid Training Corp.",
+                Order = 2,
             };
             returnedCertifications.Add(testCertification2);
 
             Certification testCertification3 = new Certification()
             {
                 ResumeId = 3,
-                Name = "cccccoding",
-                Source = "wwwwweak",
+                Name = "Food Safety",
+                Source = "Food Safety Council",
                 Order = 1,
             };
             returnedCertifications.Add(testCertification3);
@@ -285,10 +332,10 @@ namespace cpsc_471_project.Test
             Education testEducation = new Education()
             {
                 ResumeId = 1,
-                Name = "coding",
+                SchoolName = "University of Calgary",
                 StartDate = d,
                 EndDate = d,
-                Major = "watermelon",
+                Major = "Software Engineering",
                 Order = 1,
 
             };
@@ -297,66 +344,66 @@ namespace cpsc_471_project.Test
             Education testEducation1 = new Education()
             {
                 ResumeId = 2,
-                Name = "codingggggg",
+                SchoolName = "University of Calgary",
                 StartDate = d,
                 EndDate = d,
-                Major = "waterdddddmelon",
+                Major = "Computer Engineering",
                 Order = 1,
             };
             returnedEducations.Add(testEducation1);
 
             return returnedEducations;
         }
+        
         public static List<Experience> SampleExperienceData()
         {
-            DateTime d = new DateTime(1, 1, 1);
             List<Experience> returnedExperience = new List<Experience>();
-
-            Experience testExperience = new Experience()
-            {
-                ResumeId = 1,
-                Company = "coding",
-                StartDate = d,
-                EndDate = d,
-                Title = "watermelon",
-                Order = 1,
-            };
-            returnedExperience.Add(testExperience);
 
             Experience testExperience1 = new Experience()
             {
-                ResumeId = 2,
-                Company = "codddddddding",
-                StartDate = d,
-                EndDate = d,
-                Title = "waterrrrrrmelon",
+                ResumeId = 1,
+                Company = "Python Consulting",
+                StartDate = new DateTime(2019, 10, 1),
+                EndDate = new DateTime(2020, 10, 1),
+                Title = "Python Developer",
                 Order = 1,
             };
             returnedExperience.Add(testExperience1);
 
+            Experience testExperience2 = new Experience()
+            {
+                ResumeId = 1,
+                Company = "Java Consulting",
+                StartDate = new DateTime(2018, 10, 1),
+                EndDate = new DateTime(2019, 9, 30),
+                Title = "Software Architect",
+                Order = 2,
+            };
+            returnedExperience.Add(testExperience2);
+
             return returnedExperience;
         }
+
         public static List<Award> SampleAwardData()
         {
-            DateTime d = new DateTime(1, 1, 1);
             List<Award> returnedAwards = new List<Award>();
 
             Award testAward = new Award()
             {
                 ResumeId = 1,
-                Name = "coding",
-                DateReceived = d,
-                value = "watermelon",
+                Name = "Software Developer of the Year, Python Consulting",
+                DateReceived = new DateTime(2019, 12, 1),
+                value = "nominal",
                 Order = 1,
             };
             returnedAwards.Add(testAward);
 
             Award testAward1 = new Award()
             {
-                ResumeId = 2,
-                Name = "codiiiing",
-                DateReceived = d,
-                value = "watermmmmmelon",
+                ResumeId = 1,
+                Name = "1st Place, Algorithm Development Competition",
+                DateReceived = new DateTime(2018, 12, 1),
+                value = "$750",
                 Order = 1,
             };
             returnedAwards.Add(testAward1);
@@ -364,34 +411,33 @@ namespace cpsc_471_project.Test
             return returnedAwards;
         }
 
+        public static List<Project> SampleProjectData()
+        {
+            List<Project> returnedProjects = new List<Project>();
 
-        // public static List<Resume> SampleResumeData()
-        // {
-        //     List<Resume> resumes = new List<Resume>();
+            Project testProject1 = new Project()
+            {
+                ResumeId = 1,
+                Name = "Learning Management Tool",
+                Description = "Helps manage learning for staff of large organizations",
+                StartDate = new DateTime(2019, 10, 1),
+                EndDate = new DateTime(2020, 10, 1),
+                Order = 1,
+            };
+            returnedProjects.Add(testProject1);
 
-        //     resumes.Add(new Resume()
-        //     {
-        //         ResumeId = 1,
-        //         Name = "Resume #1",
-        //         CandidateId = "user-1"
-        //     });
+            Project testProject2 = new Project()
+            {
+                ResumeId = 1,
+                Name = "Network Mapping Tool",
+                StartDate = new DateTime(2018, 10, 1),
+                EndDate = new DateTime(2019, 9, 30),
+                Order = 2,
+            };
+            returnedProjects.Add(testProject2);
 
-        //     resumes.Add(new Resume()
-        //     {
-        //         ResumeId = 2,
-        //         Name = "Resume #2",
-        //         CandidateId = "user-1"
-        //     });
-
-        //     resumes.Add(new Resume()
-        //     {
-        //         ResumeId = 3,
-        //         Name = "Gr8 resume",
-        //         CandidateId = "user-3"
-        //     });
-
-        //     return resumes;
-        // }
+            return returnedProjects;
+        }
 
         public static List<JobPost> SampleJobPostData()
         {
@@ -405,7 +451,7 @@ namespace cpsc_471_project.Test
                 Description = "Develop software.",
                 Salary = 100000,
                 ClosingDate = DateTime.Now,
-                RecruiterId = "user-1"
+                RecruiterId = "recruiter-1"
             };
             returnedPosts.Add(testPost1);
 
@@ -417,7 +463,7 @@ namespace cpsc_471_project.Test
                 Description = "Makes flags.",
                 Salary = 45000,
                 ClosingDate = DateTime.Now,
-                RecruiterId = "user-1"
+                RecruiterId = "recruiter-2"
             };
             returnedPosts.Add(testPost2);
 
@@ -439,6 +485,53 @@ namespace cpsc_471_project.Test
             };
             returnedApps.Add(testApp1);
             return returnedApps;
+        }
+
+        public static List<Recruiter> SampleRecruiterData()
+        {
+            return new List<Recruiter>()
+            {
+                new Recruiter()
+                {
+                    UserId = "recruiter-1",
+                    CompanyId = 1,
+                },
+                new Recruiter()
+                {
+                    UserId = "recruiter-2",
+                    CompanyId = 1,
+                },
+                new Recruiter()
+                {
+                    UserId = "recruiter-3",
+                    CompanyId = 2,
+                }
+            };
+        }
+        
+        public static List<Offer> SampleOfferData()
+        {
+            List<Offer> returnedOffers = new List<Offer>();
+
+            Offer testOffer1 = new Offer()
+            {
+                ApplicationId = 1,
+                OfferId = 1,
+                AcceptanceEndDate = new DateTime(2020, 12, 1, 8, 30, 52),
+                Text = "We are extending an offer as a contract salesperson for $20.25/hr."
+            };
+            returnedOffers.Add(testOffer1);
+
+            Offer testOffer2 = new Offer()
+            {
+                ApplicationId = 1,
+                OfferId = 2,
+                AcceptanceEndDate = new DateTime(2008, 5, 1, 8, 30, 52),
+                Text = "We are extending an offer as a lifeguard."
+            };
+            returnedOffers.Add(testOffer2);
+
+            return returnedOffers;
         }
     }
 }

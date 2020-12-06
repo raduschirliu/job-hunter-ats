@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
+#if DEBUG
 using cpsc_471_project.Test;
+#endif
 
 namespace cpsc_471_project.Controllers
 {
@@ -51,33 +53,24 @@ namespace cpsc_471_project.Controllers
             return user;
         }
 
-        // PUT: api/users/test-user
+        // PATCH: api/users/{id}
         [Authorize]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(string id, User user)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchUser(string id, User user)
         {
             if (id != user.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
 
-            try
+            if (!UserExists(id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

@@ -89,7 +89,7 @@ namespace cpsc_471_project.Controllers
             {
                 ResumeId = education.ResumeId,
                 Order = education.Order,
-                Name = education.Name,
+                SchoolName = education.SchoolName,
                 StartDate = education.StartDate,
                 EndDate = education.EndDate,
                 Major = education.Major
@@ -100,7 +100,7 @@ namespace cpsc_471_project.Controllers
             {
                 ResumeId = educationDTO.ResumeId,
                 Order = educationDTO.Order,
-                Name = educationDTO.Name,
+                SchoolName = educationDTO.SchoolName,
                 StartDate = educationDTO.StartDate,
                 EndDate = educationDTO.EndDate,
                 Major = educationDTO.Major,

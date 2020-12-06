@@ -12,7 +12,7 @@ namespace cpsc_471_project.Models
         public long ResumeId { get; set; }
         [Key, Column(Order = 1)]
 
-        public string Name { get; set; }
+        public string SchoolName { get; set; }
 
 
         public DateTime StartDate { get; set; }
@@ -36,7 +36,7 @@ namespace cpsc_471_project.Models
         public long ResumeId { get; set; }
 
         [Display(Name = " School Name")]
-        public string Name { get; set; }
+        public string SchoolName { get; set; }
 
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
