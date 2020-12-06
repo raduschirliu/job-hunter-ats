@@ -2,7 +2,7 @@
 
 namespace cpsc_471_project.Migrations
 {
-    public partial class referrals : Migration
+    public partial class Referrals : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
+#if DEBUG
 using cpsc_471_project.Test;
+#endif
 
 namespace cpsc_471_project.Controllers
 {

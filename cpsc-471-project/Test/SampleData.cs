@@ -62,7 +62,15 @@ namespace cpsc_471_project.Test
             {
                 _context.Referrals.AddRange(SampleReferralData());
             }
+            if (!_context.Recruiters.Any())
+            {
+                _context.Recruiters.AddRange(SampleRecruiterData());
+            }
 
+            if (!_context.Offers.Any())
+            {
+                _context.Offers.AddRange(SampleOfferData());
+            }
             await _context.SaveChangesAsync();
         }
 
@@ -73,54 +81,83 @@ namespace cpsc_471_project.Test
                 Id = "admin-user",
                 FirstName = "Bob",
                 LastName = "Ross",
-                UserName = "bob-ross",
+                UserName = "admin-user",
                 Email = "bobross@12asgaetrfasfasf.com",
                 PhoneNumber = "555-555-5555",
             };
             await userManager.CreateAsync(adminUser, "password");
             await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
 
-            User recruiterUser = new User()
+            User recruiterUser1 = new User()
             {
-                Id = "recruiter-user-1",
+                Id = "recruiter-1",
                 FirstName = "Recruiter",
                 LastName = "Person",
                 UserName = "recruiter-1",
                 Email = "recruiter@afjaasdidaoifmasfa.com",
                 PhoneNumber = "555-555-5555",
             };
-            await userManager.CreateAsync(recruiterUser, "password");
-            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Recruiter);
+            await userManager.CreateAsync(recruiterUser1, "password");
+            await userManager.AddToRoleAsync(recruiterUser1, UserRoles.Recruiter);
 
-            await userManager.CreateAsync(new User()
+            User recruiterUser2 = new User()
             {
-                Id = "user-1",
+                Id = "recruiter-2",
+                FirstName = "Recruiter2",
+                LastName = "Person2",
+                UserName = "recruiter-2",
+                Email = "recruiter2@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser2, "password");
+            await userManager.AddToRoleAsync(recruiterUser2, UserRoles.Recruiter);
+
+            User recruiterUser3 = new User()
+            {
+                Id = "recruiter-3",
+                FirstName = "Recruiter3",
+                LastName = "Person3",
+                UserName = "recruiter-3",
+                Email = "recruiter3@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser3, "password");
+            await userManager.AddToRoleAsync(recruiterUser3, UserRoles.Recruiter);
+
+            User candidateUser1 = new User()
+            {
+                Id = "bob-smith",
                 FirstName = "Bob",
                 LastName = "Smith",
                 UserName = "bob-smith",
                 Email = "bobsmith12345@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "555-555-5555",
-            }, "password");
+            };
+            await userManager.CreateAsync(candidateUser1, "password");
+            await userManager.AddToRoleAsync(candidateUser1, UserRoles.Candidate);
 
-            await userManager.CreateAsync(new User()
+            User candidateUser2 = new User()
             {
-                Id = "user-2",
+                Id = "caitlyn-brown",
                 FirstName = "Caitlyn",
                 LastName = "Brown",
                 UserName = "caitlyn-brown",
                 Email = "caitlynbrown1@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "444-444-4444",
-            }, "password");
+            };
+            await userManager.CreateAsync(candidateUser2, "password");
+            await userManager.AddToRoleAsync(candidateUser2, UserRoles.Candidate);
 
-            await userManager.CreateAsync(new User()
-            {
-                Id = "user-3",
+            User candidateUser3 = new User() {
+                Id = "evan-johnson",
                 FirstName = "Evan",
                 LastName = "Johnson",
                 UserName = "evan-johnson",
                 Email = "evanjohnson@jgd098suyfvk23jbfjsdv.com",
                 PhoneNumber = "333-333-3333",
-            }, "password");
+            };
+            await userManager.CreateAsync(candidateUser3, "password");
+            await userManager.AddToRoleAsync(candidateUser3, UserRoles.Candidate);
         }
         public static List<Company> SampleCompanyData()
         {
@@ -167,21 +204,21 @@ namespace cpsc_471_project.Test
             {
                 ResumeId = 1,
                 Name = "Resume #1",
-                CandidateId = "user-1"
+                CandidateId = "bob-smith"
             });
 
             resumes.Add(new Resume()
             {
                 ResumeId = 2,
                 Name = "Resume #2",
-                CandidateId = "user-1"
+                CandidateId = "bob-smith"
             });
 
             resumes.Add(new Resume()
             {
                 ResumeId = 3,
                 Name = "Gr8 resume",
-                CandidateId = "user-3"
+                CandidateId = "evan-johnson"
             });
 
             return resumes;
@@ -199,7 +236,7 @@ namespace cpsc_471_project.Test
                 Description = "Develop software.",
                 Salary = 100000,
                 ClosingDate = DateTime.Now,
-                RecruiterId = "user-1"
+                RecruiterId = "recruiter-1"
             };
             returnedPosts.Add(testPost1);
 
@@ -211,7 +248,7 @@ namespace cpsc_471_project.Test
                 Description = "Makes flags.",
                 Salary = 45000,
                 ClosingDate = DateTime.Now,
-                RecruiterId = "user-1"
+                RecruiterId = "recruiter-2"
             };
             returnedPosts.Add(testPost2);
 
@@ -234,7 +271,6 @@ namespace cpsc_471_project.Test
             returnedApps.Add(testApp1);
             return returnedApps;
         }
-
         public static List<Referral> SampleReferralData()
         {
             List<Referral> returnedRefs = new List<Referral>();
@@ -266,6 +302,53 @@ namespace cpsc_471_project.Test
             returnedRefs.Add(testRef2);
 
             return returnedRefs;
+        }
+
+        public static List<Recruiter> SampleRecruiterData()
+        {
+            return new List<Recruiter>()
+            {
+                new Recruiter()
+                {
+                    UserId = "recruiter-1",
+                    CompanyId = 1,
+                },
+                new Recruiter()
+                {
+                    UserId = "recruiter-2",
+                    CompanyId = 1,
+                },
+                new Recruiter()
+                {
+                    UserId = "recruiter-3",
+                    CompanyId = 2,
+                }
+            };
+        }
+        
+        public static List<Offer> SampleOfferData()
+        {
+            List<Offer> returnedOffers = new List<Offer>();
+
+            Offer testOffer1 = new Offer()
+            {
+                ApplicationId = 1,
+                OfferId = 1,
+                AcceptanceEndDate = new DateTime(2020, 12, 1, 8, 30, 52),
+                Text = "We are extending an offer as a contract salesperson for $20.25/hr."
+            };
+            returnedOffers.Add(testOffer1);
+
+            Offer testOffer2 = new Offer()
+            {
+                ApplicationId = 1,
+                OfferId = 2,
+                AcceptanceEndDate = new DateTime(2008, 5, 1, 8, 30, 52),
+                Text = "We are extending an offer as a lifeguard."
+            };
+            returnedOffers.Add(testOffer2);
+
+            return returnedOffers;
         }
     }
 }

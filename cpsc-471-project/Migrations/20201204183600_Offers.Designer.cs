@@ -9,8 +9,8 @@ using cpsc_471_project.Models;
 namespace cpsc_471_project.Migrations
 {
     [DbContext(typeof(JobHunterDBContext))]
-    [Migration("20201204192628_referrals")]
-    partial class referrals
+    [Migration("20201204183600_Offers")]
+    partial class Offers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -245,37 +245,24 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("JobPosts");
                 });
 
-            modelBuilder.Entity("cpsc_471_project.Models.Referral", b =>
+            modelBuilder.Entity("cpsc_471_project.Models.Offer", b =>
                 {
                     b.Property<long>("ApplicationId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("ReferralId")
+                    b.Property<long>("OfferId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Company")
+                    b.Property<DateTime>("AcceptanceEndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
                         .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(1024);
 
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                    b.HasKey("ApplicationId", "OfferId");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(15);
-
-                    b.Property<string>("Position")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
-
-                    b.HasKey("ApplicationId", "ReferralId");
-
-                    b.ToTable("Referrals");
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>
@@ -462,7 +449,7 @@ namespace cpsc_471_project.Migrations
                         .HasForeignKey("RecruiterId");
                 });
 
-            modelBuilder.Entity("cpsc_471_project.Models.Referral", b =>
+            modelBuilder.Entity("cpsc_471_project.Models.Offer", b =>
                 {
                     b.HasOne("cpsc_471_project.Models.Application", "Application")
                         .WithMany()

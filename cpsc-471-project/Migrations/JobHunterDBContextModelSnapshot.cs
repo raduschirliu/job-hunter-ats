@@ -243,6 +243,41 @@ namespace cpsc_471_project.Migrations
                     b.ToTable("JobPosts");
                 });
 
+            modelBuilder.Entity("cpsc_471_project.Models.Offer", b =>
+                {
+                    b.Property<long>("ApplicationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("OfferId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AcceptanceEndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(1024);
+
+                    b.HasKey("ApplicationId", "OfferId");
+
+                    b.ToTable("Offers");
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Recruiter", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("UserId", "CompanyId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Recruiters");
+                });
+
             modelBuilder.Entity("cpsc_471_project.Models.Referral", b =>
                 {
                     b.Property<long>("ApplicationId")
@@ -458,6 +493,30 @@ namespace cpsc_471_project.Migrations
                     b.HasOne("cpsc_471_project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("RecruiterId");
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Offer", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("cpsc_471_project.Models.Recruiter", b =>
+                {
+                    b.HasOne("cpsc_471_project.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("cpsc_471_project.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Referral", b =>
