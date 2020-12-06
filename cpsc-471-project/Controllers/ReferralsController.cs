@@ -37,7 +37,7 @@ namespace cpsc_471_project.Controllers
             return app.Select(x => ReferralToDTO(x)).ToList();
         }
 
-        [HttpGet("applications/{appId}/referrals/{name}")]
+        [HttpGet("applications/{appId}/referrals/{refId}")]
         public async Task<ActionResult<ReferralDTO>> GetReferral(long appId, long refId)
         {
             var referral = await _context.Referrals.FindAsync(appId, refId);
@@ -50,7 +50,7 @@ namespace cpsc_471_project.Controllers
             return ReferralToDTO(referral);
         }
 
-        [HttpPatch("applications/{appId}/referrals/{name}")]
+        [HttpPatch("applications/{appId}/referrals/{refId}")]
         public async Task<IActionResult> PatchReferral(long appId, long refId, ReferralDTO referralDTO)
         {
             Referral referral = DTOToReferral(referralDTO);
@@ -77,7 +77,7 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return AcceptedAtAction("PatchOffer", new { ApplicationId = referral.ApplicationId, ReferralId = referral.ReferralId }, referralDTO);
+            return AcceptedAtAction("PatchReferral", new { ApplicationId = referral.ApplicationId, ReferralId = referral.ReferralId }, referralDTO);
         }
 
         [HttpPost("applications/{appId}/referrals")] // should this potentially just be "Referrals"?
@@ -92,7 +92,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // DELETE: api/Skill/5
-        [HttpDelete("applications/{appId}/referrals/{name}")]
+        [HttpDelete("applications/{appId}/referrals/{refId}")]
         public async Task<ActionResult<ReferralDTO>> DeleteReferral(long appId, long refId)
         {
             var referral = await _context.Referrals.FindAsync(appId, refId);
