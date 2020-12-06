@@ -23,11 +23,14 @@ namespace cpsc_471_project.Models
         public DbSet<Resume> Resumes { get; set; }
 
         public DbSet<Recruiter> Recruiters { get; set; }
+        public DbSet<Offer> Offers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Recruiter>().HasKey(x => new { x.UserId, x.CompanyId });
+            modelBuilder.Entity<Offer>().HasKey(x => new { x.ApplicationId, x.OfferId });
         }
+
     }
 }
