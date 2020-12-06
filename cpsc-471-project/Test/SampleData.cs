@@ -58,6 +58,11 @@ namespace cpsc_471_project.Test
             {
                 _context.Applications.AddRange(SampleApplicationData());
             }
+            if (!_context.Recruiters.Any())
+            {
+                _context.Recruiters.AddRange(SampleRecruiterData());
+            }
+
             if (!_context.Offers.Any())
             {
                 _context.Offers.AddRange(SampleOfferData());
@@ -79,7 +84,7 @@ namespace cpsc_471_project.Test
             await userManager.CreateAsync(adminUser, "password");
             await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
 
-            User recruiterUser = new User()
+            User recruiterUser1 = new User()
             {
                 Id = "recruiter-1",
                 FirstName = "Recruiter",
@@ -88,8 +93,32 @@ namespace cpsc_471_project.Test
                 Email = "recruiter@afjaasdidaoifmasfa.com",
                 PhoneNumber = "555-555-5555",
             };
-            await userManager.CreateAsync(recruiterUser, "password");
-            await userManager.AddToRoleAsync(recruiterUser, UserRoles.Recruiter);
+            await userManager.CreateAsync(recruiterUser1, "password");
+            await userManager.AddToRoleAsync(recruiterUser1, UserRoles.Recruiter);
+
+            User recruiterUser2 = new User()
+            {
+                Id = "recruiter-2",
+                FirstName = "Recruiter2",
+                LastName = "Person2",
+                UserName = "recruiter-2",
+                Email = "recruiter2@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser2, "password");
+            await userManager.AddToRoleAsync(recruiterUser2, UserRoles.Recruiter);
+
+            User recruiterUser3 = new User()
+            {
+                Id = "recruiter-3",
+                FirstName = "Recruiter3",
+                LastName = "Person3",
+                UserName = "recruiter-3",
+                Email = "recruiter3@afjaasdidaoifmasfa.com",
+                PhoneNumber = "555-555-5555",
+            };
+            await userManager.CreateAsync(recruiterUser3, "password");
+            await userManager.AddToRoleAsync(recruiterUser3, UserRoles.Recruiter);
 
             User candidateUser1 = new User()
             {
@@ -171,21 +200,21 @@ namespace cpsc_471_project.Test
             {
                 ResumeId = 1,
                 Name = "Resume #1",
-                CandidateId = "user-1"
+                CandidateId = "bob-smith"
             });
 
             resumes.Add(new Resume()
             {
                 ResumeId = 2,
                 Name = "Resume #2",
-                CandidateId = "user-1"
+                CandidateId = "bob-smith"
             });
 
             resumes.Add(new Resume()
             {
                 ResumeId = 3,
                 Name = "Gr8 resume",
-                CandidateId = "user-3"
+                CandidateId = "evan-johnson"
             });
 
             return resumes;
@@ -203,7 +232,7 @@ namespace cpsc_471_project.Test
                 Description = "Develop software.",
                 Salary = 100000,
                 ClosingDate = DateTime.Now,
-                RecruiterId = "user-1"
+                RecruiterId = "recruiter-1"
             };
             returnedPosts.Add(testPost1);
 
@@ -215,7 +244,7 @@ namespace cpsc_471_project.Test
                 Description = "Makes flags.",
                 Salary = 45000,
                 ClosingDate = DateTime.Now,
-                RecruiterId = "user-1"
+                RecruiterId = "recruiter-2"
             };
             returnedPosts.Add(testPost2);
 
@@ -239,6 +268,28 @@ namespace cpsc_471_project.Test
             return returnedApps;
         }
 
+        public static List<Recruiter> SampleRecruiterData()
+        {
+            return new List<Recruiter>()
+            {
+                new Recruiter()
+                {
+                    UserId = "recruiter-1",
+                    CompanyId = 1,
+                },
+                new Recruiter()
+                {
+                    UserId = "recruiter-2",
+                    CompanyId = 1,
+                },
+                new Recruiter()
+                {
+                    UserId = "recruiter-3",
+                    CompanyId = 2,
+                }
+            };
+        }
+        
         public static List<Offer> SampleOfferData()
         {
             List<Offer> returnedOffers = new List<Offer>();
