@@ -16,30 +16,43 @@ namespace cpsc_471_project.Models
         [ForeignKey("Resume")]
         [Key, Column(Order = 0)]
         public long ResumeId { get; set; }
+        public Resume Resume { get; set; } // for referential integrity
+
+        [Required]
         [Key, Column(Order = 1)]
-        public string Company { get; set; }
-        public string Title { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        [Key, Column(Order = 2)]
         public long Order { get; set; }
 
-        public Resume Resume { get; set; }
+        [Required]
+        public string Company { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+        
+        [Required]
+        public DateTime StartDate { get; set; }
+        
+        public DateTime? EndDate { get; set; }
+
     }
 
     public class ExperienceDTO
     {
         [Display(Name = "Resume Id")]
         public long ResumeId { get; set; }
-        [Display(Name = "Company")]
-        public string Company { get; set; }
-        [Display(Name = "Title")]
-        public string Title { get; set; }
-        [Display(Name = "Start Date")]
-        public DateTime StartDate { get; set; }
-        [Display(Name = "End Date")]
-        public DateTime EndDate { get; set; }
+
         [Display(Name = "Order")]
         public long Order { get; set; }
+
+        [Display(Name = "Company")]
+        public string Company { get; set; }
+
+        [Display(Name = "Title")]
+        public string Title { get; set; }
+
+        [Display(Name = "Start Date")]
+        public DateTime StartDate { get; set; }
+
+        [Display(Name = "End Date")]
+        public DateTime? EndDate { get; set; }
     }
 }

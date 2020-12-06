@@ -84,27 +84,51 @@ namespace cpsc_471_project.Controllers
             return _context.Education.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
-        private static EducationDTO EducationToDTO(Education education) =>
-            new EducationDTO
+        private static EducationDTO EducationToDTO(Education education)
+        {
+            DateTime? inputStartDate = education.StartDate;
+            if (education.StartDate.HasValue)
+            {
+                inputStartDate = education.StartDate.GetValueOrDefault();
+            }
+            DateTime? inputEndDate = education.EndDate;
+            if (education.EndDate.HasValue)
+            {
+                inputEndDate = education.EndDate.GetValueOrDefault();
+            }
+            return new EducationDTO
             {
                 ResumeId = education.ResumeId,
                 Order = education.Order,
                 SchoolName = education.SchoolName,
-                StartDate = education.StartDate,
-                EndDate = education.EndDate,
+                StartDate = inputStartDate,
+                EndDate = inputEndDate,
                 Major = education.Major
             };
+        }
 
-        private static Education DTOToEducation(EducationDTO educationDTO) =>
-            new Education
+        private static Education DTOToEducation(EducationDTO educationDTO)
+        {
+            DateTime? inputStartDate = educationDTO.StartDate;
+            if (educationDTO.StartDate.HasValue)
+            {
+                inputStartDate = educationDTO.StartDate.GetValueOrDefault();
+            }
+            DateTime? inputEndDate = educationDTO.EndDate;
+            if (educationDTO.EndDate.HasValue)
+            {
+                inputEndDate = educationDTO.EndDate.GetValueOrDefault();
+            }
+            return new Education
             {
                 ResumeId = educationDTO.ResumeId,
                 Order = educationDTO.Order,
                 SchoolName = educationDTO.SchoolName,
-                StartDate = educationDTO.StartDate,
-                EndDate = educationDTO.EndDate,
+                StartDate = inputStartDate,
+                EndDate = inputEndDate,
                 Major = educationDTO.Major,
                 Resume = null
             };
+        }  
     }
 }

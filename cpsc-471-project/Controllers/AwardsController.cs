@@ -84,25 +84,39 @@ namespace cpsc_471_project.Controllers
             return _context.Awards.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
-        private static AwardDTO AwardToDTO(Award award) =>
-            new AwardDTO
+        private static AwardDTO AwardToDTO(Award award)
+        {
+            DateTime? inputDate = award.DateReceived;
+            if (award.DateReceived.HasValue)
+            {
+                inputDate = award.DateReceived.GetValueOrDefault();
+            }
+            return new AwardDTO
             {
                 ResumeId = award.ResumeId,
                 Order = award.Order,
                 Name = award.Name,
-                DateReceived = award.DateReceived,
+                DateReceived = inputDate,
                 value = award.value
             };
+        }
 
-        private static Award DTOToAward(AwardDTO awardDTO) =>
-            new Award
+        private static Award DTOToAward(AwardDTO awardDTO)
+        {
+            DateTime? inputDate = awardDTO.DateReceived;
+            if (awardDTO.DateReceived.HasValue)
+            {
+                inputDate = awardDTO.DateReceived.GetValueOrDefault();
+            }
+            return new Award
             {
                 ResumeId = awardDTO.ResumeId,
                 Order = awardDTO.Order,
                 Name = awardDTO.Name,
-                DateReceived = awardDTO.DateReceived,
+                DateReceived = inputDate,
                 value = awardDTO.value,
                 Resume = null
             };
+        }
     }
 }

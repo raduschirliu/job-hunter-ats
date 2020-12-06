@@ -182,10 +182,11 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("Order")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateReceived")
+                    b.Property<DateTime?>("DateReceived")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("value")
@@ -205,6 +206,7 @@ namespace cpsc_471_project.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Source")
@@ -256,16 +258,18 @@ namespace cpsc_471_project.Migrations
                     b.Property<long>("Order")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Major")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SchoolName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ResumeId", "Order");
@@ -282,15 +286,17 @@ namespace cpsc_471_project.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Company")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ResumeId", "Order");
@@ -365,13 +371,14 @@ namespace cpsc_471_project.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ResumeId", "Order");
@@ -425,6 +432,7 @@ namespace cpsc_471_project.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Proficiency")

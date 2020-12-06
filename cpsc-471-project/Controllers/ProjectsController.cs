@@ -84,27 +84,52 @@ namespace cpsc_471_project.Controllers
             return _context.Projects.Any(e => (e.ResumeId == reusmeId) && (e.Order == order));
         }
 
-        private static ProjectDTO ProjectToDTO(Project project) =>
-            new ProjectDTO
+        private static ProjectDTO ProjectToDTO(Project project)
+        {
+            DateTime? inputStartDate = project.StartDate;
+            if (project.StartDate.HasValue)
+            {
+                inputStartDate = project.StartDate.GetValueOrDefault();
+            }
+            DateTime? inputEndDate = project.EndDate;
+            if (project.EndDate.HasValue)
+            {
+                inputEndDate = project.EndDate.GetValueOrDefault();
+            }
+            return new ProjectDTO
             {
                 ResumeId = project.ResumeId,
                 Order = project.Order,
                 Name = project.Name,
                 Description = project.Description,
-                StartDate = project.StartDate,
-                EndDate = project.EndDate
+                StartDate = inputStartDate,
+                EndDate = inputEndDate
             };
+        }
 
-        private static Project DTOToProject(ProjectDTO projectDTO) =>
-            new Project
+        private static Project DTOToProject(ProjectDTO projectDTO)
+        {
+            DateTime? inputStartDate = projectDTO.StartDate;
+            if (projectDTO.StartDate.HasValue)
+            {
+                inputStartDate = projectDTO.StartDate.GetValueOrDefault();
+            }
+            DateTime? inputEndDate = projectDTO.EndDate;
+            if (projectDTO.EndDate.HasValue)
+            {
+                inputEndDate = projectDTO.EndDate.GetValueOrDefault();
+            }
+            return new Project
             {
                 ResumeId = projectDTO.ResumeId,
                 Order = projectDTO.Order,
                 Name = projectDTO.Name,
                 Description = projectDTO.Description,
-                StartDate = projectDTO.StartDate,
-                EndDate = projectDTO.EndDate,
+                StartDate = inputStartDate,
+                EndDate = inputEndDate,
                 Resume = null
             };
+        }
+            
     }
 }

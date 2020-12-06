@@ -84,8 +84,15 @@ namespace cpsc_471_project.Controllers
             return _context.Experiences.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
-        private static ExperienceDTO ExperienceToDTO(Experience experience) =>
-            new ExperienceDTO
+        private static ExperienceDTO ExperienceToDTO(Experience experience)
+        {
+            DateTime inputStartDate = experience.StartDate.Date;
+            DateTime? inputEndDate = experience.EndDate;
+            if (experience.EndDate.HasValue)
+            {
+                inputEndDate = experience.EndDate.GetValueOrDefault();
+            }
+            return new ExperienceDTO
             {
                 ResumeId = experience.ResumeId,
                 Order = experience.Order,
@@ -94,17 +101,26 @@ namespace cpsc_471_project.Controllers
                 StartDate = experience.StartDate,
                 EndDate = experience.EndDate
             };
+        }
 
-        private static Experience DTOToExperience(ExperienceDTO experienceDTO) =>
-            new Experience
+        private static Experience DTOToExperience(ExperienceDTO experienceDTO)
+        {
+            DateTime inputStartDate = experienceDTO.StartDate.Date;
+            DateTime? inputEndDate = experienceDTO.EndDate;
+            if (experienceDTO.EndDate.HasValue)
+            {
+                inputEndDate = experienceDTO.EndDate.GetValueOrDefault();
+            }
+            return new Experience
             {
                 ResumeId = experienceDTO.ResumeId,
                 Order = experienceDTO.Order,
                 Title = experienceDTO.Title,
                 Company = experienceDTO.Company,
-                StartDate = experienceDTO.StartDate,
-                EndDate = experienceDTO.EndDate,
+                StartDate = inputStartDate,
+                EndDate = inputEndDate,
                 Resume = null
             };
+        }
     }
 }

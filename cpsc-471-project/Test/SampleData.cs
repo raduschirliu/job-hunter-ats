@@ -347,7 +347,7 @@ namespace cpsc_471_project.Test
                 SchoolName = "University of Calgary",
                 StartDate = d,
                 EndDate = d,
-                Major = "Computer Engineering",
+                Major = "Computer Science",
                 Order = 1,
             };
             returnedEducations.Add(testEducation1);
@@ -404,7 +404,7 @@ namespace cpsc_471_project.Test
                 Name = "1st Place, Algorithm Development Competition",
                 DateReceived = new DateTime(2018, 12, 1),
                 value = "$750",
-                Order = 1,
+                Order = 2,
             };
             returnedAwards.Add(testAward1);
 

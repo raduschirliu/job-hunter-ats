@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace cpsc_471_project.Migrations
 {
-    public partial class Resume_Subsections : Migration
+    public partial class Resume_Sections : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +13,8 @@ namespace cpsc_471_project.Migrations
                 {
                     ResumeId = table.Column<long>(nullable: false),
                     Order = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    DateReceived = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    DateReceived = table.Column<DateTime>(nullable: true),
                     value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -34,7 +34,7 @@ namespace cpsc_471_project.Migrations
                 {
                     ResumeId = table.Column<long>(nullable: false),
                     Order = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Source = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -54,10 +54,10 @@ namespace cpsc_471_project.Migrations
                 {
                     ResumeId = table.Column<long>(nullable: false),
                     Order = table.Column<long>(nullable: false),
-                    SchoolName = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    Major = table.Column<string>(nullable: true)
+                    SchoolName = table.Column<string>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    Major = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,10 +76,10 @@ namespace cpsc_471_project.Migrations
                 {
                     ResumeId = table.Column<long>(nullable: false),
                     Order = table.Column<long>(nullable: false),
-                    Company = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
+                    Company = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false)
+                    EndDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,10 +98,10 @@ namespace cpsc_471_project.Migrations
                 {
                     ResumeId = table.Column<long>(nullable: false),
                     Order = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false)
+                    StartDate = table.Column<DateTime>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -120,7 +120,7 @@ namespace cpsc_471_project.Migrations
                 {
                     ResumeId = table.Column<long>(nullable: false),
                     Order = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Proficiency = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
