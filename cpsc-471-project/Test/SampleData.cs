@@ -42,7 +42,7 @@ namespace cpsc_471_project.Test
             {
                 await AddSampleUserData(userManager);
             }
-            if ( !_context.Companies.Any() )
+            if (!_context.Companies.Any())
             {
                 _context.Companies.AddRange(SampleCompanyData());
             }
@@ -83,6 +83,10 @@ namespace cpsc_471_project.Test
             if (!_context.Applications.Any())
             {
                 _context.Applications.AddRange(SampleApplicationData());
+            }
+            if (!_context.Referrals.Any())
+            {
+                _context.Referrals.AddRange(SampleReferralData());
             }
             if (!_context.Recruiters.Any())
             {
@@ -485,6 +489,38 @@ namespace cpsc_471_project.Test
             };
             returnedApps.Add(testApp1);
             return returnedApps;
+        }
+        public static List<Referral> SampleReferralData()
+        {
+            List<Referral> returnedRefs = new List<Referral>();
+
+            Referral testRef1 = new Referral()
+            {
+                ApplicationId = 1,
+                Application = null,
+                ReferralId = 0,
+                Name = "Jane Doe",
+                Email = "jane@gmail.com",
+                Position = "HR Manager",
+                Company = "Google",
+                Phone = "555-123-5555"
+            };
+            returnedRefs.Add(testRef1);
+
+            Referral testRef2 = new Referral()
+            {
+                ApplicationId = 1,
+                Application = null,
+                ReferralId = 1,
+                Name = "Dua Lipa",
+                Email = "dua@lipa.com",
+                Position = "Pop Icon",
+                Company = "Billboard",
+                Phone = "555-123-1234"
+            };
+            returnedRefs.Add(testRef2);
+
+            return returnedRefs;
         }
 
         public static List<Recruiter> SampleRecruiterData()
