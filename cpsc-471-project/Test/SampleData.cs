@@ -253,19 +253,36 @@ namespace cpsc_471_project.Test
 
         public static List<Application> SampleApplicationData()
         {
-            List<Application> returnedApps = new List<Application>();
-
-            Application testApp1 = new Application()
+            return new List<Application>()
             {
-                ApplicationId = 1,
-                JobId = 1,
-                DateSubmitted = new DateTime(2008, 5, 1, 8, 30, 52),
-                Status = StatusEnum.Accepted,
-                CoverLetter = "pls give job xo",
-                ResumeId = 2
+                new Application()
+                {
+                    ApplicationId = 1,
+                    JobId = 1,
+                    DateSubmitted = new DateTime(2008, 5, 1, 8, 30, 52),
+                    Status = StatusEnum.Accepted,
+                    CoverLetter = "pls give job xo",
+                    ResumeId = 1
+                },
+                new Application()
+                {
+                    ApplicationId = 2,
+                    JobId = 1,
+                    DateSubmitted = new DateTime(2018, 5, 1, 8, 30, 52),
+                    Status = StatusEnum.Sent,
+                    CoverLetter = "hello i want job",
+                    ResumeId = 2
+                },
+                new Application()
+                {
+                    ApplicationId = 3,
+                    JobId = 2,
+                    DateSubmitted = DateTime.Now,
+                    Status = StatusEnum.Rejected,
+                    CoverLetter = "hi. please hire <3",
+                    ResumeId = 3
+                },
             };
-            returnedApps.Add(testApp1);
-            return returnedApps;
         }
 
         public static List<Recruiter> SampleRecruiterData()
