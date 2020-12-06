@@ -21,31 +21,25 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        [HttpPut("{id}/Certifications/{order}")]
-        public async Task<IActionResult> PutCertification(long id, long order, CertificationDTO certificationDTO)
+        [HttpPatch("{resumeId}/certifications/{order}")]
+        public async Task<IActionResult> PatchCertification(long resumeId, long order, CertificationDTO certificationDTO)
         {
             Certification sanitizedCertification = DTOToCertification(certificationDTO);
-            if (id != sanitizedCertification.ResumeId)
+            if (resumeId != sanitizedCertification.ResumeId)
             {
-                return BadRequest();
+                return BadRequest("resumeId in query params does not match resumeId in body");
             }
 
             if (order != sanitizedCertification.Order)
             {
-                return BadRequest();
+                return BadRequest("subsection order in query params does not match subsection order in body");
             }
 
-            bool newCertification;
-            if (!CertificationExists(id, order))
+            if (!CertificationExists(resumeId, order))
             {
-                newCertification = true;
-                _context.Certifications.Add(sanitizedCertification);
+                return BadRequest("Associated subsection does not exist");
             }
-            else
-            {
-                newCertification = false;
-                _context.Entry(sanitizedCertification).State = EntityState.Modified;
-            }
+            _context.Entry(sanitizedCertification).State = EntityState.Modified;
 
             try
             {
@@ -53,41 +47,36 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CertificationExists(id, order))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            if (newCertification)
-            {
-                return CreatedAtAction("PutCertification", new { id = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
-            }
-            else
-            {
-                return AcceptedAtAction("PutCertification", new { id = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
-            }
+            return AcceptedAtAction("PatchCertification", new { resumeId = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
         }
 
-        [HttpPost("{id}/Certifications")]
-        public async Task<ActionResult<CertificationDTO>> PostCertification(CertificationDTO certificationDTO)
+        [HttpPost("{resumeId}/certifications")]
+        public async Task<ActionResult<CertificationDTO>> PostCertification(long resumeId, CertificationDTO certificationDTO)
         {
+            if (resumeId != certificationDTO.ResumeId)
+            {
+                return BadRequest("resumeId in query params does not match resumeId in body");
+            }
+
+            if (CertificationExists(resumeId, certificationDTO.Order))
+            {
+                return BadRequest("associated subsection already exists");
+            }
             Certification sanitizedCertification = DTOToCertification(certificationDTO);
             _context.Certifications.Add(sanitizedCertification);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostCertification", new { id = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
+            return CreatedAtAction("PostCertification", new { resumeId = sanitizedCertification.ResumeId, order = sanitizedCertification.Order }, certificationDTO);
         }
 
         // DELETE: api/Certification/5
-        [HttpDelete("{id}/Certifications/{order}")]
-        public async Task<ActionResult<CertificationDTO>> DeleteCertification(long id, long order)
+        [HttpDelete("{resumeId}/certifications/{order}")]
+        public async Task<ActionResult<CertificationDTO>> DeleteCertification(long resumeId, long order)
         {
-            var certification = await _context.Certifications.FindAsync(id, order);
+            var certification = await _context.Certifications.FindAsync(resumeId, order);
             if (certification == null)
             {
                 return NotFound();
@@ -99,9 +88,9 @@ namespace cpsc_471_project.Controllers
             return CertificationToDTO(certification);
         }
 
-        private bool CertificationExists(long id, long order)
+        private bool CertificationExists(long resumeId, long order)
         {
-            return _context.Certifications.Any(e => (e.ResumeId == id) && (e.Order == order));
+            return _context.Certifications.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
         private static CertificationDTO CertificationToDTO(Certification certification) =>

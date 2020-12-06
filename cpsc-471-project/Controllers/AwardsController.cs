@@ -21,31 +21,25 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        [HttpPut("{id}/awards/{order}")]
-        public async Task<IActionResult> PutAward(long id, long order, AwardDTO awardDTO)
+        [HttpPatch("{resumeId}/awards/{order}")]
+        public async Task<IActionResult> PatchEducation(long resumeId, long order, AwardDTO awardDTO)
         {
             Award sanitizedAward = DTOToAward(awardDTO);
-            if (id != sanitizedAward.ResumeId)
+            if (resumeId != sanitizedAward.ResumeId)
             {
-                return BadRequest();
+                return BadRequest("resumeId in query params does not match resumeId in body");
             }
 
             if (order != sanitizedAward.Order)
             {
-                return BadRequest();
+                return BadRequest("subsection order in query params does not match subsection order in body");
             }
 
-            bool newAward;
-            if (!AwardExists(id, order))
+            if (!AwardExists(resumeId, order))
             {
-                newAward = true;
-                _context.Awards.Add(sanitizedAward);
+                return BadRequest("Associated subsection does not exist");
             }
-            else
-            {
-                newAward = false;
-                _context.Entry(sanitizedAward).State = EntityState.Modified;
-            }
+            _context.Entry(sanitizedAward).State = EntityState.Modified;
 
             try
             {
@@ -53,41 +47,27 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AwardExists(id, order))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            if (newAward)
-            {
-                return CreatedAtAction("PutAward", new { id = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
-            }
-            else
-            {
-                return AcceptedAtAction("PutAward", new { id = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
-            }
+            return AcceptedAtAction("PatchAward", new { resumeId = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
         }
 
-        [HttpPost("{id}/awards")]
+        [HttpPost("{resumeId}/awards")]
         public async Task<ActionResult<AwardDTO>> PostAward(AwardDTO awardDTO)
         {
             Award sanitizedAward = DTOToAward(awardDTO);
             _context.Awards.Add(sanitizedAward);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostAward", new { id = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
+            return CreatedAtAction("PostAward", new { resumeId = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
         }
 
         // DELETE: api/Award/5
-        [HttpDelete("{id}/awards/{order}")]
-        public async Task<ActionResult<AwardDTO>> DeleteAward(long id, long order)
+        [HttpDelete("{resumeId}/awards/{order}")]
+        public async Task<ActionResult<AwardDTO>> DeleteAward(long resumeId, long order)
         {
-            var award = await _context.Awards.FindAsync(id, order);
+            var award = await _context.Awards.FindAsync(resumeId, order);
             if (award == null)
             {
                 return NotFound();
@@ -99,9 +79,9 @@ namespace cpsc_471_project.Controllers
             return AwardToDTO(award);
         }
 
-        private bool AwardExists(long id, long order)
+        private bool AwardExists(long resumeId, long order)
         {
-            return _context.Awards.Any(e => (e.ResumeId == id) && (e.Order == order));
+            return _context.Awards.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
         private static AwardDTO AwardToDTO(Award award) =>

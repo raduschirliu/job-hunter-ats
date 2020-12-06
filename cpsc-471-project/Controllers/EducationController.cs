@@ -21,73 +21,53 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        [HttpPut("{id}/Educations/{order}")]
-        public async Task<IActionResult> PutEducation(long id, long order, EducationDTO educationDTO)
+        [HttpPatch("{resumeId}/education/{order}")]
+        public async Task<IActionResult> PatchEducation(long resumeId, long order, EducationDTO educationDTO)
         {
             Education sanitizedEducation = DTOToEducation(educationDTO);
-            if (id != sanitizedEducation.ResumeId)
+            if (resumeId != sanitizedEducation.ResumeId)
             {
-                return BadRequest();
+                return BadRequest("resumeId in query params does not match resumeId in body");
             }
 
             if (order != sanitizedEducation.Order)
             {
-                return BadRequest();
+                return BadRequest("subsection order in query params does not match subsection order in body");
             }
 
-            bool newEducation;
-            if (!EducationExists(id, order))
+            if (!EducationExists(resumeId, order))
             {
-                newEducation = true;
-                _context.Education.Add(sanitizedEducation);
+                return BadRequest("Associated subsection does not exist");
             }
-            else
-            {
-                newEducation = false;
-                _context.Entry(sanitizedEducation).State = EntityState.Modified;
-            }
-
+            _context.Entry(sanitizedEducation).State = EntityState.Modified;
+            
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EducationExists(id, order))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            if (newEducation)
-            {
-                return CreatedAtAction("PutEducation", new { id = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
-            }
-            else
-            {
-                return AcceptedAtAction("PutEducation", new { id = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
-            }
+            return AcceptedAtAction("PatchEducation", new { resumeId = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
         }
 
-        [HttpPost("{id}/Educations")]
+        [HttpPost("{resumeId}/education")]
         public async Task<ActionResult<EducationDTO>> PostEducation(EducationDTO educationDTO)
         {
             Education sanitizedEducation = DTOToEducation(educationDTO);
             _context.Education.Add(sanitizedEducation);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostEducation", new { id = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
+            return CreatedAtAction("PostEducation", new { resumeId = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
         }
 
         // DELETE: api/Education/5
-        [HttpDelete("{id}/Educations/{order}")]
-        public async Task<ActionResult<EducationDTO>> DeleteEducation(long id, long order)
+        [HttpDelete("{resumeId}/educations/{order}")]
+        public async Task<ActionResult<EducationDTO>> DeleteEducation(long resumeId, long order)
         {
-            var education = await _context.Education.FindAsync(id, order);
+            var education = await _context.Education.FindAsync(resumeId, order);
             if (education == null)
             {
                 return NotFound();
@@ -99,9 +79,9 @@ namespace cpsc_471_project.Controllers
             return EducationToDTO(education);
         }
 
-        private bool EducationExists(long id, long order)
+        private bool EducationExists(long resumeId, long order)
         {
-            return _context.Education.Any(e => (e.ResumeId == id) && (e.Order == order));
+            return _context.Education.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
         private static EducationDTO EducationToDTO(Education education) =>

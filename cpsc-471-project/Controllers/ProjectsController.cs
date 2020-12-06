@@ -21,31 +21,25 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        [HttpPut("{id}/Projects/{order}")]
-        public async Task<IActionResult> PutProject(long id, long order, ProjectDTO projectDTO)
+        [HttpPatch("{resumeId}/projects/{order}")]
+        public async Task<IActionResult> PatchProject(long resumeId, long order, ProjectDTO projectDTO)
         {
             Project sanitizedProject = DTOToProject(projectDTO);
-            if (id != sanitizedProject.ResumeId)
+            if (resumeId != sanitizedProject.ResumeId)
             {
-                return BadRequest();
+                return BadRequest("resumeId in query params does not match resumeId in body");
             }
 
             if (order != sanitizedProject.Order)
             {
-                return BadRequest();
+                return BadRequest("subsection order in query params does not match subsection order in body");
             }
 
-            bool newProject;
-            if (!ProjectExists(id, order))
+            if (!ProjectExists(resumeId, order))
             {
-                newProject = true;
-                _context.Projects.Add(sanitizedProject);
+                return BadRequest("Associated subsection does not exist");
             }
-            else
-            {
-                newProject = false;
-                _context.Entry(sanitizedProject).State = EntityState.Modified;
-            }
+            _context.Entry(sanitizedProject).State = EntityState.Modified;
 
             try
             {
@@ -53,41 +47,27 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProjectExists(id, order))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            if (newProject)
-            {
-                return CreatedAtAction("PutProject", new { id = sanitizedProject.ResumeId, order = sanitizedProject.Order }, projectDTO);
-            }
-            else
-            {
-                return AcceptedAtAction("PutProject", new { id = sanitizedProject.ResumeId, order = sanitizedProject.Order }, projectDTO);
-            }
+            return AcceptedAtAction("PatchProject", new { resumeId = sanitizedProject.ResumeId, order = sanitizedProject.Order }, projectDTO);
         }
 
-        [HttpPost("{id}/Projects")]
+        [HttpPost("{reusmeId}/Projects")]
         public async Task<ActionResult<ProjectDTO>> PostProject(ProjectDTO projectDTO)
         {
             Project sanitizedProject = DTOToProject(projectDTO);
             _context.Projects.Add(sanitizedProject);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostProject", new { id = sanitizedProject.ResumeId, order = sanitizedProject.Order }, projectDTO);
+            return CreatedAtAction("PostProject", new { reusmeId = sanitizedProject.ResumeId, order = sanitizedProject.Order }, projectDTO);
         }
 
         // DELETE: api/Project/5
-        [HttpDelete("{id}/Projects/{order}")]
-        public async Task<ActionResult<ProjectDTO>> DeleteProject(long id, long order)
+        [HttpDelete("{reusmeId}/Projects/{order}")]
+        public async Task<ActionResult<ProjectDTO>> DeleteProject(long reusmeId, long order)
         {
-            var project = await _context.Projects.FindAsync(id, order);
+            var project = await _context.Projects.FindAsync(reusmeId, order);
             if (project == null)
             {
                 return NotFound();
@@ -99,9 +79,9 @@ namespace cpsc_471_project.Controllers
             return ProjectToDTO(project);
         }
 
-        private bool ProjectExists(long id, long order)
+        private bool ProjectExists(long reusmeId, long order)
         {
-            return _context.Projects.Any(e => (e.ResumeId == id) && (e.Order == order));
+            return _context.Projects.Any(e => (e.ResumeId == reusmeId) && (e.Order == order));
         }
 
         private static ProjectDTO ProjectToDTO(Project project) =>

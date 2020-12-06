@@ -12,40 +12,34 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/resumes")]
     [ApiController]
-    public class ExperiencesController : ControllerBase
+    public class ExperienceController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public ExperiencesController(JobHunterDBContext context)
+        public ExperienceController(JobHunterDBContext context)
         {
             _context = context;
         }
 
-        [HttpPut("{id}/Experiences/{order}")]
-        public async Task<IActionResult> PutExperience(long id, long order, ExperienceDTO experienceDTO)
+        [HttpPatch("{resumeId}/experience/{order}")]
+        public async Task<IActionResult> PatchExperience(long resumeId, long order, ExperienceDTO experienceDTO)
         {
             Experience sanitizedExperience = DTOToExperience(experienceDTO);
-            if (id != sanitizedExperience.ResumeId)
+            if (resumeId != sanitizedExperience.ResumeId)
             {
-                return BadRequest();
+                return BadRequest("resumeId in query params does not match resumeId in body");
             }
 
             if (order != sanitizedExperience.Order)
             {
-                return BadRequest();
+                return BadRequest("subsection order in query params does not match subsection order in body");
             }
 
-            bool newExperience;
-            if (!ExperienceExists(id, order))
+            if (!ExperienceExists(resumeId, order))
             {
-                newExperience = true;
-                _context.Experiences.Add(sanitizedExperience);
+                return BadRequest("Associated subsection does not exist");
             }
-            else
-            {
-                newExperience = false;
-                _context.Entry(sanitizedExperience).State = EntityState.Modified;
-            }
+            _context.Entry(sanitizedExperience).State = EntityState.Modified;
 
             try
             {
@@ -53,41 +47,27 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ExperienceExists(id, order))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            if (newExperience)
-            {
-                return CreatedAtAction("PutExperience", new { id = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
-            }
-            else
-            {
-                return AcceptedAtAction("PutExperience", new { id = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
-            }
+            return AcceptedAtAction("PatchExperience", new { resumeId = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
         }
 
-        [HttpPost("{id}/Experiences")]
+        [HttpPost("{resumeId}/experience")]
         public async Task<ActionResult<ExperienceDTO>> PostExperience(ExperienceDTO experienceDTO)
         {
             Experience sanitizedExperience = DTOToExperience(experienceDTO);
             _context.Experiences.Add(sanitizedExperience);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostExperience", new { id = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
+            return CreatedAtAction("PostExperience", new { resumeId = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
         }
 
         // DELETE: api/Experience/5
-        [HttpDelete("{id}/Experiences/{order}")]
-        public async Task<ActionResult<ExperienceDTO>> DeleteExperience(long id, long order)
+        [HttpDelete("{resumeId}/experience/{order}")]
+        public async Task<ActionResult<ExperienceDTO>> DeleteExperience(long resumeId, long order)
         {
-            var experience = await _context.Experiences.FindAsync(id, order);
+            var experience = await _context.Experiences.FindAsync(resumeId, order);
             if (experience == null)
             {
                 return NotFound();
@@ -99,9 +79,9 @@ namespace cpsc_471_project.Controllers
             return ExperienceToDTO(experience);
         }
 
-        private bool ExperienceExists(long id, long order)
+        private bool ExperienceExists(long resumeId, long order)
         {
-            return _context.Experiences.Any(e => (e.ResumeId == id) && (e.Order == order));
+            return _context.Experiences.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
         private static ExperienceDTO ExperienceToDTO(Experience experience) =>

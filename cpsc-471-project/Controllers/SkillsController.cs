@@ -21,31 +21,25 @@ namespace cpsc_471_project.Controllers
             _context = context;
         }
 
-        [HttpPut("{id}/Skills/{order}")]
-        public async Task<IActionResult> PutSkill(long id, long order, SkillDTO skillDTO)
+        [HttpPatch("{resumeId}/skills/{order}")]
+        public async Task<IActionResult> PatchSkill(long resumeId, long order, SkillDTO skillDTO)
         {
             Skill sanitizedSkill = DTOToSkill(skillDTO);
-            if (id != sanitizedSkill.ResumeId)
+            if (resumeId != sanitizedSkill.ResumeId)
             {
-                return BadRequest();
+                return BadRequest("resumeId in query params does not match resumeId in body");
             }
 
             if (order != sanitizedSkill.Order)
             {
-                return BadRequest();
+                return BadRequest("subsection order in query params does not match subsection order in body");
             }
 
-            bool newSkill;
-            if (!SkillExists(id, order))
+            if (!SkillExists(resumeId, order))
             {
-                newSkill = true;
-                _context.Skills.Add(sanitizedSkill);
+                return BadRequest("Associated subsection does not exist");
             }
-            else
-            {
-                newSkill = false;
-                _context.Entry(sanitizedSkill).State = EntityState.Modified;
-            }
+            _context.Entry(sanitizedSkill).State = EntityState.Modified;
 
             try
             {
@@ -53,41 +47,27 @@ namespace cpsc_471_project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SkillExists(id, order))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            if (newSkill)
-            {
-                return CreatedAtAction("PutSkill", new { id = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
-            }
-            else
-            {
-                return AcceptedAtAction("PutSkill", new { id = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
-            }
+            return AcceptedAtAction("PatchSkill", new { resumeId = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
         }
 
-        [HttpPost("{id}/Skills")]
+        [HttpPost("{resumeId}/Skills")]
         public async Task<ActionResult<SkillDTO>> PostSkill(SkillDTO skillDTO)
         {
             Skill sanitizedSkill = DTOToSkill(skillDTO);
             _context.Skills.Add(sanitizedSkill);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostSkill", new { id = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
+            return CreatedAtAction("PostSkill", new { resumeId = sanitizedSkill.ResumeId, order = sanitizedSkill.Order }, skillDTO);
         }
 
         // DELETE: api/Skill/5
-        [HttpDelete("{id}/Skills/{order}")]
-        public async Task<ActionResult<SkillDTO>> DeleteSkill(long id, long order)
+        [HttpDelete("{resumeId}/Skills/{order}")]
+        public async Task<ActionResult<SkillDTO>> DeleteSkill(long resumeId, long order)
         {
-            var skill = await _context.Skills.FindAsync(id, order);
+            var skill = await _context.Skills.FindAsync(resumeId, order);
             if (skill == null)
             {
                 return NotFound();
@@ -99,9 +79,9 @@ namespace cpsc_471_project.Controllers
             return SkillToDTO(skill);
         }
 
-        private bool SkillExists(long id, long order)
+        private bool SkillExists(long resumeId, long order)
         {
-            return _context.Skills.Any(e => (e.ResumeId == id) && (e.Order == order));
+            return _context.Skills.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
         private static SkillDTO SkillToDTO(Skill skill) =>
