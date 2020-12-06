@@ -13,7 +13,7 @@ using cpsc_471_project.Authentication;
 
 namespace cpsc_471_project.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class RecruitersController : ControllerBase
     {
@@ -28,7 +28,8 @@ namespace cpsc_471_project.Controllers
 
         // GET: api/recruiters
         // Returns all recruiter/company pairs in the system
-        [HttpGet]
+        [Authorize]
+        [HttpGet("recruiters")]
         public async Task<ActionResult<IEnumerable<RecruiterDTO>>> GetAllRecruiters()
         {
             var query = from recruiter in _context.Recruiters
@@ -43,9 +44,10 @@ namespace cpsc_471_project.Controllers
             return await query.ToListAsync();
         }
 
-        // GET: api/recruiters/{companyId}
+        // GET: api/companies/{companyId}/recruiters
         // Returns all recruiters for a specific company
-        [HttpGet("{companyId}")]
+        [Authorize]
+        [HttpGet("companies/{companyId}/recruiters")]
         public async Task<ActionResult<IEnumerable<RecruiterDTO>>> GetRecruiters(long companyId)
         {
             var query = from recruiter in _context.Recruiters
@@ -61,11 +63,11 @@ namespace cpsc_471_project.Controllers
             return await query.ToListAsync();
         }
 
-        // POST: api/recruiters
+        // POST: api/companies/{companyId}/recruiters/{userId}
         // Makes the given user a new recruiter for the given company
         [Authorize(Roles = UserRoles.Admin)]
-        [HttpPost]
-        public async Task<IActionResult> PostRecruiter([FromBody] long companyId, [FromBody] string userId)
+        [HttpPost("companies/{companyId}/recruiters/{userId}")]
+        public async Task<IActionResult> PostRecruiter(long companyId, string userId)
         {
             User user = await userManager.FindByIdAsync(userId);
             Company company = await _context.Companies.FindAsync(companyId);
