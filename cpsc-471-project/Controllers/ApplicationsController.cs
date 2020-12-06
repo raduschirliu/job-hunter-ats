@@ -84,7 +84,7 @@ namespace cpsc_471_project.Controllers
                 // Return application only for jobs they manage
                 var query = from app in _context.Applications
                             join jobPost in _context.JobPosts on app.JobId equals jobPost.JobPostId
-                            where app.ApplicationId == id && jobPost.RecruiterId == user.Id
+                            where app.ApplicationId == id
                             select new Application()
                             {
                                 ApplicationId = app.ApplicationId,
@@ -96,6 +96,14 @@ namespace cpsc_471_project.Controllers
                                 ResumeId = app.ResumeId
                             };
                 application = await query.FirstOrDefaultAsync();
+
+                if (application != null)
+                {
+                    if (application.JobPost.RecruiterId != user.Id)
+                    {
+                        return Unauthorized("Cannot view an application for a job that you do not manage");
+                    }
+                }
             }
             else
             {
@@ -106,14 +114,6 @@ namespace cpsc_471_project.Controllers
                             select app;
 
                 application = await query.FirstOrDefaultAsync();
-
-                if (application != null)
-                {
-                    if (application.JobPost.RecruiterId != user.Id)
-                    {
-                        return Unauthorized("Cannot view an application for a job that you do not manage");
-                    }
-                }
             }
 
             if (application == null)
