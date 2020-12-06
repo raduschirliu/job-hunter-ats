@@ -66,8 +66,8 @@ namespace cpsc_471_project.Controllers
         // POST: api/companies/{companyId}/recruiters/{userId}
         // Makes the given user a new recruiter for the given company
         [Authorize(Roles = UserRoles.Admin)]
-        [HttpPost("companies/{companyId}/recruiters/{userId}")]
-        public async Task<IActionResult> PostRecruiter(long companyId, string userId)
+        [HttpPut("companies/{companyId}/recruiters/{userId}")]
+        public async Task<ActionResult> PutRecruiter(long companyId, string userId)
         {
             User user = await userManager.FindByIdAsync(userId);
             Company company = await _context.Companies.FindAsync(companyId);
@@ -93,7 +93,26 @@ namespace cpsc_471_project.Controllers
 
             await userManager.AddToRoleAsync(user, UserRoles.Recruiter);
 
-            return Ok();
+            return CreatedAtAction("PostRecruiter", new { recruiter.UserId, recruiter.CompanyId }, recruiter);
+        }
+
+        // DELETE: api/companies/{companyId}/recruiters/{usersId}
+        // Deletes an existing recruiter from a company
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpDelete("companies/{companyId}/recruiters/{usersId}")]
+        public async Task<ActionResult<Recruiter>> DeleteRecruiter(long companyId, string usersId)
+        {
+            Recruiter recruiter = await _context.Recruiters.FindAsync(usersId, companyId);
+
+            if (recruiter == null)
+            {
+                return NotFound();
+            }
+
+            _context.Recruiters.Remove(recruiter);
+            await _context.SaveChangesAsync();
+
+            return Ok(recruiter);
         }
     }
 }
