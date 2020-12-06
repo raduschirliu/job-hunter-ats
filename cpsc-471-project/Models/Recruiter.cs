@@ -10,13 +10,13 @@ namespace cpsc_471_project.Models
 {
     public class Recruiter
     {
-        [Key, Column(Order = 1)]
+        [Key, Column(Order = 0)]
         [ForeignKey("User")]
         public string UserId { get; set; }
 
         public User User { get; set; } // Required for referential integrity constraints
 
-        [Key, Column(Order = 2)]
+        [Key, Column(Order = 1)]
         [ForeignKey("Company")]
         public long CompanyId { get; set; }
         public Company Company { get; set; } // Required for referential integrity constraints
