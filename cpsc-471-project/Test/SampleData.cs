@@ -54,6 +54,32 @@ namespace cpsc_471_project.Test
             {
                 _context.JobPosts.AddRange(SampleJobPostData());
             }
+            if (!_context.Skills.Any())
+            {
+                _context.Skills.AddRange(SampleSkillData());
+            }
+            
+            if (!_context.Certifications.Any())
+            {
+                _context.Certifications.AddRange(SampleCertificationData());
+            }
+            if (!_context.Education.Any())
+            {
+                _context.Education.AddRange(SampleEducationData());
+            }
+            if (!_context.Experiences.Any())
+            {
+                _context.Experiences.AddRange(SampleExperienceData());
+            }
+            if (!_context.Awards.Any())
+            {
+                _context.Awards.AddRange(SampleAwardData());
+            }
+            if(!_context.Projects.Any())
+            {
+                _context.Projects.AddRange(SampleProjectData());
+            }
+
             if (!_context.Applications.Any())
             {
                 _context.Applications.AddRange(SampleApplicationData());
@@ -195,33 +221,226 @@ namespace cpsc_471_project.Test
 
             return returnedCompanies;
         }
-
         public static List<Resume> SampleResumeData()
         {
-            List<Resume> resumes = new List<Resume>();
+            List<Resume> returnedResumes = new List<Resume>();
 
-            resumes.Add(new Resume()
+            Resume testResume1 = new Resume()
             {
                 ResumeId = 1,
                 Name = "Resume #1",
                 CandidateId = "bob-smith"
-            });
+            };
 
-            resumes.Add(new Resume()
+            returnedResumes.Add(testResume1);
+
+            Resume testResume2 = new Resume()
             {
                 ResumeId = 2,
                 Name = "Resume #2",
                 CandidateId = "bob-smith"
-            });
+            };
+            returnedResumes.Add(testResume2);
 
-            resumes.Add(new Resume()
+            Resume testResume3 = new Resume()
             {
                 ResumeId = 3,
-                Name = "Gr8 resume",
-                CandidateId = "evan-johnson"
-            });
+                Name = "Resume #3",
+                CandidateId = "caitlyn-brown",
+            };
+            returnedResumes.Add(testResume3);
 
-            return resumes;
+            return returnedResumes;
+        }
+        public static List<Skill> SampleSkillData()
+        {
+            List<Skill> returnedSkills = new List<Skill>();
+
+            Skill testSkill1 = new Skill()
+            {
+                ResumeId = 1,
+                Name = "Python",
+                Proficiency = "Experienced",
+                Order = 1,
+            };
+            returnedSkills.Add(testSkill1);
+
+            Skill testSkill2 = new Skill()
+            {
+                ResumeId = 1,
+                Name = "Java",
+                Proficiency = "Strong",
+                Order = 2,
+            };
+            returnedSkills.Add(testSkill2);
+
+            Skill testSkill3 = new Skill()
+            {
+                ResumeId = 2,
+                Name = "C#",
+                Proficiency = "Experienced",
+                Order = 1,
+            };
+            returnedSkills.Add(testSkill3);
+
+            Skill testSkill4 = new Skill()
+            {
+                ResumeId = 3,
+                Name = "Rust",
+                Proficiency = "Fluent",
+                Order = 1,
+            };
+            returnedSkills.Add(testSkill4);
+
+            return returnedSkills;
+        }
+        public static List<Certification> SampleCertificationData()
+        {
+            List<Certification> returnedCertifications = new List<Certification>();
+
+            Certification testCertification1 = new Certification()
+            {
+                ResumeId = 1,
+                Name = "Python Fundamentals",
+                Source = "Python 101 Studios",
+                Order = 1,
+            };
+            returnedCertifications.Add(testCertification1);
+
+            Certification testCertification2 = new Certification()
+            {
+                ResumeId = 1,
+                Name = "First Aid",
+                Source = "First Aid Training Corp.",
+                Order = 2,
+            };
+            returnedCertifications.Add(testCertification2);
+
+            Certification testCertification3 = new Certification()
+            {
+                ResumeId = 3,
+                Name = "Food Safety",
+                Source = "Food Safety Council",
+                Order = 1,
+            };
+            returnedCertifications.Add(testCertification3);
+
+            return returnedCertifications;
+        }
+
+        public static List<Education> SampleEducationData()
+        {
+            DateTime d = new DateTime(1, 1, 1);
+            List<Education> returnedEducations = new List<Education>();
+
+            Education testEducation = new Education()
+            {
+                ResumeId = 1,
+                SchoolName = "University of Calgary",
+                StartDate = d,
+                EndDate = d,
+                Major = "Software Engineering",
+                Order = 1,
+
+            };
+            returnedEducations.Add(testEducation);
+
+            Education testEducation1 = new Education()
+            {
+                ResumeId = 2,
+                SchoolName = "University of Calgary",
+                StartDate = d,
+                EndDate = d,
+                Major = "Computer Science",
+                Order = 1,
+            };
+            returnedEducations.Add(testEducation1);
+
+            return returnedEducations;
+        }
+        
+        public static List<Experience> SampleExperienceData()
+        {
+            List<Experience> returnedExperience = new List<Experience>();
+
+            Experience testExperience1 = new Experience()
+            {
+                ResumeId = 1,
+                Company = "Python Consulting",
+                StartDate = new DateTime(2019, 10, 1),
+                EndDate = new DateTime(2020, 10, 1),
+                Title = "Python Developer",
+                Order = 1,
+            };
+            returnedExperience.Add(testExperience1);
+
+            Experience testExperience2 = new Experience()
+            {
+                ResumeId = 1,
+                Company = "Java Consulting",
+                StartDate = new DateTime(2018, 10, 1),
+                EndDate = new DateTime(2019, 9, 30),
+                Title = "Software Architect",
+                Order = 2,
+            };
+            returnedExperience.Add(testExperience2);
+
+            return returnedExperience;
+        }
+
+        public static List<Award> SampleAwardData()
+        {
+            List<Award> returnedAwards = new List<Award>();
+
+            Award testAward = new Award()
+            {
+                ResumeId = 1,
+                Name = "Software Developer of the Year, Python Consulting",
+                DateReceived = new DateTime(2019, 12, 1),
+                value = "nominal",
+                Order = 1,
+            };
+            returnedAwards.Add(testAward);
+
+            Award testAward1 = new Award()
+            {
+                ResumeId = 1,
+                Name = "1st Place, Algorithm Development Competition",
+                DateReceived = new DateTime(2018, 12, 1),
+                value = "$750",
+                Order = 2,
+            };
+            returnedAwards.Add(testAward1);
+
+            return returnedAwards;
+        }
+
+        public static List<Project> SampleProjectData()
+        {
+            List<Project> returnedProjects = new List<Project>();
+
+            Project testProject1 = new Project()
+            {
+                ResumeId = 1,
+                Name = "Learning Management Tool",
+                Description = "Helps manage learning for staff of large organizations",
+                StartDate = new DateTime(2019, 10, 1),
+                EndDate = new DateTime(2020, 10, 1),
+                Order = 1,
+            };
+            returnedProjects.Add(testProject1);
+
+            Project testProject2 = new Project()
+            {
+                ResumeId = 1,
+                Name = "Network Mapping Tool",
+                StartDate = new DateTime(2018, 10, 1),
+                EndDate = new DateTime(2019, 9, 30),
+                Order = 2,
+            };
+            returnedProjects.Add(testProject2);
+
+            return returnedProjects;
         }
 
         public static List<JobPost> SampleJobPostData()
