@@ -28,10 +28,6 @@ namespace cpsc_471_project.Models
         public int Salary { get; set; }
 
         public DateTime ClosingDate { get; set; }
-
-        [ForeignKey("User")]
-        public string RecruiterId { get; set; }
-        public User User { get; set; } // Enforces referential integrity
     }
 
     public class JobPostDTO
@@ -53,8 +49,5 @@ namespace cpsc_471_project.Models
 
         [Display(Name = "Closing Date")]
         public DateTime ClosingDate { get; set; }
-
-        [Display(Name = "Recruiter ID")]
-        public string RecruiterId { get; set; }
     }
 }
