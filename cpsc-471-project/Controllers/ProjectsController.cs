@@ -84,7 +84,7 @@ namespace cpsc_471_project.Controllers
             return _context.Projects.Any(e => (e.ResumeId == reusmeId) && (e.Order == order));
         }
 
-        private static ProjectDTO ProjectToDTO(Project project)
+        public static ProjectDTO ProjectToDTO(Project project)
         {
             DateTime? inputStartDate = project.StartDate;
             if (project.StartDate.HasValue)
@@ -107,7 +107,7 @@ namespace cpsc_471_project.Controllers
             };
         }
 
-        private static Project DTOToProject(ProjectDTO projectDTO)
+        public static Project DTOToProject(ProjectDTO projectDTO)
         {
             DateTime? inputStartDate = projectDTO.StartDate;
             if (projectDTO.StartDate.HasValue)
