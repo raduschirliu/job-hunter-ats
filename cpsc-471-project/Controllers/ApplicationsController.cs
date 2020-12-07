@@ -124,12 +124,41 @@ namespace cpsc_471_project.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchApplication(long id, ApplicationDTO appDTO)
         {
-            Application app = DTOToApplication(appDTO);
-            app.DateSubmitted = DateTime.Now;
-
-            if (id != app.ApplicationId)
+            if (id != appDTO.ApplicationId)
             {
-                return BadRequest();
+                return BadRequest("Application Id is different in the URL and body of the request");
+            }
+
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if((appDTO.DateSubmitted == null) || (!roles.Contains(UserRoles.Admin) && !roles.Contains(UserRoles.Recruiter)))
+            {
+                appDTO.DateSubmitted = DateTime.UtcNow;
+            }
+            Application app = DTOToApplication(appDTO);
+
+            bool authorized = false;
+            if(roles.Contains(UserRoles.Admin))
+            {
+                authorized = true;
+            }
+            else if(roles.Contains(UserRoles.Recruiter))
+            {
+                var query = from application in _context.Applications
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId && application.ApplicationId == app.ApplicationId
+                            select application;
+                if (await query.AnyAsync())
+                {
+                    authorized = true;
+                }
+            }
+
+            if(!authorized)
+            {
+                return Unauthorized("Not authorized to update this application or the application does not exist");
             }
 
             _context.Entry(app).State = EntityState.Modified;
@@ -150,7 +179,7 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return NoContent();
+            return AcceptedAtAction("PatchApplication", new { applicationId = app.ApplicationId }, appDTO );
         }
 
         // POST: api/applications
@@ -159,6 +188,11 @@ namespace cpsc_471_project.Controllers
         [HttpPost]
         public async Task<ActionResult<ApplicationDTO>> PostApplication(ApplicationDTO appDTO)
         {
+            if (appDTO.Status != StatusEnum.Sent)
+            {
+                return BadRequest("New applications must have the sent status");
+            }
+
             User user = await userManager.FindByNameAsync(User.Identity.Name);
 
             Application app = DTOToApplication(appDTO);
