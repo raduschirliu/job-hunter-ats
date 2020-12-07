@@ -23,9 +23,6 @@ namespace cpsc_471_project.Models
 
     public class UserDTO
     {
-        [Display(Name = "User ID")]
-        public string Id { get; set; }
-
         [Display(Name = "User Name")]
         public string UserName { get; set; }
 

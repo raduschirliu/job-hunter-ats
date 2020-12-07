@@ -47,29 +47,55 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/resumes/{id}
+        // Gets a single resume, and joins all related weak entities
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResumeDTO>> GetResume(long id)
+        public async Task<ActionResult<ResumeDetailDTO>> GetResume(long id)
         {
             User user = await userManager.FindByNameAsync(User.Identity.Name);
-            Resume resume;
 
-            // Admin can get any resume, otherwise only return resume belonging to logged in user
-            if (await userManager.IsInRoleAsync(user, UserRoles.Admin))
-            {
-                resume = await _context.Resumes.FindAsync(id);
-            }
-            else
-            {
-                resume = _context.Resumes.Where(r => r.ResumeId == id && r.CandidateId == user.Id).FirstOrDefault();
-            }
+            // Definitely not the fastest way of doing it, but after spending many hours trying to figure out group joins
+            // in EF 3.0 and having it only result sadness, this will have to do for now
+            ResumeDetailDTO resumeDetail = await (from resume in _context.Resumes
+                                                  join candidate in _context.Users on resume.CandidateId equals candidate.Id
+                                                  where resume.ResumeId == id
+                                                  select new ResumeDetailDTO()
+                                                  {
+                                                      ResumeId = resume.ResumeId,
+                                                      Name = resume.Name,
+                                                      Candidate = AuthController.UserToDTO(candidate)
+                                                  }).FirstOrDefaultAsync();
 
-            if (resume == null)
+            if (resumeDetail == null)
             {
                 return NotFound();
             }
 
-            return ResumeToDTO(resume);
+            if (resumeDetail.Candidate.UserName != user.UserName && !await userManager.IsInRoleAsync(user, UserRoles.Admin))
+            {
+                return Unauthorized("Cannot view another user's resume");
+            }
+
+            // Find and join all weak entities separately
+            resumeDetail.Awards = await (from award in _context.Awards where award.ResumeId == id orderby award.Order select award)
+                .Select(x => AwardsController.AwardToDTO(x)).ToListAsync();
+
+            resumeDetail.Certifications = await (from cert in _context.Certifications where cert.ResumeId == id orderby cert.Order select cert)
+                .Select(x => CertificationsController.CertificationToDTO(x)).ToListAsync();
+
+            resumeDetail.Education = await (from edu in _context.Education where edu.ResumeId == id orderby edu.Order select edu)
+                .Select(x => EducationController.EducationToDTO(x)).ToListAsync();
+
+            resumeDetail.Experience = await (from exp in _context.Experiences where exp.ResumeId == id orderby exp.Order select exp)
+                .Select(x => ExperienceController.ExperienceToDTO(x)).ToListAsync();
+
+            resumeDetail.Projects = await (from proj in _context.Projects where proj.ResumeId == id orderby proj.Order select proj)
+                .Select(x => ProjectsController.ProjectToDTO(x)).ToListAsync();
+
+            resumeDetail.Skills = await (from skill in _context.Skills where skill.ResumeId == id orderby skill.Order select skill)
+                .Select(x => SkillsController.SkillToDTO(x)).ToListAsync();
+
+            return resumeDetail;
         }
 
         // DELETE: api/resumes/{id}
@@ -153,7 +179,7 @@ namespace cpsc_471_project.Controllers
             if (!(await userManager.IsInRoleAsync(user, UserRoles.Admin)))
             {
                 Resume resume = await _context.Resumes.FindAsync(id);
-                
+
                 if (resume.CandidateId != user.Id)
                 {
                     return Unauthorized("Cannot change the candidate of a resume");
