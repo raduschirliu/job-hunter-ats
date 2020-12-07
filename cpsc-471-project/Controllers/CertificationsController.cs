@@ -93,7 +93,7 @@ namespace cpsc_471_project.Controllers
             return _context.Certifications.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
-        private static CertificationDTO CertificationToDTO(Certification certification) =>
+        public static CertificationDTO CertificationToDTO(Certification certification) =>
             new CertificationDTO
             {
                 ResumeId = certification.ResumeId,
@@ -102,7 +102,7 @@ namespace cpsc_471_project.Controllers
                 Source = certification.Source
             };
 
-        private static Certification DTOToCertification(CertificationDTO certificationDTO) =>
+        public static Certification DTOToCertification(CertificationDTO certificationDTO) =>
             new Certification
             {
                 ResumeId = certificationDTO.ResumeId,

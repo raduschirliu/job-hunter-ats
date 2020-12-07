@@ -129,5 +129,15 @@ namespace cpsc_471_project.Controllers
         {
             return _context.Users.Any(e => e.UserName == username);
         }
+
+        public static UserDTO UserToDTO(User user) =>
+            new UserDTO()
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber
+            };
     }
 }

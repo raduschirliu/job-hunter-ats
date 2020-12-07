@@ -30,4 +30,17 @@ namespace cpsc_471_project.Models
         public string Name { get; set; }
         public string CandidateId { get; set; }
     }
+
+    public class ResumeDetailDTO
+    {
+        public long ResumeId { get; set; }
+        public string Name { get; set; }
+        public UserDTO Candidate { get; set; }
+        public List<AwardDTO> Awards { get; set; }
+        public List<CertificationDTO> Certifications { get; set; }
+        public List<EducationDTO> Education { get; set; }
+        public List<ExperienceDTO> Experience { get; set; }
+        public List<ProjectDTO> Projects { get; set; }
+        public List<SkillDTO> Skills { get; set; }
+    }
 }

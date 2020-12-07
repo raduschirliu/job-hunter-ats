@@ -12,11 +12,11 @@ namespace cpsc_471_project.Controllers
 {
     [Route("api/resumes")]
     [ApiController]
-    public class EducationsController : ControllerBase
+    public class EducationController : ControllerBase
     {
         private readonly JobHunterDBContext _context;
 
-        public EducationsController(JobHunterDBContext context)
+        public EducationController(JobHunterDBContext context)
         {
             _context = context;
         }
@@ -84,7 +84,7 @@ namespace cpsc_471_project.Controllers
             return _context.Education.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
-        private static EducationDTO EducationToDTO(Education education)
+        public static EducationDTO EducationToDTO(Education education)
         {
             DateTime? inputStartDate = education.StartDate;
             if (education.StartDate.HasValue)
@@ -107,7 +107,7 @@ namespace cpsc_471_project.Controllers
             };
         }
 
-        private static Education DTOToEducation(EducationDTO educationDTO)
+        public static Education DTOToEducation(EducationDTO educationDTO)
         {
             DateTime? inputStartDate = educationDTO.StartDate;
             if (educationDTO.StartDate.HasValue)

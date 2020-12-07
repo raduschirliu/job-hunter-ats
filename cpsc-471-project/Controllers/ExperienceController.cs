@@ -84,7 +84,7 @@ namespace cpsc_471_project.Controllers
             return _context.Experiences.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
-        private static ExperienceDTO ExperienceToDTO(Experience experience)
+        public static ExperienceDTO ExperienceToDTO(Experience experience)
         {
             DateTime inputStartDate = experience.StartDate.Date;
             DateTime? inputEndDate = experience.EndDate;
@@ -103,7 +103,7 @@ namespace cpsc_471_project.Controllers
             };
         }
 
-        private static Experience DTOToExperience(ExperienceDTO experienceDTO)
+        public static Experience DTOToExperience(ExperienceDTO experienceDTO)
         {
             DateTime inputStartDate = experienceDTO.StartDate.Date;
             DateTime? inputEndDate = experienceDTO.EndDate;

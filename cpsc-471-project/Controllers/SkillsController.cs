@@ -84,7 +84,7 @@ namespace cpsc_471_project.Controllers
             return _context.Skills.Any(e => (e.ResumeId == resumeId) && (e.Order == order));
         }
 
-        private static SkillDTO SkillToDTO(Skill skill) =>
+        public static SkillDTO SkillToDTO(Skill skill) =>
             new SkillDTO
             {
                 ResumeId = skill.ResumeId,
@@ -93,7 +93,7 @@ namespace cpsc_471_project.Controllers
                 Proficiency = skill.Proficiency
             };
 
-        private static Skill DTOToSkill(SkillDTO skillDTO) =>
+        public static Skill DTOToSkill(SkillDTO skillDTO) =>
             new Skill
             {
                 ResumeId = skillDTO.ResumeId,
