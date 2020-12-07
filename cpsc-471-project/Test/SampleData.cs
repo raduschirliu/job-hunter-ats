@@ -231,8 +231,7 @@ namespace cpsc_471_project.Test
                 Name = "Software Developer",
                 Description = "Develop software.",
                 Salary = 100000,
-                ClosingDate = DateTime.Now,
-                RecruiterId = "recruiter-1"
+                ClosingDate = DateTime.Now
             };
             returnedPosts.Add(testPost1);
 
@@ -243,8 +242,7 @@ namespace cpsc_471_project.Test
                 Name = "Vexillologist",
                 Description = "Makes flags.",
                 Salary = 45000,
-                ClosingDate = DateTime.Now,
-                RecruiterId = "recruiter-2"
+                ClosingDate = DateTime.Now
             };
             returnedPosts.Add(testPost2);
 

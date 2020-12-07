@@ -43,10 +43,11 @@ namespace cpsc_471_project.Controllers
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // Return all applications only for jobs they manage
+                // Return all applications only for jobs of their company
                 var query = from app in _context.Applications
                             join jobPost in _context.JobPosts on app.JobId equals jobPost.JobPostId
-                            where jobPost.RecruiterId == user.Id
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId
                             select app;
                 applications = await query.ToListAsync();
             }
@@ -84,7 +85,8 @@ namespace cpsc_471_project.Controllers
                 // Return application only for jobs they manage
                 var query = from app in _context.Applications
                             join jobPost in _context.JobPosts on app.JobId equals jobPost.JobPostId
-                            where app.ApplicationId == id
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where app.ApplicationId == id && jobPost.CompanyId == recruiter.CompanyId
                             select new Application()
                             {
                                 ApplicationId = app.ApplicationId,
@@ -96,14 +98,6 @@ namespace cpsc_471_project.Controllers
                                 ResumeId = app.ResumeId
                             };
                 application = await query.FirstOrDefaultAsync();
-
-                if (application != null)
-                {
-                    if (application.JobPost.RecruiterId != user.Id)
-                    {
-                        return Unauthorized("Cannot view an application for a job that you do not manage");
-                    }
-                }
             }
             else
             {
@@ -212,7 +206,8 @@ namespace cpsc_471_project.Controllers
                 // Recruiter can only delete applications for jobs that they own
                 var query = from app in _context.Applications
                             join jobPost in _context.JobPosts on app.JobId equals jobPost.JobPostId
-                            where app.ApplicationId == id
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where app.ApplicationId == id && jobPost.CompanyId == recruiter.CompanyId
                             select new Application()
                             {
                                 ApplicationId = app.ApplicationId,
@@ -224,14 +219,6 @@ namespace cpsc_471_project.Controllers
                                 ResumeId = app.ResumeId
                             };
                 application = await query.FirstOrDefaultAsync();
-
-                if (application != null)
-                {
-                    if (application.JobPost.RecruiterId != user.Id)
-                    {
-                        return Unauthorized("Cannot delete an application for a job that you do not manage");
-                    }
-                }
             }
             else
             {
