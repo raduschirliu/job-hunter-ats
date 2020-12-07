@@ -47,9 +47,10 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/resumes/{id}
+        // Gets a single resume, and joins all related weak entities
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<object>> GetResume(long id)
+        public async Task<ActionResult<ResumeDetailDTO>> GetResume(long id)
         {
             User user = await userManager.FindByNameAsync(User.Identity.Name);
 
@@ -62,7 +63,7 @@ namespace cpsc_471_project.Controllers
                                                   {
                                                       ResumeId = resume.ResumeId,
                                                       Name = resume.Name,
-                                                      Candidate = UsersController.UserToDTO(candidate)
+                                                      Candidate = AuthController.UserToDTO(candidate)
                                                   }).FirstOrDefaultAsync();
 
             if (resumeDetail == null)
@@ -75,22 +76,23 @@ namespace cpsc_471_project.Controllers
                 return Unauthorized("Cannot view another user's resume");
             }
 
-            resumeDetail.Awards = await (from award in _context.Awards where award.ResumeId == id select award)
+            // Find and join all weak entities separately
+            resumeDetail.Awards = await (from award in _context.Awards where award.ResumeId == id orderby award.Order select award)
                 .Select(x => AwardsController.AwardToDTO(x)).ToListAsync();
 
-            resumeDetail.Certifications = await (from cert in _context.Certifications where cert.ResumeId == id select cert)
+            resumeDetail.Certifications = await (from cert in _context.Certifications where cert.ResumeId == id orderby cert.Order select cert)
                 .Select(x => CertificationsController.CertificationToDTO(x)).ToListAsync();
 
-            resumeDetail.Education = await (from edu in _context.Education where edu.ResumeId == id select edu)
+            resumeDetail.Education = await (from edu in _context.Education where edu.ResumeId == id orderby edu.Order select edu)
                 .Select(x => EducationController.EducationToDTO(x)).ToListAsync();
 
-            resumeDetail.Experience = await (from exp in _context.Experiences where exp.ResumeId == id select exp)
+            resumeDetail.Experience = await (from exp in _context.Experiences where exp.ResumeId == id orderby exp.Order select exp)
                 .Select(x => ExperienceController.ExperienceToDTO(x)).ToListAsync();
 
-            resumeDetail.Projects = await (from proj in _context.Projects where proj.ResumeId == id select proj)
+            resumeDetail.Projects = await (from proj in _context.Projects where proj.ResumeId == id orderby proj.Order select proj)
                 .Select(x => ProjectsController.ProjectToDTO(x)).ToListAsync();
 
-            resumeDetail.Skills = await (from skill in _context.Skills where skill.ResumeId == id select skill)
+            resumeDetail.Skills = await (from skill in _context.Skills where skill.ResumeId == id orderby skill.Order select skill)
                 .Select(x => SkillsController.SkillToDTO(x)).ToListAsync();
 
             return resumeDetail;
