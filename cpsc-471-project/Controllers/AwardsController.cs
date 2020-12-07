@@ -22,7 +22,7 @@ namespace cpsc_471_project.Controllers
         }
 
         [HttpPatch("{resumeId}/awards/{order}")]
-        public async Task<IActionResult> PatchEducation(long resumeId, long order, AwardDTO awardDTO)
+        public async Task<IActionResult> PatchAward(long resumeId, long order, AwardDTO awardDTO)
         {
             Award sanitizedAward = DTOToAward(awardDTO);
             if (resumeId != sanitizedAward.ResumeId)
