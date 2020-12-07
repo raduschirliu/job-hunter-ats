@@ -115,8 +115,7 @@ namespace cpsc_471_project.Controllers
                 CompanyId = post.CompanyId,
                 Name = post.Name,
                 Description = post.Description,
-                ClosingDate = post.ClosingDate,
-                RecruiterId = post.RecruiterId
+                ClosingDate = post.ClosingDate
             };
 
         private static JobPost DTOToJobPost(JobPostDTO postDTO) =>
@@ -127,9 +126,7 @@ namespace cpsc_471_project.Controllers
                 Company = null,
                 Name = postDTO.Name,
                 Description = postDTO.Description,
-                ClosingDate = postDTO.ClosingDate,
-                RecruiterId = postDTO.RecruiterId,
-                User = null
+                ClosingDate = postDTO.ClosingDate
             };
     }
 }

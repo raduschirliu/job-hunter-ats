@@ -207,8 +207,7 @@ namespace cpsc_471_project.Migrations
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 1024, nullable: true),
                     Salary = table.Column<int>(nullable: false),
-                    ClosingDate = table.Column<DateTime>(nullable: false),
-                    RecruiterId = table.Column<string>(nullable: true)
+                    ClosingDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -219,12 +218,6 @@ namespace cpsc_471_project.Migrations
                         principalTable: "Companies",
                         principalColumn: "CompanyId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JobPosts_AspNetUsers_RecruiterId",
-                        column: x => x.RecruiterId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -312,11 +305,6 @@ namespace cpsc_471_project.Migrations
                 name: "IX_JobPosts_CompanyId",
                 table: "JobPosts",
                 column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_JobPosts_RecruiterId",
-                table: "JobPosts",
-                column: "RecruiterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Resumes_CandidateId",

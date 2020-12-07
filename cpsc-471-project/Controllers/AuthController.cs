@@ -174,9 +174,8 @@ namespace cpsc_471_project.Controllers
             );
         }
 
-        public UserDTO UserToDTO(User user) => new UserDTO()
+        public static UserDTO UserToDTO(User user) => new UserDTO()
         {
-            Id = user.Id,
             UserName = user.UserName,
             Email = user.Email,
             FirstName = user.FirstName,

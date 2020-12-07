@@ -149,7 +149,8 @@ namespace cpsc_471_project.Controllers
                 // Recruiter can only create interviews for themselves and for their own jobs
                 var query = from job in _context.JobPosts
                             join application in _context.Applications on job.JobPostId equals application.JobId
-                            where application.ApplicationId == interviewDTO.ApplicationId && job.RecruiterId == user.Id
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where application.ApplicationId == interviewDTO.ApplicationId && job.CompanyId == recruiter.CompanyId
                             select job;
 
                 JobPost jobPost = await query.FirstOrDefaultAsync();
@@ -188,7 +189,8 @@ namespace cpsc_471_project.Controllers
                 // Recruiter can only update interviews for themselves and for their own jobs
                 var query = from job in _context.JobPosts
                             join application in _context.Applications on job.JobPostId equals application.JobId
-                            where application.ApplicationId == interviewDTO.ApplicationId && job.RecruiterId == user.Id
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where application.ApplicationId == interviewDTO.ApplicationId && job.CompanyId == recruiter.CompanyId
                             select job;
 
                 JobPost jobPost = await query.FirstOrDefaultAsync();
