@@ -21,6 +21,7 @@ namespace cpsc_471_project.Controllers
         public InterviewsController(JobHunterDBContext context, UserManager<User> userManager)
         {
             _context = context;
+            this.userManager = userManager;
         }
 
         // GET: api/interviews
@@ -126,6 +127,9 @@ namespace cpsc_471_project.Controllers
             {
                 return NotFound();
             }
+
+            _context.Interviews.Remove(interview);
+            await _context.SaveChangesAsync();
 
             return Ok(InterviewToDTO(interview));
         }
