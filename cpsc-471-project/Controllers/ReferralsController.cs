@@ -38,12 +38,12 @@ namespace cpsc_471_project.Controllers
 
             if (roles.Contains(UserRoles.Admin))
             {
-                // Display all applications for admin
+                // Display all referrals for admin
                 referrals = await _context.Referrals.ToListAsync();
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // Return all applications only for jobs of their company
+                // Return all referrals only for applications associated with the jobs of their company
                 var query = from referral in _context.Referrals
                             join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
                             join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
@@ -54,7 +54,7 @@ namespace cpsc_471_project.Controllers
             }
             else
             {
-                // Display all of your own applications
+                // Display all of your own referrals
                 var query = from referral in _context.Referrals
                             join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
                             join resume in _context.Resumes on application.ResumeId equals resume.ResumeId
@@ -79,12 +79,12 @@ namespace cpsc_471_project.Controllers
 
             if (roles.Contains(UserRoles.Admin))
             {
-                // Display any application for admin
+                // Admin can access any referral
                 referralResult = await _context.Referrals.FindAsync(appId, refId);
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // Return application only for jobs they manage
+                // Return referrals only for applications/jobs they manage
                 var query = from referral in _context.Referrals
                             join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
                             join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
@@ -95,7 +95,7 @@ namespace cpsc_471_project.Controllers
             }
             else
             {
-                // Display your own application
+                // Display referrals associated with your applications
                 var query = from referral in _context.Referrals
                             join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
                             join resume in _context.Resumes on application.ResumeId equals resume.ResumeId
