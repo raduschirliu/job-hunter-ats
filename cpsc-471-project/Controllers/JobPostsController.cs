@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cpsc_471_project.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using cpsc_471_project.Authentication;
 
 namespace cpsc_471_project.Controllers
 {
@@ -14,18 +17,22 @@ namespace cpsc_471_project.Controllers
     [ApiController]
     public class JobPostsController : ControllerBase
     {
+        private readonly UserManager<User> userManager;
         private readonly JobHunterDBContext _context;
 
-        public JobPostsController(JobHunterDBContext context)
+        public JobPostsController(JobHunterDBContext context, UserManager<User> userManager)
         {
             _context = context;
+            this.userManager = userManager;
         }
 
         // GET: api/JobPost
+        // Returns all job posts on the platform
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetJobPosts()
         {
-            var posts = await _context.JobPosts.ToListAsync();
+            List<JobPost> posts = await _context.JobPosts.ToListAsync();
 
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
@@ -33,11 +40,13 @@ namespace cpsc_471_project.Controllers
             return posts.Select(x => JobPostToDTO(x)).ToList();
         }
 
-        // GET: api/JobPost/5
+        // GET: api/JobPost/{id}
+        // Returns a single job post by ID
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<JobPostDTO>> GetJobPost(long id)
         {
-            var post = await _context.JobPosts.FindAsync(id);
+            JobPost post = await _context.JobPosts.FindAsync(id);
 
             if (post == null)
             {
@@ -47,13 +56,30 @@ namespace cpsc_471_project.Controllers
             return JobPostToDTO(post);
         }
 
+        // PATCH: api/JobPost/{id}
+        // Updates an existing job post by ID
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Recruiter)]
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchJobPost(long id, JobPostDTO postDTO)
+        public async Task<ActionResult<JobPostDTO>> PatchJobPost(long id, JobPostDTO postDTO)
         {
             JobPost post = DTOToJobPost(postDTO);
+
             if (id != post.JobPostId)
             {
                 return BadRequest();
+            }
+
+            User user = await userManager.FindByIdAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                Recruiter recruiter = await _context.Recruiters.FindAsync(user.Id, post.CompanyId);
+
+                if (recruiter == null)
+                {
+                    return Unauthorized();
+                }
             }
 
             _context.Entry(post).State = EntityState.Modified;
@@ -77,24 +103,56 @@ namespace cpsc_471_project.Controllers
             return NoContent();
         }
 
+        // POST: api/JobPost
+        // Create a new job post
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Recruiter)]
         [HttpPost]
         public async Task<ActionResult<JobPostDTO>> PostJobPost(JobPostDTO postDTO)
         {
+            User user = await userManager.FindByIdAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
             JobPost post = DTOToJobPost(postDTO);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                Recruiter recruiter = await _context.Recruiters.FindAsync(user.Id, post.CompanyId);
+
+                if (recruiter == null)
+                {
+                    return Unauthorized();
+                }
+            }
+
             _context.JobPosts.Add(post);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetJobPost", new { id = post.JobPostId }, post);
         }
 
-        // DELETE: api/JobPost/5
+        // DELETE: api/JobPost/{id}
+        // Deletes an existing job post by ID
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Recruiter)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<JobPostDTO>> DeleteJobPost(long id)
         {
-            var post = await _context.JobPosts.FindAsync(id);
+            JobPost post = await _context.JobPosts.FindAsync(id);
+
             if (post == null)
             {
                 return NotFound();
+            }
+
+            User user = await userManager.FindByIdAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                Recruiter recruiter = await _context.Recruiters.FindAsync(user.Id, post.CompanyId);
+
+                if (recruiter == null)
+                {
+                    return Unauthorized();
+                }
             }
 
             _context.JobPosts.Remove(post);
