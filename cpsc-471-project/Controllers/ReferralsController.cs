@@ -113,7 +113,7 @@ namespace cpsc_471_project.Controllers
             return ReferralToDTO(referralResult);
         }
 
-        [Authorize(UserRoles.Admin + ", " + UserRoles.Recruiter)]
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpPatch("applications/{appId}/referrals/{refId}")]
         public async Task<IActionResult> PatchReferral(long appId, long refId, ReferralDTO referralDTO)
         {
@@ -175,7 +175,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // DELETE: api/Skill/5
-        [Authorize(UserRoles.Admin + ", " + UserRoles.Recruiter)]
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpDelete("applications/{appId}/referrals/{refId}")]
         public async Task<ActionResult<ReferralDTO>> DeleteReferral(long appId, long refId)
         {
