@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+
 
 namespace cpsc_471_project.Controllers
 {
     [Route("api/resumes")]
     [ApiController]
-    public class EducationController : ControllerBase
+    public class EducationController : ResumeSectionController
     {
-        private readonly JobHunterDBContext _context;
+        public EducationController(JobHunterDBContext context, UserManager<User> userManager) : base(context, userManager) { }
 
-        public EducationController(JobHunterDBContext context)
-        {
-            _context = context;
-        }
-
+        [Authorize]
         [HttpPatch("{resumeId}/education/{order}")]
         public async Task<IActionResult> PatchEducation(long resumeId, long order, EducationDTO educationDTO)
         {
@@ -33,6 +32,11 @@ namespace cpsc_471_project.Controllers
             if (order != sanitizedEducation.Order)
             {
                 return BadRequest("subsection order in query params does not match subsection order in body");
+            }
+
+            if (!await ResumeAccessAuthorized(sanitizedEducation.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedEducation.ResumeId);
             }
 
             if (!EducationExists(resumeId, order))
@@ -53,24 +57,37 @@ namespace cpsc_471_project.Controllers
             return AcceptedAtAction("PatchEducation", new { resumeId = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
         }
 
+        [Authorize]
         [HttpPost("{resumeId}/education")]
         public async Task<ActionResult<EducationDTO>> PostEducation(EducationDTO educationDTO)
         {
             Education sanitizedEducation = DTOToEducation(educationDTO);
+
+            if (!await ResumeAccessAuthorized(sanitizedEducation.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedEducation.ResumeId);
+            }
+
             _context.Education.Add(sanitizedEducation);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostEducation", new { resumeId = sanitizedEducation.ResumeId, order = sanitizedEducation.Order }, educationDTO);
         }
 
-        // DELETE: api/Education/5
-        [HttpDelete("{resumeId}/educations/{order}")]
+        // DELETE: api/education/5
+        [Authorize]
+        [HttpDelete("{resumeId}/education/{order}")]
         public async Task<ActionResult<EducationDTO>> DeleteEducation(long resumeId, long order)
         {
+            if (!await ResumeAccessAuthorized(resumeId))
+            {
+                return GenerateResumeNotFoundError(resumeId);
+            }
+
             var education = await _context.Education.FindAsync(resumeId, order);
             if (education == null)
             {
-                return NotFound();
+                return NotFound("Subsection not found");
             }
 
             _context.Education.Remove(education);

@@ -2,25 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
     [Route("api/resumes")]
     [ApiController]
-    public class CertificationsController : ControllerBase
+    public class CertificationsController : ResumeSectionController
     {
-        private readonly JobHunterDBContext _context;
+        public CertificationsController(JobHunterDBContext context, UserManager<User> userManager): base(context, userManager) {}
 
-        public CertificationsController(JobHunterDBContext context)
-        {
-            _context = context;
-        }
-
+        [Authorize]
         [HttpPatch("{resumeId}/certifications/{order}")]
         public async Task<IActionResult> PatchCertification(long resumeId, long order, CertificationDTO certificationDTO)
         {
@@ -33,6 +31,11 @@ namespace cpsc_471_project.Controllers
             if (order != sanitizedCertification.Order)
             {
                 return BadRequest("subsection order in query params does not match subsection order in body");
+            }
+
+            if (!await ResumeAccessAuthorized(sanitizedCertification.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedCertification.ResumeId);
             }
 
             if (!CertificationExists(resumeId, order))
@@ -54,18 +57,19 @@ namespace cpsc_471_project.Controllers
         }
 
         [HttpPost("{resumeId}/certifications")]
-        public async Task<ActionResult<CertificationDTO>> PostCertification(long resumeId, CertificationDTO certificationDTO)
+        public async Task<ActionResult<CertificationDTO>> PostCertification(CertificationDTO certificationDTO)
         {
-            if (resumeId != certificationDTO.ResumeId)
+            Certification sanitizedCertification = DTOToCertification(certificationDTO);
+
+            if (!await ResumeAccessAuthorized(sanitizedCertification.ResumeId))
             {
-                return BadRequest("resumeId in query params does not match resumeId in body");
+                return GenerateResumeNotFoundError(sanitizedCertification.ResumeId);
             }
 
-            if (CertificationExists(resumeId, certificationDTO.Order))
+            if (CertificationExists(sanitizedCertification.ResumeId, certificationDTO.Order))
             {
                 return BadRequest("associated subsection already exists");
             }
-            Certification sanitizedCertification = DTOToCertification(certificationDTO);
             _context.Certifications.Add(sanitizedCertification);
             await _context.SaveChangesAsync();
 
@@ -76,10 +80,15 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{resumeId}/certifications/{order}")]
         public async Task<ActionResult<CertificationDTO>> DeleteCertification(long resumeId, long order)
         {
+            if (!await ResumeAccessAuthorized(resumeId))
+            {
+                return GenerateResumeNotFoundError(resumeId);
+            }
+
             var certification = await _context.Certifications.FindAsync(resumeId, order);
             if (certification == null)
             {
-                return NotFound();
+                return NotFound("Subsection not found");
             }
 
             _context.Certifications.Remove(certification);

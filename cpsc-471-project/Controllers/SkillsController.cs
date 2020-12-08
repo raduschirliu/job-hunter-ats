@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+
 
 namespace cpsc_471_project.Controllers
 {
     [Route("api/resumes")]
     [ApiController]
-    public class SkillsController : ControllerBase
+    public class SkillsController : ResumeSectionController
     {
+        UserManager<User> userManager;
         private readonly JobHunterDBContext _context;
 
-        public SkillsController(JobHunterDBContext context)
-        {
-            _context = context;
-        }
+        public SkillsController(JobHunterDBContext context, UserManager<User> userManager) : base(context, userManager) { }
 
+        [Authorize]
         [HttpPatch("{resumeId}/skills/{order}")]
         public async Task<IActionResult> PatchSkill(long resumeId, long order, SkillDTO skillDTO)
         {
@@ -33,6 +35,11 @@ namespace cpsc_471_project.Controllers
             if (order != sanitizedSkill.Order)
             {
                 return BadRequest("subsection order in query params does not match subsection order in body");
+            }
+
+            if (!await ResumeAccessAuthorized(sanitizedSkill.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedSkill.ResumeId);
             }
 
             if (!SkillExists(resumeId, order))
@@ -57,6 +64,12 @@ namespace cpsc_471_project.Controllers
         public async Task<ActionResult<SkillDTO>> PostSkill(SkillDTO skillDTO)
         {
             Skill sanitizedSkill = DTOToSkill(skillDTO);
+
+            if (!await ResumeAccessAuthorized(sanitizedSkill.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedSkill.ResumeId);
+            }
+
             _context.Skills.Add(sanitizedSkill);
             await _context.SaveChangesAsync();
 
@@ -67,6 +80,11 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{resumeId}/Skills/{order}")]
         public async Task<ActionResult<SkillDTO>> DeleteSkill(long resumeId, long order)
         {
+            if (!await ResumeAccessAuthorized(resumeId))
+            {
+                return GenerateResumeNotFoundError(resumeId);
+            }
+
             var skill = await _context.Skills.FindAsync(resumeId, order);
             if (skill == null)
             {
