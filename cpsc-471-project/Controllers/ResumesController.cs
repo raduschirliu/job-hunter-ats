@@ -31,12 +31,23 @@ namespace cpsc_471_project.Controllers
         public async Task<ActionResult<IEnumerable<ResumeDTO>>> GetResumes()
         {
             User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
             List<Resume> resumes = new List<Resume>();
 
             // If admin, return all resumes. If user, return just your own resumes
-            if (await userManager.IsInRoleAsync(user, UserRoles.Admin))
+            if (roles.Contains(UserRoles.Admin))
             {
                 resumes = await _context.Resumes.ToListAsync();
+            }
+            else if(roles.Contains(UserRoles.Recruiter))
+            {
+                var query = from resume in _context.Resumes
+                            join application in _context.Applications on resume.ResumeId equals application.ResumeId
+                            join jobpost in _context.JobPosts on application.JobId equals jobpost.JobPostId
+                            join recruiter in _context.Recruiters on jobpost.CompanyId equals recruiter.CompanyId
+                            where recruiter.UserId == user.Id
+                            select resume;
+                resumes = await query.ToListAsync();
             }
             else
             {
@@ -53,6 +64,7 @@ namespace cpsc_471_project.Controllers
         public async Task<ActionResult<ResumeDetailDTO>> GetResume(long id)
         {
             User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
 
             // Definitely not the fastest way of doing it, but after spending many hours trying to figure out group joins
             // in EF 3.0 and having it only result sadness, this will have to do for now
@@ -71,9 +83,33 @@ namespace cpsc_471_project.Controllers
                 return NotFound();
             }
 
-            if (resumeDetail.Candidate.UserName != user.UserName && !await userManager.IsInRoleAsync(user, UserRoles.Admin))
+            bool authorized = false;
+
+            if(roles.Contains(UserRoles.Admin))
             {
-                return Unauthorized("Cannot view another user's resume");
+                authorized = true;
+            }
+            else if (roles.Contains(UserRoles.Recruiter))
+            {
+                var query = from resume in _context.Resumes
+                            join application in _context.Applications on resume.ResumeId equals application.ResumeId
+                            join jobpost in _context.JobPosts on application.JobId equals jobpost.JobPostId
+                            join recruiter in _context.Recruiters on jobpost.CompanyId equals recruiter.CompanyId
+                            where recruiter.UserId == user.Id && resume.ResumeId == id
+                            select resume;
+                if(query.Any())
+                {
+                    authorized = true;
+                }
+            }
+            else if (resumeDetail.Candidate.UserName == user.UserName)
+            {
+                authorized = true;
+            }
+
+            if (!authorized)
+            {
+                return Unauthorized("Cannot view that resume");
             }
 
             // Find and join all weak entities separately

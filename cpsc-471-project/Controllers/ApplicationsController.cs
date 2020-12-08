@@ -188,11 +188,6 @@ namespace cpsc_471_project.Controllers
         [HttpPost]
         public async Task<ActionResult<ApplicationDTO>> PostApplication(ApplicationDTO appDTO)
         {
-            if (appDTO.Status != StatusEnum.Sent)
-            {
-                return BadRequest("New applications must have the sent status");
-            }
-
             User user = await userManager.FindByNameAsync(User.Identity.Name);
             IList<string> roles = await userManager.GetRolesAsync(user);
             if ((appDTO.DateSubmitted == null) || (!roles.Contains(UserRoles.Admin)))
@@ -200,7 +195,10 @@ namespace cpsc_471_project.Controllers
                 appDTO.DateSubmitted = DateTime.UtcNow;
             }
             Application app = DTOToApplication(appDTO);
-            app.DateSubmitted = DateTime.Now;
+            if (app.Status != StatusEnum.Sent)
+            {
+                return BadRequest("New applications must have the sent status");
+            }
 
             Resume resume = null;
             
