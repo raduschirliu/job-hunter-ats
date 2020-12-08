@@ -62,14 +62,15 @@ namespace cpsc_471_project.Controllers
         [HttpPatch("{id}")]
         public async Task<ActionResult<JobPostDTO>> PatchJobPost(long id, JobPostDTO postDTO)
         {
-            User user = await userManager.FindByIdAsync(User.Identity.Name);
-            IList<string> roles = await userManager.GetRolesAsync(user);
             JobPost post = DTOToJobPost(postDTO);
 
             if (id != post.JobPostId)
             {
                 return BadRequest();
             }
+
+            User user = await userManager.FindByIdAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
 
             if (!roles.Contains(UserRoles.Admin))
             {
@@ -134,14 +135,15 @@ namespace cpsc_471_project.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<JobPostDTO>> DeleteJobPost(long id)
         {
-            User user = await userManager.FindByIdAsync(User.Identity.Name);
-            IList<string> roles = await userManager.GetRolesAsync(user);
             JobPost post = await _context.JobPosts.FindAsync(id);
 
             if (post == null)
             {
                 return NotFound();
             }
+
+            User user = await userManager.FindByIdAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
 
             if (!roles.Contains(UserRoles.Admin))
             {
