@@ -2,25 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace cpsc_471_project.Controllers
 {
     [Route("api/resumes")]
     [ApiController]
-    public class AwardsController : ControllerBase
+    public class AwardsController : ResumeSectionController
     {
-        private readonly JobHunterDBContext _context;
+        public AwardsController(JobHunterDBContext context, UserManager<User> userManager): base(context, userManager) {}
 
-        public AwardsController(JobHunterDBContext context)
-        {
-            _context = context;
-        }
-
+        [Authorize]
         [HttpPatch("{resumeId}/awards/{order}")]
         public async Task<IActionResult> PatchAward(long resumeId, long order, AwardDTO awardDTO)
         {
@@ -33,6 +31,14 @@ namespace cpsc_471_project.Controllers
             if (order != sanitizedAward.Order)
             {
                 return BadRequest("subsection order in query params does not match subsection order in body");
+            }
+
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!await ResumeAccessAuthorized(sanitizedAward.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedAward.ResumeId);
             }
 
             if (!AwardExists(resumeId, order))
@@ -53,24 +59,42 @@ namespace cpsc_471_project.Controllers
             return AcceptedAtAction("PatchAward", new { resumeId = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
         }
 
+        [Authorize]
         [HttpPost("{resumeId}/awards")]
         public async Task<ActionResult<AwardDTO>> PostAward(AwardDTO awardDTO)
         {
             Award sanitizedAward = DTOToAward(awardDTO);
+
+            if (!await ResumeAccessAuthorized(sanitizedAward.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedAward.ResumeId);
+            }
+
+            if (AwardExists(sanitizedAward.ResumeId, sanitizedAward.Order))
+            {
+                return BadRequest("associated subsection already exists");
+            }
+
             _context.Awards.Add(sanitizedAward);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostAward", new { resumeId = sanitizedAward.ResumeId, order = sanitizedAward.Order }, awardDTO);
         }
 
-        // DELETE: api/Award/5
+        // DELETE: api/awards/5
+        [Authorize]
         [HttpDelete("{resumeId}/awards/{order}")]
         public async Task<ActionResult<AwardDTO>> DeleteAward(long resumeId, long order)
         {
+            if (!await ResumeAccessAuthorized(resumeId))
+            {
+                return GenerateResumeNotFoundError(resumeId);
+            }
+
             var award = await _context.Awards.FindAsync(resumeId, order);
             if (award == null)
             {
-                return NotFound();
+                return NotFound("Subsection not found");
             }
 
             _context.Awards.Remove(award);

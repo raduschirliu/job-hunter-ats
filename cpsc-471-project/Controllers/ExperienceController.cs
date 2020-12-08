@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+
 
 namespace cpsc_471_project.Controllers
 {
     [Route("api/resumes")]
     [ApiController]
-    public class ExperienceController : ControllerBase
+    public class ExperienceController : ResumeSectionController
     {
-        private readonly JobHunterDBContext _context;
+        public ExperienceController(JobHunterDBContext context, UserManager<User> userManager) : base(context, userManager) { }
 
-        public ExperienceController(JobHunterDBContext context)
-        {
-            _context = context;
-        }
-
+        [Authorize]
         [HttpPatch("{resumeId}/experience/{order}")]
         public async Task<IActionResult> PatchExperience(long resumeId, long order, ExperienceDTO experienceDTO)
         {
@@ -33,6 +32,11 @@ namespace cpsc_471_project.Controllers
             if (order != sanitizedExperience.Order)
             {
                 return BadRequest("subsection order in query params does not match subsection order in body");
+            }
+
+            if (!await ResumeAccessAuthorized(sanitizedExperience.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedExperience.ResumeId);
             }
 
             if (!ExperienceExists(resumeId, order))
@@ -53,24 +57,38 @@ namespace cpsc_471_project.Controllers
             return AcceptedAtAction("PatchExperience", new { resumeId = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
         }
 
+        [Authorize]
         [HttpPost("{resumeId}/experience")]
         public async Task<ActionResult<ExperienceDTO>> PostExperience(ExperienceDTO experienceDTO)
         {
             Experience sanitizedExperience = DTOToExperience(experienceDTO);
+
+            if (!await ResumeAccessAuthorized(sanitizedExperience.ResumeId))
+            {
+                return GenerateResumeNotFoundError(sanitizedExperience.ResumeId);
+            }
+
+
             _context.Experiences.Add(sanitizedExperience);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostExperience", new { resumeId = sanitizedExperience.ResumeId, order = sanitizedExperience.Order }, experienceDTO);
         }
 
-        // DELETE: api/Experience/5
+        // DELETE: api/experience/5
+        [Authorize]
         [HttpDelete("{resumeId}/experience/{order}")]
         public async Task<ActionResult<ExperienceDTO>> DeleteExperience(long resumeId, long order)
         {
+            if (!await ResumeAccessAuthorized(resumeId))
+            {
+                return GenerateResumeNotFoundError(resumeId);
+            }
+
             var experience = await _context.Experiences.FindAsync(resumeId, order);
             if (experience == null)
             {
-                return NotFound();
+                return NotFound("Subsection not found");
             }
 
             _context.Experiences.Remove(experience);
