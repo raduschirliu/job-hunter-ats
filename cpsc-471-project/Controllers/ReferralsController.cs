@@ -113,6 +113,7 @@ namespace cpsc_471_project.Controllers
             return ReferralToDTO(referralResult);
         }
 
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpPatch("applications/{appId}/referrals/{refId}")]
         public async Task<IActionResult> PatchReferral(long appId, long refId, ReferralDTO referralDTO)
         {
@@ -120,6 +121,25 @@ namespace cpsc_471_project.Controllers
             if (appId != referralDTO.ApplicationId || refId != referralDTO.ReferralId)
             {
                 return BadRequest();
+            }
+
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from queryReferral in _context.Referrals
+                            join application in _context.Applications on queryReferral.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId
+                            && queryReferral.ApplicationId == referral.ApplicationId
+                            && queryReferral.ReferralId == referral.ReferralId
+                            select queryReferral;
+                if (!await query.AnyAsync())
+                {
+                    return Unauthorized("Cannot modify the referral for that application");
+                }
             }
 
             _context.Entry(referral).State = EntityState.Modified;
@@ -155,6 +175,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // DELETE: api/Skill/5
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpDelete("applications/{appId}/referrals/{refId}")]
         public async Task<ActionResult<ReferralDTO>> DeleteReferral(long appId, long refId)
         {
@@ -162,6 +183,24 @@ namespace cpsc_471_project.Controllers
             if (referral == null)
             {
                 return NotFound();
+            }
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from queryReferral in _context.Referrals
+                            join application in _context.Applications on queryReferral.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId
+                            && queryReferral.ApplicationId == referral.ApplicationId
+                            && queryReferral.ReferralId == referral.ReferralId
+                            select queryReferral;
+                if (!await query.AnyAsync())
+                {
+                    return Unauthorized("Cannot delete that referral");
+                }
             }
 
             _context.Referrals.Remove(referral);
