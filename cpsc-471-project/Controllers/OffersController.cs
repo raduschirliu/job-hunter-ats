@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore;
 
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
 
 namespace cpsc_471_project.Controllers
@@ -51,6 +53,7 @@ namespace cpsc_471_project.Controllers
             return OfferToDTO(offer);
         }
 
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpPatch("applications/{appId}/offers/{offerId}")]
         public async Task<IActionResult> PatchOffer(long appId, long offerId, OfferDTO offerDTO)
         {
@@ -58,6 +61,23 @@ namespace cpsc_471_project.Controllers
             if (offerId != offerDTO.OfferId || appId != offerDTO.ApplicationId)
             {
                 return BadRequest();
+            }
+
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from queryOffer in _context.Offers
+                            join application in _context.Applications on queryOffer.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId && offer.ApplicationId == appId && offer.OfferId == offerId
+                            select queryOffer;
+                if(!await query.AnyAsync())
+                {
+                    return Unauthorized("Cannot make an offer for that application");
+                }
             }
 
             _context.Entry(offer).State = EntityState.Modified;
@@ -81,10 +101,28 @@ namespace cpsc_471_project.Controllers
             return AcceptedAtAction("PatchOffer", new { ApplicationId = offer.ApplicationId, OfferId = offer.OfferId }, offerDTO);
         }
 
+        // POST: api/applications/1/offers
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpPost("applications/{appId}/offers")]
         public async Task<ActionResult<OfferDTO>> PostOffer(OfferDTO offerDTO)
         {
             Offer offer = DTOToOffer(offerDTO);
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from application in _context.Applications
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId && offer.ApplicationId == application.ApplicationId
+                            select application;
+                if (!await query.AnyAsync())
+                {
+                    return Unauthorized("Cannot make an offer for that application");
+                }
+            }
+
             _context.Offers.Add(offer);
             await _context.SaveChangesAsync();
 
@@ -92,7 +130,8 @@ namespace cpsc_471_project.Controllers
 
         }
 
-        // DELETE: api/Skill/5
+        // DELETE: api/applications/1/offers/2
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpDelete("applications/{appId}/offers/{offerId}")]
         public async Task<ActionResult<OfferDTO>> DeleteOffer(long appId, long offerId)
         {
@@ -100,6 +139,22 @@ namespace cpsc_471_project.Controllers
             if (offer == null)
             {
                 return NotFound();
+            }
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from queryOffer in _context.Offers
+                            join application in _context.Applications on queryOffer.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId && offer.ApplicationId == appId && offer.OfferId == offerId
+                            select queryOffer;
+                if (!await query.AnyAsync())
+                {
+                    return Unauthorized("Cannot delete that offer");
+                }
             }
 
             _context.Offers.Remove(offer);
