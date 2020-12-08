@@ -124,12 +124,41 @@ namespace cpsc_471_project.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchApplication(long id, ApplicationDTO appDTO)
         {
-            Application app = DTOToApplication(appDTO);
-            app.DateSubmitted = DateTime.Now;
-
-            if (id != app.ApplicationId)
+            if (id != appDTO.ApplicationId)
             {
-                return BadRequest();
+                return BadRequest("Application Id is different in the URL and body of the request");
+            }
+
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if((appDTO.DateSubmitted == null) || (!roles.Contains(UserRoles.Admin) && !roles.Contains(UserRoles.Recruiter)))
+            {
+                appDTO.DateSubmitted = DateTime.UtcNow;
+            }
+            Application app = DTOToApplication(appDTO);
+
+            bool authorized = false;
+            if(roles.Contains(UserRoles.Admin))
+            {
+                authorized = true;
+            }
+            else if(roles.Contains(UserRoles.Recruiter))
+            {
+                var query = from application in _context.Applications
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId && application.ApplicationId == app.ApplicationId
+                            select application;
+                if (await query.AnyAsync())
+                {
+                    authorized = true;
+                }
+            }
+
+            if(!authorized)
+            {
+                return Unauthorized("Not authorized to update this application or the application does not exist");
             }
 
             _context.Entry(app).State = EntityState.Modified;
@@ -150,7 +179,7 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return NoContent();
+            return AcceptedAtAction("PatchApplication", new { applicationId = app.ApplicationId }, appDTO );
         }
 
         // POST: api/applications
@@ -160,13 +189,20 @@ namespace cpsc_471_project.Controllers
         public async Task<ActionResult<ApplicationDTO>> PostApplication(ApplicationDTO appDTO)
         {
             User user = await userManager.FindByNameAsync(User.Identity.Name);
-
+            IList<string> roles = await userManager.GetRolesAsync(user);
+            if ((appDTO.DateSubmitted == null) || (!roles.Contains(UserRoles.Admin)))
+            {
+                appDTO.DateSubmitted = DateTime.UtcNow;
+            }
             Application app = DTOToApplication(appDTO);
-            app.DateSubmitted = DateTime.Now;
+            if (app.Status != StatusEnum.Sent)
+            {
+                return BadRequest("New applications must have the sent status");
+            }
 
             Resume resume = null;
             
-            if (await userManager.IsInRoleAsync(user, UserRoles.Admin))
+            if (roles.Contains(UserRoles.Admin))
             {
                 resume = await _context.Resumes.Where(r => r.ResumeId == app.ResumeId).FirstOrDefaultAsync();
             }
@@ -180,10 +216,26 @@ namespace cpsc_471_project.Controllers
                 return NotFound("Resume does not exist");
             }
 
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from jobpost in _context.JobPosts
+                            where jobpost.JobPostId == app.JobId
+                            select jobpost;
+                JobPost jobPost = await query.FirstOrDefaultAsync();
+                if (jobPost.ClosingDate.Date.AddSeconds(86399) <= DateTime.UtcNow)
+                {
+                    return Unauthorized("Cannot submit an application after the closing date");
+                }
+                if (app.Status != StatusEnum.Sent)
+                {
+                    return BadRequest("Candidates can only submit an application with a sent status");
+                }
+            }
+
             _context.Applications.Add(app);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetApplication", new { id = app.ApplicationId }, app);
+            return CreatedAtAction("PostApplication", new { id = app.ApplicationId }, ApplicationToDTO(app));
         }
 
         // DELETE: api/applications/{id}
@@ -222,7 +274,7 @@ namespace cpsc_471_project.Controllers
             }
             else
             {
-                // Display all of your own applications
+                // Can delete your own applications
                 var query = from app in _context.Applications
                             join resume in _context.Resumes on app.ResumeId equals resume.ResumeId
                             where resume.CandidateId == user.Id && app.ApplicationId == id
@@ -247,28 +299,70 @@ namespace cpsc_471_project.Controllers
             return _context.Applications.Any(e => e.ApplicationId == id);
         }
 
-        private static ApplicationDTO ApplicationToDTO(Application app) =>
-            new ApplicationDTO
+        private static ApplicationDTO ApplicationToDTO(Application app)
+        {
+            string status = null;
+            if (app.Status == StatusEnum.Sent)
+            {
+                status = "sent";
+            }
+            else if (app.Status == StatusEnum.InReview)
+            {
+                status = "inreview";
+            }
+            else if (app.Status == StatusEnum.Accepted)
+            {
+                status = "accepted";
+            }
+            else if (app.Status == StatusEnum.Rejected)
+            {
+                status = "rejected";
+            }
+            return new ApplicationDTO
             {
                 ApplicationId = app.ApplicationId,
                 JobId = app.JobId,
                 DateSubmitted = app.DateSubmitted,
-                Status = app.Status,
+                Status = status,
                 CoverLetter = app.CoverLetter,
                 ResumeId = app.ResumeId
             };
+        }
 
-        private static Application DTOToApplication(ApplicationDTO appDTO) =>
-            new Application
+        private static Application DTOToApplication(ApplicationDTO appDTO)
+        {
+            StatusEnum statusEnum = StatusEnum.Sent;
+            if (appDTO.Status == null)
+            {
+                statusEnum = StatusEnum.Sent;
+            }
+            else if (appDTO.Status.ToLowerInvariant() == "sent")
+            {
+                statusEnum = StatusEnum.Sent;
+            }
+            else if (appDTO.Status.ToLowerInvariant() == "inreview")
+            {
+                statusEnum = StatusEnum.InReview;
+            }
+            else if (appDTO.Status.ToLowerInvariant() == "accepted")
+            {
+                statusEnum = StatusEnum.Accepted;
+            }
+            else if (appDTO.Status.ToLowerInvariant() == "rejected")
+            {
+                statusEnum = StatusEnum.Rejected;
+            }
+            return new Application
             {
                 ApplicationId = appDTO.ApplicationId,
                 JobId = appDTO.JobId,
                 JobPost = null,
                 DateSubmitted = appDTO.DateSubmitted,
-                Status = appDTO.Status,
+                Status = statusEnum,
                 CoverLetter = appDTO.CoverLetter,
                 ResumeId = appDTO.ResumeId,
                 Resume = null
             };
+        }
     }
 }

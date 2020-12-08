@@ -51,7 +51,7 @@ namespace cpsc_471_project.Models
         public DateTime DateSubmitted { get; set; }
 
         [Display(Name = "Status")]
-        public StatusEnum Status { get; set; }
+        public string Status { get; set; }
 
         [Display(Name = "Cover Letter")]
         public string CoverLetter { get; set; }

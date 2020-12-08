@@ -458,7 +458,7 @@ namespace cpsc_471_project.Test
                 Name = "Software Developer",
                 Description = "Develop software.",
                 Salary = 100000,
-                ClosingDate = DateTime.Now
+                ClosingDate = new DateTime(2020, 07, 10)
             };
             returnedPosts.Add(testPost1);
 

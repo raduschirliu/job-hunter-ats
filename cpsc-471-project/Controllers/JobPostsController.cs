@@ -108,8 +108,10 @@ namespace cpsc_471_project.Controllers
             return _context.JobPosts.Any(e => e.JobPostId == id);
         }
 
-        private static JobPostDTO JobPostToDTO(JobPost post) =>
-            new JobPostDTO
+        private static JobPostDTO JobPostToDTO(JobPost post)
+        {
+            post.ClosingDate = post.ClosingDate.Date.AddSeconds(86399);
+            return new JobPostDTO
             {
                 JobPostId = post.JobPostId,
                 CompanyId = post.CompanyId,
@@ -117,9 +119,12 @@ namespace cpsc_471_project.Controllers
                 Description = post.Description,
                 ClosingDate = post.ClosingDate
             };
+        }
 
-        private static JobPost DTOToJobPost(JobPostDTO postDTO) =>
-            new JobPost
+        private static JobPost DTOToJobPost(JobPostDTO postDTO)
+        {
+            postDTO.ClosingDate = postDTO.ClosingDate.Date.AddSeconds(86399);
+            return new JobPost
             {
                 JobPostId = postDTO.JobPostId,
                 CompanyId = postDTO.CompanyId,
@@ -128,5 +133,6 @@ namespace cpsc_471_project.Controllers
                 Description = postDTO.Description,
                 ClosingDate = postDTO.ClosingDate
             };
+        }
     }
 }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore;
 
+using cpsc_471_project.Authentication;
 using cpsc_471_project.Models;
 
 namespace cpsc_471_project.Controllers
@@ -26,30 +28,92 @@ namespace cpsc_471_project.Controllers
         }
 
         // GET: api/Referrals
+        [Authorize]
         [HttpGet("referrals")]
         public async Task<ActionResult<IEnumerable<ReferralDTO>>> GetReferrals()
         {
-            var app = await _context.Referrals.ToListAsync();
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+            List<Referral> referrals = new List<Referral>();
 
+            if (roles.Contains(UserRoles.Admin))
+            {
+                // Display all referrals for admin
+                referrals = await _context.Referrals.ToListAsync();
+            }
+            else if (roles.Contains(UserRoles.Recruiter))
+            {
+                // Return all referrals only for applications associated with the jobs of their company
+                var query = from referral in _context.Referrals
+                            join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId
+                            select referral;
+                referrals = await query.ToListAsync();
+            }
+            else
+            {
+                // Display all of your own referrals
+                var query = from referral in _context.Referrals
+                            join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
+                            join resume in _context.Resumes on application.ResumeId equals resume.ResumeId
+                            where resume.CandidateId == user.Id
+                            select referral;
+
+                referrals = await query.ToListAsync();
+            }
             // NOTE: the select function here is not querying anything
             // it is simply converting the values to another format
             // i.e. the functional programming map function is named Select in C#
-            return app.Select(x => ReferralToDTO(x)).ToList();
+            return referrals.Select(x => ReferralToDTO(x)).ToList();
         }
 
+        [Authorize]
         [HttpGet("applications/{appId}/referrals/{refId}")]
         public async Task<ActionResult<ReferralDTO>> GetReferral(long appId, long refId)
         {
-            var referral = await _context.Referrals.FindAsync(appId, refId);
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+            Referral referralResult = null;
 
-            if (referral == null)
+            if (roles.Contains(UserRoles.Admin))
+            {
+                // Admin can access any referral
+                referralResult = await _context.Referrals.FindAsync(appId, refId);
+            }
+            else if (roles.Contains(UserRoles.Recruiter))
+            {
+                // Return referrals only for applications/jobs they manage
+                var query = from referral in _context.Referrals
+                            join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId && referral.ApplicationId == appId && referral.ReferralId == refId
+                            select referral;
+                referralResult = await query.FirstOrDefaultAsync();
+            }
+            else
+            {
+                // Display referrals associated with your applications
+                var query = from referral in _context.Referrals
+                            join application in _context.Applications on referral.ApplicationId equals application.ApplicationId
+                            join resume in _context.Resumes on application.ResumeId equals resume.ResumeId
+                            where resume.CandidateId == user.Id && referral.ApplicationId == appId && referral.ReferralId == refId
+                            select referral;
+
+                referralResult = await query.FirstOrDefaultAsync();
+            }
+
+            if (referralResult == null)
             {
                 return NotFound();
             }
 
-            return ReferralToDTO(referral);
+            return ReferralToDTO(referralResult);
         }
 
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpPatch("applications/{appId}/referrals/{refId}")]
         public async Task<IActionResult> PatchReferral(long appId, long refId, ReferralDTO referralDTO)
         {
@@ -57,6 +121,25 @@ namespace cpsc_471_project.Controllers
             if (appId != referralDTO.ApplicationId || refId != referralDTO.ReferralId)
             {
                 return BadRequest();
+            }
+
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from queryReferral in _context.Referrals
+                            join application in _context.Applications on queryReferral.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId
+                            && queryReferral.ApplicationId == referral.ApplicationId
+                            && queryReferral.ReferralId == referral.ReferralId
+                            select queryReferral;
+                if (!await query.AnyAsync())
+                {
+                    return Unauthorized("Cannot modify the referral for that application");
+                }
             }
 
             _context.Entry(referral).State = EntityState.Modified;
@@ -92,6 +175,7 @@ namespace cpsc_471_project.Controllers
         }
 
         // DELETE: api/Skill/5
+        [Authorize(Roles = UserRoles.Admin + ", " + UserRoles.Recruiter)]
         [HttpDelete("applications/{appId}/referrals/{refId}")]
         public async Task<ActionResult<ReferralDTO>> DeleteReferral(long appId, long refId)
         {
@@ -99,6 +183,24 @@ namespace cpsc_471_project.Controllers
             if (referral == null)
             {
                 return NotFound();
+            }
+            User user = await userManager.FindByNameAsync(User.Identity.Name);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains(UserRoles.Admin))
+            {
+                var query = from queryReferral in _context.Referrals
+                            join application in _context.Applications on queryReferral.ApplicationId equals application.ApplicationId
+                            join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            where jobPost.CompanyId == recruiter.CompanyId
+                            && queryReferral.ApplicationId == referral.ApplicationId
+                            && queryReferral.ReferralId == referral.ReferralId
+                            select queryReferral;
+                if (!await query.AnyAsync())
+                {
+                    return Unauthorized("Cannot delete that referral");
+                }
             }
 
             _context.Referrals.Remove(referral);
