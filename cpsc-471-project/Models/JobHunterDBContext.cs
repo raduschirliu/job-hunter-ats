@@ -40,6 +40,8 @@ namespace cpsc_471_project.Models
 
         public DbSet<Offer> Offers { get; set; }
 
+        public DbSet<Interview> Interviews { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

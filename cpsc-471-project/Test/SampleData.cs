@@ -97,6 +97,10 @@ namespace cpsc_471_project.Test
             {
                 _context.Offers.AddRange(SampleOfferData());
             }
+            if (!_context.Interviews.Any())
+            {
+                _context.Interviews.AddRange(SampleInterviewData());
+            }
             await _context.SaveChangesAsync();
         }
 
@@ -583,6 +587,31 @@ namespace cpsc_471_project.Test
             returnedOffers.Add(testOffer2);
 
             return returnedOffers;
+        }
+
+        public static List<Interview> SampleInterviewData()
+        {
+            return new List<Interview>()
+            {
+                new Interview()
+                {
+                    RecruiterId = "recruiter-1",
+                    ApplicationId = 1,
+                    Date = DateTime.Now
+                },
+                new Interview()
+                {
+                    RecruiterId = "recruiter-1",
+                    ApplicationId = 2,
+                    Date = new DateTime(2008, 5, 1, 8, 30, 52)
+                },
+                new Interview()
+                {
+                    RecruiterId = "recruiter-3",
+                    ApplicationId = 3,
+                    Date = DateTime.Now
+                }
+            };
         }
     }
 }
