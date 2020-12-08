@@ -72,7 +72,9 @@ namespace cpsc_471_project.Controllers
                             join application in _context.Applications on queryOffer.ApplicationId equals application.ApplicationId
                             join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
                             join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
-                            where jobPost.CompanyId == recruiter.CompanyId && offer.ApplicationId == appId && offer.OfferId == offerId
+                            where jobPost.CompanyId == recruiter.CompanyId
+                            && queryOffer.ApplicationId == offer.ApplicationId
+                            && queryOffer.OfferId == offer.OfferId
                             select queryOffer;
                 if(!await query.AnyAsync())
                 {
@@ -149,7 +151,9 @@ namespace cpsc_471_project.Controllers
                             join application in _context.Applications on queryOffer.ApplicationId equals application.ApplicationId
                             join jobPost in _context.JobPosts on application.JobId equals jobPost.JobPostId
                             join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
-                            where jobPost.CompanyId == recruiter.CompanyId && offer.ApplicationId == appId && offer.OfferId == offerId
+                            where jobPost.CompanyId == recruiter.CompanyId
+                            && queryOffer.ApplicationId == offer.ApplicationId
+                            && queryOffer.OfferId == offer.OfferId
                             select queryOffer;
                 if (!await query.AnyAsync())
                 {
