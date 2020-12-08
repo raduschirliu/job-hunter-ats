@@ -41,8 +41,15 @@ namespace cpsc_471_project.Controllers
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // For recruiters, return all interviews where they are the interviewer
-                interviews = await _context.Interviews.Where(x => x.RecruiterId == user.Id).ToListAsync();
+                // For recruiters, return all interviews for their company
+                var query = from interview in _context.Interviews
+                            join app in _context.Applications on interview.ApplicationId equals app.ApplicationId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            join job in _context.JobPosts on recruiter.CompanyId equals job.CompanyId
+                            where app.JobId == job.JobPostId
+                            select interview;
+
+                interviews = await query.ToListAsync();
             }
             else
             {
@@ -76,10 +83,15 @@ namespace cpsc_471_project.Controllers
             }
             else if (roles.Contains(UserRoles.Recruiter))
             {
-                // For recruiters, return interviews where they are the interviewer
-                result = await _context.Interviews.Where(
-                        x => x.RecruiterId == user.Id && x.ApplicationId == applicationId
-                    ).FirstOrDefaultAsync();
+                // For recruiters, return interviews for their company
+                var query = from interview in _context.Interviews
+                            join app in _context.Applications on interview.ApplicationId equals app.ApplicationId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            join job in _context.JobPosts on recruiter.CompanyId equals job.CompanyId
+                            where interview.ApplicationId == applicationId && app.JobId == job.JobPostId
+                            select interview;
+
+                result = await query.FirstOrDefaultAsync();
             }
             else
             {
@@ -118,9 +130,14 @@ namespace cpsc_471_project.Controllers
             else
             {
                 // Recruiter can only delete their own interviews
-                interview = await _context.Interviews.Where(
-                        x => x.ApplicationId == applicationId && x.RecruiterId == user.Id
-                    ).FirstOrDefaultAsync();
+                var query = from qInterview in _context.Interviews
+                            join app in _context.Applications on qInterview.ApplicationId equals app.ApplicationId
+                            join recruiter in _context.Recruiters on user.Id equals recruiter.UserId
+                            join job in _context.JobPosts on recruiter.CompanyId equals job.CompanyId
+                            where qInterview.ApplicationId == applicationId
+                            select qInterview;
+
+                interview = await query.FirstOrDefaultAsync();
             }
 
             if (interview == null)
