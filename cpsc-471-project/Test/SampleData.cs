@@ -469,7 +469,7 @@ namespace cpsc_471_project.Test
                 Name = "Vexillologist",
                 Description = "Makes flags.",
                 Salary = 45000,
-                ClosingDate = DateTime.Now
+                ClosingDate = DateTime.Now.AddDays(10)
             };
             returnedPosts.Add(testPost2);
 
