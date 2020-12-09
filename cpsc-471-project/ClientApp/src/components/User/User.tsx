@@ -18,7 +18,7 @@ const User = () => {
       .then((res) => {
         setUser(res.data);
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, [userId, getHeaders]);
 
@@ -34,10 +34,24 @@ const User = () => {
     <div className="user-container">
       {user ? (
         <>
-          <p>{user.userName}</p>
-          <p>{user.email}</p>
-          <p>{`${user.firstName} ${user.lastName}`}</p>
-          <p>{user.phoneNumber}</p>
+          <div className="user-segment">
+            <p className="user-title">Username</p>
+            <p>{user.userName}</p>
+          </div>
+          <div className="user-segment">
+            <p className="user-title">Email</p>
+            <p>{user.email}</p>
+          </div>
+          <div className="user-segment">
+            <p className="user-title">Name</p>
+            <p>{`${user.firstName} ${user.lastName}`}</p>
+          </div>
+          {user.phoneNumber && (
+            <div className="user-segment">
+              <p className="user-title">Phone number</p>
+              <p>{user.phoneNumber}</p>
+            </div>
+          )}
         </>
       ) : (
         <p>User does not exist :(</p>
