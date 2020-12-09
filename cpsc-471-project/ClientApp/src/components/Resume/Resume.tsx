@@ -13,6 +13,9 @@ const Resume = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
+    setLoading(true);
+
     axios
       .get(`/api/resumes/${resumeId}`, getHeaders())
       .then((res) => {
@@ -20,6 +23,7 @@ const Resume = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resumeId, getHeaders]);
 
   if (loading) {

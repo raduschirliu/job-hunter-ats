@@ -13,6 +13,9 @@ const JobPost = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
+    setLoading(true);
+
     axios
       .get(`/api/jobposts/${jobPostId}`, getHeaders())
       .then((res) => {
@@ -20,6 +23,7 @@ const JobPost = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobPostId, getHeaders]);
 
   if (loading) {
@@ -48,7 +52,7 @@ const JobPost = () => {
           </div>
           <div className="jobpost-segment">
             <p className="jobpost-title">Closing date</p>
-            <p>{jobPost.closingDate}</p>
+            <p>{new Date(jobPost.closingDate || null).toDateString()}</p>
           </div>
         </>
       ) : (

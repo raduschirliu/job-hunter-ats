@@ -13,6 +13,9 @@ const Company = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
+    setLoading(true);
+
     axios
       .get(`/api/companies/${companyId}`, getHeaders())
       .then((res) => {
@@ -20,6 +23,7 @@ const Company = () => {
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId, getHeaders]);
 
   if (loading) {

@@ -13,6 +13,9 @@ const User = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
+    setLoading(true);
+
     axios
       .get(`/api/users/${userId}`, getHeaders())
       .then((res) => {
@@ -20,6 +23,7 @@ const User = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, getHeaders]);
 
   if (loading) {

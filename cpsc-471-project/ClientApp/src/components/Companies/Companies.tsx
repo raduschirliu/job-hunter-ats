@@ -22,7 +22,9 @@ const Companies = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (loading) setLoading(true);
+    if (loading) return;
+    setLoading(true);
+
     axios
       .get('/api/companies', getHeaders())
       .then((res) => {
@@ -31,7 +33,8 @@ const Companies = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [loading, getHeaders]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getHeaders]);
 
   return (
     <div className="companies-container">
