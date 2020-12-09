@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { IAuthResponse } from '../models/IAuthResponse';
+import { IUserRegistration } from '../models/IUserRegistration';
+import { IRegisterResponse } from '../models/IRegisterResponse';
 
 interface IAuthContext {
   children: any;
-  login: (username: string, password: string) => Promise<any>;
+  login: (username: string, password: string) => Promise<IAuthResponse>;
+  register: (data: IUserRegistration) => Promise<IRegisterResponse>;
   logout: () => void;
   isLoggedIn: () => boolean;
   getHeaders: () => any;
@@ -22,7 +26,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
     }
   }, []);
 
-  const login = (username: string, password: string) => {
+  const login = (username: string, password: string): Promise<IAuthResponse> => {
     return axios
       .post('/api/auth/login', {
         username,
@@ -31,9 +35,21 @@ export const AuthProvider = ({ children }: { children: any }) => {
       .then((res) => {
         if (res.data.token) {
           localStorage.setItem('accessToken', res.data.token);
+          setJwt(res.data.token);
         }
 
-        setJwt(res.data.token);
+        return res.data;
+      });
+  };
+
+  const register = (data: IUserRegistration): Promise<IRegisterResponse> => {
+    return axios
+      .post('/api/auth/register', data)
+      .then((res) => {
+        if (res.data.auth.token) {
+          localStorage.setItem('accessToken', res.data.auth.token);
+          setJwt(res.data.auth.token);
+        }
 
         return res.data;
       });
@@ -61,6 +77,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
       value={{
         children,
         login,
+        register,
         logout,
         isLoggedIn,
         getHeaders,

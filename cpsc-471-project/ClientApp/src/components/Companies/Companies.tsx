@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
-import { ICompany } from '../../models/Company';
+import { ICompany } from '../../models/ICompany';
 import './Companies.css';
 
 const CompanyCard = ({ company }: { company: ICompany }) => {

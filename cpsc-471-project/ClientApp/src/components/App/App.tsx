@@ -11,7 +11,9 @@ import Company from '../Company/Company';
 import JobPost from '../JobPost/JobPost';
 import JobPosts from '../JobPosts/JobPosts';
 import Login from '../Login/Login';
+import Logout from '../Logout/Logout';
 import Nav from '../Nav/Nav';
+import Register from '../Register/Register';
 import User from '../User/User';
 import Users from '../Users/Users';
 import './App.css';
@@ -38,6 +40,8 @@ const App = () => {
         <div className="app-content">
           <Switch>
             <Route path="/login" component={Login} exact />
+            <Route path="/register" component={Register} exact />
+            <Route path="/logout" component={Logout} exact />
             <Route path="/companies" component={Companies} exact />
             <Route path="/companies/:companyId" component={Company} exact />
             <Route path="/users" component={Users} exact />

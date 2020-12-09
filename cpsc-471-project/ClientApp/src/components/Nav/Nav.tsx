@@ -1,17 +1,11 @@
 import React, { useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
 
 import './Nav.css';
 
 const Nav = () => {
-  const history = useHistory();
-  const { isLoggedIn, logout } = useContext(AuthContext);
-
-  const onLogout = () => {
-    logout();
-    history.replace('/login');
-  };
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
     <div className="nav-container">
@@ -20,10 +14,13 @@ const Nav = () => {
           <Link className="nav-container-link" to="/companies">Companies</Link>
           <Link className="nav-container-link" to="/users">Users</Link>
           <Link className="nav-container-link" to="/jobposts">Job Posts</Link>
-          <a className="nav-container-link" href="#" onClick={onLogout}>Logout</a>
+          <Link className="nav-container-link" to="/logout">Logout</Link>
         </>
       ) : (
-        <Link to="/login" className="nav-container-link">Login</Link>
+        <>
+          <Link to="/login" className="nav-container-link">Login</Link>
+          <Link to="/register" className="nav-container-link">Register</Link>
+        </>
       )}
     </div>
   );
