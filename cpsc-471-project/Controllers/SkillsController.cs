@@ -17,9 +17,6 @@ namespace cpsc_471_project.Controllers
     [ApiController]
     public class SkillsController : ResumeSectionController
     {
-        UserManager<User> userManager;
-        private readonly JobHunterDBContext _context;
-
         public SkillsController(JobHunterDBContext context, UserManager<User> userManager) : base(context, userManager) { }
 
         [Authorize]
