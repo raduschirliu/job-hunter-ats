@@ -74,11 +74,20 @@ namespace cpsc_471_project.Controllers
 
             if (!roles.Contains(UserRoles.Admin))
             {
-                Recruiter recruiter = await _context.Recruiters.FindAsync(user.Id, post.CompanyId);
+                // check if the job post is owned by a companyt hat the recruiter is part of
+                var query = from jobpost in _context.JobPosts
+                                        join queryRecruiter in _context.Recruiters on jobpost.CompanyId equals queryRecruiter.CompanyId
+                                        where jobpost.JobPostId == post.JobPostId && queryRecruiter.UserId == user.Id
+                                        select jobpost;
+                if (!query.Any())
+                {
+                    return Unauthorized("You are not a recruiter for the currenet company specified in the job post");
+                }
 
+                Recruiter recruiter = await _context.Recruiters.FindAsync(user.Id, post.CompanyId);
                 if (recruiter == null)
                 {
-                    return Unauthorized();
+                    return Unauthorized("You are not a recruiter for the new company specified in the job post");
                 }
             }
 
@@ -100,7 +109,7 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return NoContent();
+            return AcceptedAtAction("PatchJobPost", new { JobPostId = post.JobPostId }, postDTO);
         }
 
         // POST: api/JobPost
