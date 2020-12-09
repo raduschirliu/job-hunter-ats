@@ -108,7 +108,7 @@ namespace cpsc_471_project.Controllers
             return _context.Companies.Any(e => e.CompanyId == id);
         }
 
-        private static CompanyDTO CompanyToDTO(Company company) =>
+        public static CompanyDTO CompanyToDTO(Company company) =>
             new CompanyDTO
             {
                 CompanyId = company.CompanyId,
