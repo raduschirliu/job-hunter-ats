@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
-import { IUser } from '../../models/IUser';
+import IUser from '../../models/IUser';
 import './User.css';
 
 const User = () => {

@@ -1,0 +1,17 @@
+.resume-container {
+  background: white;
+  padding: 10px;
+  margin: auto;
+}
+
+.resume-segment {
+  margin-bottom: 15px;
+}
+
+.resume-segment > p {
+  margin: 0;
+}
+
+.resume-title {
+  font-weight: bold;
+}

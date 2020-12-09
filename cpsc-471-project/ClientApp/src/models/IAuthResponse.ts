@@ -1,10 +1,10 @@
-import { IUser } from "./IUser";
+import IUser from './IUser';
 
-export interface IAuthResponse {
+export default interface IAuthResponse {
   user: IUser;
   auth: {
     token: string;
     roles: string[];
     expiration: Date;
   };
-};
+}

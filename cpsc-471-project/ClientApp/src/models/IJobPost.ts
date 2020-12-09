@@ -1,4 +1,4 @@
-export interface IJobPost {
+export default interface IJobPost {
   jobPostId: number;
   companyId: number;
   name: string;

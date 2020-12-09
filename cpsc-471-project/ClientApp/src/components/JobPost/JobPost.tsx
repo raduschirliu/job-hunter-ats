@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
-import { IJobPost } from '../../models/IJobPost';
+import IJobPost from '../../models/IJobPost';
 import './JobPost.css';
 
 const JobPost = () => {

@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import AuthContext from '../../contexts/AuthContext';
-import { IUserRegistration } from '../../models/IUserRegistration';
+import IUserRegistration from '../../models/IUserRegistration';
 import './Register.css';
 
 const Login = () => {

@@ -3,44 +3,45 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
-import ICompany from '../../models/ICompany';
-import './Companies.css';
+import IResume from '../../models/IResume';
 
-const CompanyCard = ({ company }: { company: ICompany }) => {
+import './Resumes.css';
+
+const ResumeCard = ({ resume }: { resume: IResume }) => {
   return (
-    <Link to={`/companies/${company.companyId}`}>
-      <div className="company-card">
-        <p>{company.name}</p>
+    <Link to={`/resumes/${resume.resumeId}`}>
+      <div className="resumes-card">
+        <p>{`${resume.name}`}</p>
       </div>
     </Link>
   );
 };
 
-const Companies = () => {
+const Resumes = () => {
   const { getHeaders } = useContext(AuthContext);
-  const [companies, setCompanies] = useState<ICompany[]>([]);
+  const [resumes, setResumes] = useState<IResume[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (loading) setLoading(true);
     axios
-      .get('/api/companies', getHeaders())
+      .get('/api/resumes', getHeaders())
       .then((res) => {
         console.log(res.data);
-        setCompanies(res.data);
+        setResumes(res.data);
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, [loading, getHeaders]);
 
   return (
-    <div className="companies-container">
+    <div className="resumes-container">
       {loading ? (
         <CircularProgress />
       ) : (
         <>
-          {companies.map((company) => (
-            <CompanyCard key={company.companyId} company={company} />
+          {resumes.map((resume) => (
+            <ResumeCard key={resume.resumeId} resume={resume} />
           ))}
         </>
       )}
@@ -48,4 +49,4 @@ const Companies = () => {
   );
 };
 
-export default Companies;
+export default Resumes;

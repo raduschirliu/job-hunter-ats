@@ -14,6 +14,8 @@ import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
 import Nav from '../Nav/Nav';
 import Register from '../Register/Register';
+import Resume from '../Resume/Resume';
+import Resumes from '../Resumes/Resumes';
 import User from '../User/User';
 import Users from '../Users/Users';
 import './App.css';
@@ -27,12 +29,14 @@ const ProtectedRoute = ({
   component: any;
   exact?: boolean;
 }) => {
-  return <Route path={path} component={component} exact={exact} />;
+  const { isLoggedIn } = useContext(AuthContext);
+
+  return isLoggedIn() ? <Route path={path} component={component} exact={exact} /> : <Redirect to="/login"/>;
 };
 
 const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
-
+  
   return (
     <Router>
       <div className="app-container">
@@ -42,13 +46,15 @@ const App = () => {
             <Route path="/login" component={Login} exact />
             <Route path="/register" component={Register} exact />
             <Route path="/logout" component={Logout} exact />
-            <Route path="/companies" component={Companies} exact />
-            <Route path="/companies/:companyId" component={Company} exact />
-            <Route path="/users" component={Users} exact />
-            <Route path="/users/:userId" component={User} exact />
-            <Route path="/jobposts" component={JobPosts} exact />
-            <Route path="/jobposts/:jobPostId" component={JobPost} exact />
-            <Route path="/" exact>
+            <ProtectedRoute path="/companies" component={Companies} exact />
+            <ProtectedRoute path="/companies/:companyId" component={Company} exact />
+            <ProtectedRoute path="/users" component={Users} exact />
+            <ProtectedRoute path="/users/:userId" component={User} exact />
+            <ProtectedRoute path="/jobposts" component={JobPosts} exact />
+            <ProtectedRoute path="/jobposts/:jobPostId" component={JobPost} exact />
+            <ProtectedRoute path="/resumes" component={Resumes} exact />
+            <ProtectedRoute path="/resumes/:resumeId" component={Resume} exact />
+            <Route path="/">
               {isLoggedIn() ? (
                 <Redirect to="/companies" />
               ) : (

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { IAuthResponse } from '../models/IAuthResponse';
-import { IUserRegistration } from '../models/IUserRegistration';
-import { IUser } from '../models/IUser';
+import IAuthResponse from '../models/IAuthResponse';
+import IUserRegistration from '../models/IUserRegistration';
+import IUser from '../models/IUser';
 
 interface IAuthContext {
   children: any;

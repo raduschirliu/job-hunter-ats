@@ -14,6 +14,7 @@ const Nav = () => {
           <Link className="nav-container-link" to="/companies">Companies</Link>
           <Link className="nav-container-link" to="/users">Users</Link>
           <Link className="nav-container-link" to="/jobposts">Job Posts</Link>
+          <Link className="nav-container-link" to="/resumes">Resumes</Link>
           <Link className="nav-container-link" to="/logout">Logout</Link>
         </>
       ) : (
