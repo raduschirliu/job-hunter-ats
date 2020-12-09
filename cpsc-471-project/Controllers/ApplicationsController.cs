@@ -222,7 +222,11 @@ namespace cpsc_471_project.Controllers
                             where jobpost.JobPostId == app.JobId
                             select jobpost;
                 JobPost jobPost = await query.FirstOrDefaultAsync();
-                if (jobPost.ClosingDate.Date.AddSeconds(86399) <= DateTime.UtcNow)
+                if (jobPost == null)
+                {
+                    return BadRequest("JobId not specified or job does not exist");
+                }
+                if (jobPost.ClosingDate != null && jobPost.ClosingDate.Date.AddSeconds(86399) <= DateTime.UtcNow)
                 {
                     return Unauthorized("Cannot submit an application after the closing date");
                 }

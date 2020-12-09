@@ -78,7 +78,7 @@ namespace cpsc_471_project.Controllers
 
                 if (recruiter == null)
                 {
-                    return Unauthorized();
+                    return Unauthorized("Cannot change companyId as you are not a recruiter for that company");
                 }
             }
 
@@ -100,7 +100,7 @@ namespace cpsc_471_project.Controllers
                 }
             }
 
-            return NoContent();
+            return AcceptedAtAction("PatchJobPost", new { JobPostId = post.JobPostId }, postDTO);
         }
 
         // POST: api/JobPost
