@@ -18,7 +18,8 @@ const Nav = () => {
       {isLoggedIn() ? (
         <>
           <Link className="nav-container-link" to="/companies">Companies</Link>
-          <a className="nav-container-link" onClick={onLogout}>Logout</a>
+          <Link className="nav-container-link" to="/users">Users</Link>
+          <a className="nav-container-link" href="#" onClick={onLogout}>Logout</a>
         </>
       ) : (
         <Link to="/login" className="nav-container-link">Login</Link>

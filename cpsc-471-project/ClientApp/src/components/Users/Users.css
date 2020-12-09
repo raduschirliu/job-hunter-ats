@@ -1,15 +1,15 @@
-.companies-container {
+.users-container {
   background: white;
   padding: 10px;
   margin: auto;
 }
 
-.companies-container > a {
+.users-container > a {
   text-decoration: none;
   color: black;
 }
 
-.company-card {
+.user-card {
   border: 1px solid rgb(235, 235, 235);
   border-radius: 2px;
   margin: 10px;
@@ -17,7 +17,7 @@
   transition: all 150ms ease;
 }
 
-.company-card:hover {
+.user-card:hover {
   background-color: rgba(235, 235, 235, 0.25);
   opacity: 0.8;
 }
