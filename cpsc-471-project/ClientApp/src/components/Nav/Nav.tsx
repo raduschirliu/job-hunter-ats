@@ -19,6 +19,7 @@ const Nav = () => {
         <>
           <Link className="nav-container-link" to="/companies">Companies</Link>
           <Link className="nav-container-link" to="/users">Users</Link>
+          <Link className="nav-container-link" to="/jobposts">Job Posts</Link>
           <a className="nav-container-link" href="#" onClick={onLogout}>Logout</a>
         </>
       ) : (

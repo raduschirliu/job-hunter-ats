@@ -8,6 +8,8 @@ import {
 import AuthContext from '../../contexts/AuthContext';
 import Companies from '../Companies/Companies';
 import Company from '../Company/Company';
+import JobPost from '../JobPost/JobPost';
+import JobPosts from '../JobPosts/JobPosts';
 import Login from '../Login/Login';
 import Nav from '../Nav/Nav';
 import User from '../User/User';
@@ -40,6 +42,8 @@ const App = () => {
             <Route path="/companies/:companyId" component={Company} exact />
             <Route path="/users" component={Users} exact />
             <Route path="/users/:userId" component={User} exact />
+            <Route path="/jobposts" component={JobPosts} exact />
+            <Route path="/jobposts/:jobPostId" component={JobPost} exact />
             <Route path="/" exact>
               {isLoggedIn() ? (
                 <Redirect to="/companies" />
