@@ -6,6 +6,11 @@
   padding: 0px 20px 0px 20px;
 }
 
+.nav-container-right {
+  margin-left: auto;
+  margin-right: 20px;
+}
+
 .nav-container-link {
   cursor: pointer;
   color: white;
