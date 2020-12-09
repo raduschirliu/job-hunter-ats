@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 
@@ -68,6 +69,20 @@ namespace cpsc_471_project
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
             });
+
+            // Configure CORS
+            services.AddCors(options => options.AddPolicy("ReactPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,6 +100,8 @@ namespace cpsc_471_project
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors("ReactPolicy");
+
             // Create roles if they do not exist
             CreateRoleIfNotExists(roleManager, UserRoles.Admin);
             CreateRoleIfNotExists(roleManager, UserRoles.Recruiter);
@@ -93,6 +110,20 @@ namespace cpsc_471_project
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            // Setup React SPA
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
 
