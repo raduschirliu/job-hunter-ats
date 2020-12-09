@@ -44,11 +44,13 @@ export const AuthProvider = ({ children }: { children: any }) => {
 
   const isLoggedIn = (): boolean => {
     return jwt === null;
-  }
+  };
 
   const getHeaders = () => {
     return {
-      Authorization: 'Bearer ' + jwt,
+      headers: {
+        Authorization: 'Bearer ' + jwt,
+      },
     };
   };
 

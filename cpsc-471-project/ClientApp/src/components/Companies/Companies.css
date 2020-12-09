@@ -1,0 +1,13 @@
+.companies-container {
+  background: white;
+  padding: 10px;
+  margin: auto;
+  margin-top: 20%;
+}
+
+.company-card {
+  border: 1px solid rgb(235, 235, 235);
+  border-radius: 2px;
+  margin: 10px;
+  cursor: pointer;
+}

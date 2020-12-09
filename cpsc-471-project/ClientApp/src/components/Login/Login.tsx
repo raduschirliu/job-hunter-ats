@@ -1,23 +1,20 @@
 import { Button, TextField } from '@material-ui/core';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 import AuthContext from '../../contexts/AuthContext';
 import './Login.css';
 
 const Login = () => {
+  const history = useHistory();
   const { register, handleSubmit } = useForm();
-  const { login, getHeaders } = useContext(AuthContext);
-
-  useEffect(() => {
-    console.log(getHeaders());
-  }, [getHeaders]);
+  const { login } = useContext(AuthContext);
 
   const onSubmit = (data: any) => {
-    console.log(data);
     login(data.username, data.password).then(res => {
-      console.log(res);
+      history.push('/companies');
     }).catch(err => {
-
+      console.log(err);
     });
   };
 
