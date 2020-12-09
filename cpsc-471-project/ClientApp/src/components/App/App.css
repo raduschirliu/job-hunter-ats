@@ -1,6 +1,7 @@
 .app-container {
   display: grid;
   grid-template-rows: 60px 1fr;
+  overflow-x: scroll;
 }
 
 .app-content {
@@ -9,4 +10,5 @@
   margin: auto;
   margin-top: 60px;
   border-radius: 2px;
+  overflow-y: auto;
 }
