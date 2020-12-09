@@ -3,3 +3,15 @@
   padding: 10px;
   margin: auto;
 }
+
+.company-segment {
+  margin-bottom: 15px;
+}
+
+.company-segment > p {
+  margin: 0;
+}
+
+.company-title {
+  font-weight: bold;
+}

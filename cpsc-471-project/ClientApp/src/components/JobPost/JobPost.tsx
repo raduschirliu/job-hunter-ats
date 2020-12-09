@@ -34,10 +34,22 @@ const JobPost = () => {
     <div className="jobpost-container">
       {jobPost ? (
         <>
-          <p>{jobPost.name}</p>
-          <p>{jobPost.description}</p>
-          <p>{jobPost.salary}</p>
-          <p>{jobPost.closingDate}</p>
+          <div className="jobpost-segment">
+            <p className="jobpost-title">Name</p>
+            <p>{jobPost.name}</p>
+          </div>
+          <div className="jobpost-segment">
+            <p className="jobpost-title">Description</p>
+            <p>{jobPost.description}</p>
+          </div>
+          <div className="jobpost-segment">
+            <p className="jobpost-title">Salary</p>
+            <p>${jobPost.salary}</p>
+          </div>
+          <div className="jobpost-segment">
+            <p className="jobpost-title">Closing date</p>
+            <p>{jobPost.closingDate}</p>
+          </div>
         </>
       ) : (
         <p>Job post does not exist :(</p>

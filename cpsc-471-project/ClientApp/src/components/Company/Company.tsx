@@ -34,9 +34,18 @@ const Company = () => {
     <div className="company-container">
       {company ? (
         <>
-          <p>{company.name}</p>
-          <p>{company.industry}</p>
-          <p>{company.description}</p>
+          <div className="company-segment">
+            <p className="company-title">Name</p>
+            <p>{company.name}</p>
+          </div>
+          <div className="company-segment">
+            <p className="company-title">Industry</p>
+            <p>{company.industry}</p>
+          </div>
+          <div className="company-segment">
+            <p className="company-title">Description</p>
+            <p>{company.description}</p>
+          </div>
         </>
       ) : (
         <p>Company does not exist :(</p>
