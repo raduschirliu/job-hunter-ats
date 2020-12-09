@@ -33,6 +33,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
           localStorage.setItem('accessToken', res.data.token);
         }
 
+        setJwt(res.data.token);
+
         return res.data;
       });
   };
@@ -43,7 +45,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
   };
 
   const isLoggedIn = (): boolean => {
-    return jwt === null;
+    return jwt !== null;
   };
 
   const getHeaders = () => {

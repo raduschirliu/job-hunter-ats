@@ -9,6 +9,7 @@ import AuthContext from '../../contexts/AuthContext';
 import Companies from '../Companies/Companies';
 import Company from '../Company/Company';
 import Login from '../Login/Login';
+import Nav from '../Nav/Nav';
 import './App.css';
 
 const ProtectedRoute = ({
@@ -29,18 +30,21 @@ const App = () => {
   return (
     <Router>
       <div className="app-container">
-        <Switch>
-          <Route path="/login" component={Login} exact />
-          <Route path="/companies" component={Companies} exact />
-          <Route path="/companies/:companyId" component={Company} exact />
-          <Route path="/" exact>
-            {isLoggedIn() ? (
-              <Redirect to="/companies" />
-            ) : (
-              <Redirect to="/login" />
-            )}
-          </Route>
-        </Switch>
+        <Nav />
+        <div className="app-content">
+          <Switch>
+            <Route path="/login" component={Login} exact />
+            <Route path="/companies" component={Companies} exact />
+            <Route path="/companies/:companyId" component={Company} exact />
+            <Route path="/" exact>
+              {isLoggedIn() ? (
+                <Redirect to="/companies" />
+              ) : (
+                <Redirect to="/login" />
+              )}
+            </Route>
+          </Switch>
+        </div>
       </div>
     </Router>
   );

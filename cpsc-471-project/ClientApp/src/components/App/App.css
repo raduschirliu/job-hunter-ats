@@ -1,6 +1,12 @@
 .app-container {
+  display: grid;
+  grid-template-rows: 60px 1fr;
+}
+
+.app-content {
   text-align: center;
   width: 70%;
   margin: auto;
+  margin-top: 60px;
   border-radius: 2px;
 }

@@ -1,5 +1,5 @@
 import { Button, TextField } from '@material-ui/core';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import AuthContext from '../../contexts/AuthContext';
@@ -8,11 +8,17 @@ import './Login.css';
 const Login = () => {
   const history = useHistory();
   const { register, handleSubmit } = useForm();
-  const { login } = useContext(AuthContext);
+  const { login, isLoggedIn } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      history.push('/companies');
+    }
+  }, [isLoggedIn, history]);
 
   const onSubmit = (data: any) => {
     login(data.username, data.password).then(res => {
-      history.push('/companies');
+      // history.push('/companies');
     }).catch(err => {
       console.log(err);
     });
