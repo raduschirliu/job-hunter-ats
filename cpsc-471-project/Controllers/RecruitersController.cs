@@ -37,8 +37,8 @@ namespace cpsc_471_project.Controllers
                         join company in _context.Companies on recruiter.CompanyId equals company.CompanyId
                         select new RecruiterDTO()
                         {
-                            User = recruiterUser,
-                            Company = company
+                            User = AuthController.UserToDTO(recruiterUser),
+                            Company = CompaniesController.CompanyToDTO(company)
                         };
 
             return await query.ToListAsync();
@@ -56,11 +56,30 @@ namespace cpsc_471_project.Controllers
                         where company.CompanyId == companyId
                         select new RecruiterDTO()
                         {
-                            User = recruiterUser,
-                            Company = company
+                            User = AuthController.UserToDTO(recruiterUser),
+                            Company = CompaniesController.CompanyToDTO(company)
                         };
 
             return await query.ToListAsync();
+        }
+
+        // GET: api/companies/{companyId}/recruiters/{recruiterId}
+        // Returns the recruiter with the input companyId and recruiterId/username
+        [Authorize]
+        [HttpGet("companies/{companyId}/recruiters/{recruiterId}")]
+        public async Task<ActionResult<RecruiterDTO>> GetRecruiter(long companyId, string recruiterId)
+        {
+            var query = from recruiter in _context.Recruiters
+                        join recruiterUser in _context.Users on recruiter.UserId equals recruiterUser.Id
+                        join company in _context.Companies on recruiter.CompanyId equals company.CompanyId
+                        where recruiter.CompanyId == companyId && recruiter.UserId == recruiterId
+                        select new RecruiterDTO()
+                        {
+                            User = AuthController.UserToDTO(recruiterUser),
+                            Company = CompaniesController.CompanyToDTO(company)
+                        };
+
+            return await query.FirstOrDefaultAsync();
         }
 
         // POST: api/companies/{companyId}/recruiters/{userId}
@@ -93,14 +112,14 @@ namespace cpsc_471_project.Controllers
 
             await userManager.AddToRoleAsync(user, UserRoles.Recruiter);
 
-            return CreatedAtAction("PostRecruiter", new { recruiter.UserId, recruiter.CompanyId }, recruiter);
+            return CreatedAtAction("PutRecruiter", new { recruiter.UserId, recruiter.CompanyId }, RecruiterToDTO(recruiter));
         }
 
         // DELETE: api/companies/{companyId}/recruiters/{usersId}
         // Deletes an existing recruiter from a company
         [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("companies/{companyId}/recruiters/{usersId}")]
-        public async Task<ActionResult<Recruiter>> DeleteRecruiter(long companyId, string usersId)
+        public async Task<ActionResult<SimplifiedRecruiterDTO>> DeleteRecruiter(long companyId, string usersId)
         {
             Recruiter recruiter = await _context.Recruiters.FindAsync(usersId, companyId);
 
@@ -112,7 +131,22 @@ namespace cpsc_471_project.Controllers
             _context.Recruiters.Remove(recruiter);
             await _context.SaveChangesAsync();
 
-            return Ok(recruiter);
+            return Ok(new SimplifiedRecruiterDTO { RecruiterId = recruiter.UserId, CompanyId = recruiter.CompanyId });
+        }
+
+        private async Task<RecruiterDTO> RecruiterToDTO(Recruiter recruiterInfo)
+        {
+            var query = from recruiter in _context.Recruiters
+                        join recruiterUser in _context.Users on recruiter.UserId equals recruiterUser.Id
+                        join company in _context.Companies on recruiter.CompanyId equals company.CompanyId
+                        where recruiter.CompanyId == recruiterInfo.CompanyId && recruiter.UserId == recruiterInfo.UserId
+                        select new RecruiterDTO()
+                        {
+                            User = AuthController.UserToDTO(recruiterUser),
+                            Company = CompaniesController.CompanyToDTO(company)
+                        };
+
+            return await query.FirstOrDefaultAsync();
         }
     }
 }

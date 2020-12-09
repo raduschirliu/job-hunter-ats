@@ -24,7 +24,13 @@ namespace cpsc_471_project.Models
 
     public class RecruiterDTO
     {
-        public User User { get; set; }
-        public Company Company { get; set; }
+        public UserDTO User { get; set; }
+        public CompanyDTO Company { get; set; }
+    }
+
+    public class SimplifiedRecruiterDTO
+    {
+        public string RecruiterId { get; set; }
+        public long CompanyId { get; set; }
     }
 }
