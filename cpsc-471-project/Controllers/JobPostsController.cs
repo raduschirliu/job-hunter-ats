@@ -184,7 +184,8 @@ namespace cpsc_471_project.Controllers
                 CompanyId = post.CompanyId,
                 Name = post.Name,
                 Description = post.Description,
-                ClosingDate = post.ClosingDate
+                ClosingDate = post.ClosingDate,
+                Salary = post.Salary
             };
         }
 
@@ -197,6 +198,7 @@ namespace cpsc_471_project.Controllers
                 CompanyId = postDTO.CompanyId,
                 Company = null,
                 Name = postDTO.Name,
+                Salary = postDTO.Salary,
                 Description = postDTO.Description,
                 ClosingDate = postDTO.ClosingDate
             };
