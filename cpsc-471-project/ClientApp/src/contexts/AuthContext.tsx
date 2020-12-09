@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { IAuthResponse } from '../models/IAuthResponse';
 import { IUserRegistration } from '../models/IUserRegistration';
-import { IRegisterResponse } from '../models/IRegisterResponse';
+import { IUser } from '../models/IUser';
 
 interface IAuthContext {
   children: any;
   login: (username: string, password: string) => Promise<IAuthResponse>;
-  register: (data: IUserRegistration) => Promise<IRegisterResponse>;
+  register: (data: IUserRegistration) => Promise<IAuthResponse>;
   logout: () => void;
   isLoggedIn: () => boolean;
+  getUser: () => IUser | null;
+  isInRole: (role: string) => boolean;
   getHeaders: () => any;
 }
 
@@ -17,12 +19,20 @@ const AuthContext = React.createContext<IAuthContext>(null as any);
 
 export const AuthProvider = ({ children }: { children: any }) => {
   const [jwt, setJwt] = useState<string | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [roles, setRoles] = useState<string[]>([]);
 
   useEffect(() => {
-    let accessToken = localStorage.getItem('accessToken');
+    let data = localStorage.getItem('auth');
 
-    if (accessToken) {
-      setJwt(accessToken);
+    if (data) {
+      let jsonData = JSON.parse(data) as IAuthResponse;
+
+      if (jsonData) {
+        setJwt(jsonData.auth.token);
+        setRoles(jsonData.auth.roles);
+        setUser(jsonData.user);
+      }
     }
   }, []);
 
@@ -32,37 +42,61 @@ export const AuthProvider = ({ children }: { children: any }) => {
         username,
         password,
       })
-      .then((res) => {
-        if (res.data.token) {
-          localStorage.setItem('accessToken', res.data.token);
-          setJwt(res.data.token);
+      .then((res: AxiosResponse<IAuthResponse>) => {
+        let data = res.data as IAuthResponse;
+        console.log(data);
+
+        if (data.user && data.auth) {
+          localStorage.setItem('auth', JSON.stringify(data));
+
+          setJwt(data.auth.token);
+          setRoles(data.auth.roles);
+          setUser(data.user);
         }
 
-        return res.data;
+        return data;
       });
   };
 
-  const register = (data: IUserRegistration): Promise<IRegisterResponse> => {
+  const register = (data: IUserRegistration): Promise<IAuthResponse> => {
     return axios
       .post('/api/auth/register', data)
-      .then((res) => {
-        if (res.data.auth.token) {
-          localStorage.setItem('accessToken', res.data.auth.token);
-          setJwt(res.data.auth.token);
+      .then((res: AxiosResponse<IAuthResponse>) => {
+        let data = res.data as IAuthResponse;
+        console.log(data);
+
+        if (data.auth.token) {
+          localStorage.setItem('auth', JSON.stringify(data));
+
+          setJwt(data.auth.token);
+          setRoles(data.auth.roles);
+          setUser(data.user);
         }
 
-        return res.data;
+        return data;
       });
   };
 
   const logout = () => {
     setJwt(null);
-    localStorage.removeItem('accessToken');
+    setUser(null);
+    setRoles([]);
+
+    localStorage.removeItem('auth');
   };
 
   const isLoggedIn = (): boolean => {
     return jwt !== null;
   };
+
+  const getUser = (): IUser | null => {
+    return user;
+  }
+
+  const isInRole = (role: string): boolean => {
+    if (!user || !jwt || !roles) return false;
+    return roles.includes(role);
+  }
 
   const getHeaders = () => {
     return {
@@ -80,6 +114,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
         register,
         logout,
         isLoggedIn,
+        getUser,
+        isInRole,
         getHeaders,
       }}
     >

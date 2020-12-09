@@ -1,4 +1,10 @@
+import { IUser } from "./IUser";
+
 export interface IAuthResponse {
-  token: string;
-  expiration: Date;
+  user: IUser;
+  auth: {
+    token: string;
+    roles: string[];
+    expiration: Date;
+  };
 };
