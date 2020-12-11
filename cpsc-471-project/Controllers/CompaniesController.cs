@@ -83,7 +83,7 @@ namespace cpsc_471_project.Controllers
             _context.Companies.Add(sanitizedCompany);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostCompany", new { id = sanitizedCompany.CompanyId }, sanitizedCompany);
+            return CreatedAtAction("PostCompany", new { id = sanitizedCompany.CompanyId }, companyDTO);
         }
 
         // DELETE: api/companies/{id}
