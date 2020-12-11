@@ -120,7 +120,7 @@ namespace cpsc_471_project.Controllers
             Referral referral = DTOToReferral(referralDTO);
             if (appId != referralDTO.ApplicationId || refId != referralDTO.ReferralId)
             {
-                return BadRequest();
+                return BadRequest("One of the query params does not match the body params");
             }
 
             User user = await userManager.FindByNameAsync(User.Identity.Name);
