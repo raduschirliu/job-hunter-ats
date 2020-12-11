@@ -230,17 +230,12 @@ namespace cpsc_471_project.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(128);
 
-                    b.Property<string>("RecruiterId")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("Salary")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("JobPostId");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("RecruiterId");
 
                     b.ToTable("JobPosts");
                 });
@@ -423,10 +418,6 @@ namespace cpsc_471_project.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("cpsc_471_project.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("RecruiterId");
                 });
 
             modelBuilder.Entity("cpsc_471_project.Models.Resume", b =>

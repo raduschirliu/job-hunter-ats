@@ -131,7 +131,7 @@ namespace cpsc_471_project.Controllers
             _context.Recruiters.Remove(recruiter);
             await _context.SaveChangesAsync();
 
-            return Ok(new SimplifiedRecruiterDTO { RecruiterId = recruiter.UserId, CompanyId = recruiter.CompanyId });
+            return Ok(new SimplifiedRecruiterDTO { UserId = recruiter.UserId, CompanyId = recruiter.CompanyId });
         }
 
         private async Task<RecruiterDTO> RecruiterToDTO(Recruiter recruiterInfo)
