@@ -119,9 +119,9 @@ namespace cpsc_471_project.Controllers
         // Deletes an existing recruiter from a company
         [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("companies/{companyId}/recruiters/{usersId}")]
-        public async Task<ActionResult<SimplifiedRecruiterDTO>> DeleteRecruiter(long companyId, string usersId)
+        public async Task<ActionResult<SimplifiedRecruiterDTO>> DeleteRecruiter(long companyId, string userId)
         {
-            Recruiter recruiter = await _context.Recruiters.FindAsync(usersId, companyId);
+            Recruiter recruiter = await _context.Recruiters.FindAsync(userId, companyId);
 
             if (recruiter == null)
             {
