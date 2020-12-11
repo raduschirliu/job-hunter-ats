@@ -86,7 +86,7 @@ namespace cpsc_471_project.Controllers
         // Makes the given user a new recruiter for the given company
         [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("companies/{companyId}/recruiters/{userId}")]
-        public async Task<ActionResult> PutRecruiter(long companyId, string userId)
+        public async Task<ActionResult<RecruiterDTO>> PutRecruiter(long companyId, string userId)
         {
             User user = await userManager.FindByIdAsync(userId);
             Company company = await _context.Companies.FindAsync(companyId);
@@ -112,7 +112,7 @@ namespace cpsc_471_project.Controllers
 
             await userManager.AddToRoleAsync(user, UserRoles.Recruiter);
 
-            return CreatedAtAction("PutRecruiter", new { recruiter.UserId, recruiter.CompanyId }, RecruiterToDTO(recruiter));
+            return CreatedAtAction("PutRecruiter", new { recruiter.UserId, recruiter.CompanyId }, await RecruiterToDTO(recruiter));
         }
 
         // DELETE: api/companies/{companyId}/recruiters/{usersId}
