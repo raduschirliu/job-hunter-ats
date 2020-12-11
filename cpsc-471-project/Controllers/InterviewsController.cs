@@ -194,9 +194,13 @@ namespace cpsc_471_project.Controllers
         // PATCH: api/interviews/{applicationId}
         // Updates an existing interview
         [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Recruiter)]
-        [HttpPatch]
-        public async Task<ActionResult<InterviewDTO>> PatchInterview(InterviewDTO interviewDTO)
+        [HttpPatch("{applicationId}")]
+        public async Task<ActionResult<InterviewDTO>> PatchInterview(long applicationId, InterviewDTO interviewDTO)
         {
+            if (applicationId != interviewDTO.ApplicationId)
+            {
+                return BadRequest("applicationId in query params does not match applicationId in body");
+            }
             User user = await userManager.FindByIdAsync(User.Identity.Name);
             Interview interview = null;
 

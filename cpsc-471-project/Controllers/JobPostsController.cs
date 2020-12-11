@@ -135,7 +135,7 @@ namespace cpsc_471_project.Controllers
             _context.JobPosts.Add(post);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetJobPost", new { id = post.JobPostId }, post);
+            return CreatedAtAction("PostJobPost", new { JobPostId = post.JobPostId }, postDTO);
         }
 
         // DELETE: api/JobPost/{id}

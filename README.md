@@ -1,4 +1,4 @@
-This was based on the <span>ASP.NET</span> Web API Template in Visual Studio. All Models are our own.  
+This was based on the <span>ASP.NET</span> Web API Template in Visual Studio. All Models are our own.
   
 # cpsc-471-project
 
@@ -54,12 +54,12 @@ The location can be changed by changing the following code in `cpsc-471-project\
    > Update-Database
    ```
    This will automatically create a database at the `"DBLocation = "Data Source='{DESIRED_LOCATION}'"` with the current models
-   IMPORTANT: In the sqlite command line tool , you must run the following commands upon initially creating the database:
+
+   Note: In the sqlite command line tool, you may need to run the following commands upon initially creating the database to enable foreign key constraint enforcement:
    ```bash
    > .open JobHunterDB.sqlite
    > PRAGMA foreign_keys = ON;
    ```
-   This enables foreign key/referential integrity constraint enforcement
 
 
 ### Updating Models and Creating Migrations
