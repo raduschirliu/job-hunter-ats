@@ -87,7 +87,7 @@ _Some notes about Migrations:_
 2. Sign in to the app (create an account if you haven't already)
 3. Turn off SSL certificate verification via File > Settings > SSL Certificate Verification 
    - Since the SSL certificate is local, it can't be verified. make sure to turn this setting back on if you are hitting public endpoints (we won't be for this project)
-4. Run cpsc_471_project using the play button in the 2nd toolbar (beside "Any CPU"). If the button is not visible, you may have to switch to Solution View in the Solution Explorer
+4. Run cpsc_471_project using the play button in the 2nd toolbar (beside "Any CPU"). If the button is not visible, you may have to switch to Solution View in the Solution Explorer. The project may take a minute or two to start up.
 5. Enter the desired endpoint URL in Postman and add the authorization info (more info in the [Authorizing Requests](#Authorizing-Requests) section)
 6. Enter the relevant parameters in the body section of Postman. For example, the POST endpoint `https://localhost:5001/api/companies` requires information in the following form
 ```json
