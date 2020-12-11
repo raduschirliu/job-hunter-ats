@@ -121,7 +121,7 @@ namespace cpsc_471_project.Controllers
                 Order = award.Order,
                 Name = award.Name,
                 DateReceived = inputDate,
-                value = award.value
+                value = award.Value
             };
         }
 
@@ -138,7 +138,7 @@ namespace cpsc_471_project.Controllers
                 Order = awardDTO.Order,
                 Name = awardDTO.Name,
                 DateReceived = inputDate,
-                value = awardDTO.value,
+                Value = awardDTO.value,
                 Resume = null
             };
         }

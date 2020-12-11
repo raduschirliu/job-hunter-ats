@@ -28,7 +28,7 @@ namespace cpsc_471_project.Models
         
         public DateTime? DateReceived { get; set; }
         
-        public string value { get; set; }
+        public string Value { get; set; }
         
     }
     public class AwardDTO
