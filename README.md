@@ -3,7 +3,6 @@ This was based on the <span>ASP.NET</span> Web API Template in Visual Studio. Al
 # cpsc-471-project
 
 ### Important General Info (Read me first)
-
 1. In order to run this project, you will need Visual Studio 2019 Community (hereafter referred to as VS). Any recent version should work.
    - You will need the <span>ASP.NET</span> package to run this project
    - After downloading VS and the above package(s), open the cpsc-471-project.sln project/solution in VS
@@ -13,7 +12,9 @@ This was based on the <span>ASP.NET</span> Web API Template in Visual Studio. Al
 2. To properly run the frontend, you will also need a recent version of [NodeJS](https://nodejs.org/en/) installed. When debugging from within VS, all required
 dependencies _should_ be automatically installed.
    - The frontend is developed using [NodeJS](https://nodejs.org/en/), [React](https://reactjs.org/), and [TypeScript](https://www.typescriptlang.org/).
-   - The [Material-UI library](https://material-ui.com/) was also used extensively to build the forms.
+   - The [Material-UI library](https://material-ui.com/) was also used extensively for its input components to build the forms.
+   - The [React Hook Form](https://react-hook-form.com/) library was used to allow for easy development of forms using React's functional component pattern.
+   - [Axios](https://www.npmjs.com/package/axios) was used to make all HTTP requests to the backend.
 
 3. The database is sqlite
    - To download debugging tools for sqlite, go to https://www.sqlite.org/download.html (you will likely need this for development)
@@ -48,13 +49,11 @@ The location can be changed by changing the following code in `cpsc-471-project\
 - The backend should be running locally on the same machine as the frontend.
 
 ### Creating and Upgrading your Database
-
-1. Go to Tools > NuGet Package Manager > Package Manager Console, then enter command
+- Go to Tools > NuGet Package Manager > Package Manager Console, then enter command
    ```bash
    > Update-Database
    ```
    This will automatically create a database at the `"DBLocation = "Data Source='{DESIRED_LOCATION}'"` with the current models
-
    Note: In the sqlite command line tool, you may need to run the following commands upon initially creating the database to enable foreign key constraint enforcement:
    ```bash
    > .open JobHunterDB.sqlite
@@ -76,6 +75,12 @@ _Some notes about Migrations:_
    - If you want a behaviour upon deletion other than Cascading deletion, then you need to manually go into the migration and change the `"onDelete: ReferentialAction.*"` to appropriate action 
 
 [Reference for how to create new models](https://docs.microsoft.com/en-ca/aspnet/core/tutorials/first-web-api?view=aspnetcore-3.1&tabs=visual-studio)
+
+### Seeding the Database
+- There is a built-in route for seeding the database with dummy data. This route is only available when running the project in `debug` mode in VS.
+- To seed the DB, first start the API in `debug` mode.
+- Next, send a `POST` request to the following endpoint: `https://localhost:5001/api/users/populatedb`.
+- If there are no entries in the DB, sample data will be added
 
 ### Instructions for hitting API Endpoints
 1. Download the Postman Desktop App
