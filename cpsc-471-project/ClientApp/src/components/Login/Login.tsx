@@ -5,6 +5,9 @@ import { useHistory } from 'react-router';
 import AuthContext from '../../contexts/AuthContext';
 import './Login.css';
 
+/**
+ * Login component responsible for taking in username/password inputs and sending the login request
+ */
 const Login = () => {
   const history = useHistory();
   const { register, handleSubmit } = useForm();
@@ -18,7 +21,6 @@ const Login = () => {
 
   const onSubmit = (data: any) => {
     login(data.username, data.password).then(res => {
-      // history.push('/companies');
     }).catch(err => {
       console.log(err);
     });

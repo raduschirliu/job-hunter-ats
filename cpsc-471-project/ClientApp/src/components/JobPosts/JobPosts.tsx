@@ -6,6 +6,10 @@ import AuthContext from '../../contexts/AuthContext';
 import IJobPost from '../../models/IJobPost';
 import './JobPosts.css';
 
+/**
+ * JobPostCard component, responsible to display a single job post card
+ * @param jobPost Job Post object
+ */
 const JobPostCard = ({ jobPost }: { jobPost: IJobPost }) => {
   return (
     <Link to={`/jobposts/${jobPost.jobPostId}`}>
@@ -16,6 +20,9 @@ const JobPostCard = ({ jobPost }: { jobPost: IJobPost }) => {
   );
 };
 
+/*
+* JobPosts component, responsible to fetch and display the list of all job posts
+*/
 const JobPosts = () => {
   const { getHeaders } = useContext(AuthContext);
   const [jobPosts, setJobPosts] = useState<IJobPost[]>([]);

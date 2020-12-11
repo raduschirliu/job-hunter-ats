@@ -20,6 +20,10 @@ import User from '../User/User';
 import Users from '../Users/Users';
 import './App.css';
 
+/**
+ * ProtectedRoute component, responsible for guarding against accessing routes if unauthorized
+ * @param data Route parameters
+ */
 const ProtectedRoute = ({
   path,
   component,
@@ -30,10 +34,12 @@ const ProtectedRoute = ({
   exact?: boolean;
 }) => {
   const { isLoggedIn } = useContext(AuthContext);
-
   return isLoggedIn() ? <Route path={path} component={component} exact={exact} /> : <Redirect to="/login"/>;
 };
 
+/**
+ * Main app container, responsible for routing to various pages
+ */
 const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
   

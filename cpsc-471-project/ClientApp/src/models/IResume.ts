@@ -1,5 +1,8 @@
 import IUser from "./IUser";
 
+/**
+ * Representation of the ResumeDTO sent back from the API
+ */
 export default interface IResume {
   resumeId: number;
   name: string;
@@ -11,6 +14,8 @@ export default interface IResume {
   projects?: IProject[];
   skills?: ISkill[];
 };
+
+// Various other weak resume entity DTOs sent back from the backend
 
 export interface IAward {
   resumeId: number;

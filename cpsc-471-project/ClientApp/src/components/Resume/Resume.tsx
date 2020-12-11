@@ -6,6 +6,9 @@ import AuthContext from '../../contexts/AuthContext';
 import IResume from '../../models/IResume';
 import './Resume.css';
 
+/**
+ * Fetch and display data for a single Resume based on ID pased in the URL params
+ */
 const Resume = () => {
   const { getHeaders, isInRole } = useContext(AuthContext);
   const { resumeId } = useParams<any>();

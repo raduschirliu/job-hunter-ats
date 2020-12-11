@@ -6,6 +6,9 @@ import ICompany from '../../models/ICompany';
 import axios from 'axios';
 import './Company.css';
 
+/**
+ * Fetch and display data for a single Company based on ID pased in the URL params
+ */
 const Company = () => {
   const { getHeaders } = useContext(AuthContext);
   const { companyId } = useParams<any>();

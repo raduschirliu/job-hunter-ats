@@ -6,6 +6,9 @@ import AuthContext from '../../contexts/AuthContext';
 import IUser from '../../models/IUser';
 import './User.css';
 
+/**
+ * Fetch and display data for a single user based on ID pased in the URL params
+ */
 const User = () => {
   const { getHeaders } = useContext(AuthContext);
   const { userId } = useParams<any>();

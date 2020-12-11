@@ -5,13 +5,46 @@ import IUserRegistration from '../models/IUserRegistration';
 import IUser from '../models/IUser';
 
 interface IAuthContext {
+  /**
+   * React nodes that are childs of the AuthContextProvider
+   */
   children: any;
+
+  /**
+   * Attempts to log in with given username and password, and stores user login credentials 
+   * @param username Username
+   * @param password Password
+   */
   login: (username: string, password: string) => Promise<IAuthResponse>;
+
+  /**
+   * Attempts to register a new user, and saves their login credentials if successful
+   */
   register: (data: IUserRegistration) => Promise<IAuthResponse>;
+
+  /**
+   * Logs out current logged in user
+   */
   logout: () => void;
+
+  /**
+   * Returns whether the client is currently logged in or not
+   */
   isLoggedIn: () => boolean;
+
+  /**
+   * Returns the current user if they're logged in, or null otherwise
+   */
   getUser: () => IUser | null;
+
+  /**
+   * Returns whether a user is part of a given role
+   */
   isInRole: (role: string) => boolean;
+
+  /**
+   * Returns REST API request headers that need to be sent in order to authenticate
+   */
   getHeaders: () => any;
 }
 

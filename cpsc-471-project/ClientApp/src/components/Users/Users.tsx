@@ -7,6 +7,10 @@ import IUser from '../../models/IUser';
 
 import './Users.css';
 
+/**
+ * UserCard component, responsible to display a single user card
+ * @param user User object
+ */
 const UserCard = ({ user }: { user: IUser }) => {
   return (
     <Link to={`/users/${user.userName}`}>
@@ -17,6 +21,9 @@ const UserCard = ({ user }: { user: IUser }) => {
   );
 };
 
+/**
+ * Users component, responsible to fetch and display the list of all registered users
+ */
 const Users = () => {
   const { getHeaders } = useContext(AuthContext);
   const [users, setUsers] = useState<IUser[]>([]);

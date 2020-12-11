@@ -6,6 +6,10 @@ import AuthContext from '../../contexts/AuthContext';
 import ICompany from '../../models/ICompany';
 import './Companies.css';
 
+/**
+ * CompanyCard component, responsible to display a single company card
+ * @param company Company object
+ */
 const CompanyCard = ({ company }: { company: ICompany }) => {
   return (
     <Link to={`/companies/${company.companyId}`}>
@@ -16,6 +20,9 @@ const CompanyCard = ({ company }: { company: ICompany }) => {
   );
 };
 
+/*
+* Companies component, responsible to fetch and display the list of all active companies
+*/
 const Companies = () => {
   const { getHeaders } = useContext(AuthContext);
   const [companies, setCompanies] = useState<ICompany[]>([]);

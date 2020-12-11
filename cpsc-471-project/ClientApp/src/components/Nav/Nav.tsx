@@ -4,6 +4,10 @@ import AuthContext from '../../contexts/AuthContext';
 
 import './Nav.css';
 
+/**
+ * Nav bar component, responsible for displaying different nav links based on whether the 
+ * user is currently authenticated or not
+ */
 const Nav = () => {
   const { getUser, isLoggedIn } = useContext(AuthContext);
   const [name, setName] = useState('');

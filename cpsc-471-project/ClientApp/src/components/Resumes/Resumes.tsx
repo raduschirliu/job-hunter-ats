@@ -7,6 +7,10 @@ import IResume from '../../models/IResume';
 
 import './Resumes.css';
 
+/**
+ * ResumeCard component, responsible to display a single resume card
+ * @param resume Resume object
+ */
 const ResumeCard = ({ resume }: { resume: IResume }) => {
   return (
     <Link to={`/resumes/${resume.resumeId}`}>
@@ -17,6 +21,10 @@ const ResumeCard = ({ resume }: { resume: IResume }) => {
   );
 };
 
+/*
+* Resumes component, responsible to fetch and display the list of all resumes
+* (either your own resumes, or those of others if admin)
+*/
 const Resumes = () => {
   const { getHeaders } = useContext(AuthContext);
   const [resumes, setResumes] = useState<IResume[]>([]);

@@ -6,7 +6,11 @@ import AuthContext from '../../contexts/AuthContext';
 import IUserRegistration from '../../models/IUserRegistration';
 import './Register.css';
 
-const Login = () => {
+/**
+ * Registration component, responsible for taking in form input and
+ * sending a request to the server to create a new user, then log them in
+ */
+const Register = () => {
   const history = useHistory();
   const { register, handleSubmit } = useForm();
   const { register: registerUser, isLoggedIn } = useContext(AuthContext);
@@ -37,4 +41,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

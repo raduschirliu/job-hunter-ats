@@ -6,6 +6,9 @@ import AuthContext from '../../contexts/AuthContext';
 import IJobPost from '../../models/IJobPost';
 import './JobPost.css';
 
+/**
+ * Fetch and display data for a single JobPost based on ID pased in the URL params
+ */
 const JobPost = () => {
   const { getHeaders } = useContext(AuthContext);
   const { jobPostId } = useParams<any>();
