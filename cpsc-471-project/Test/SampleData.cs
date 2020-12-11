@@ -401,7 +401,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 1,
                 Name = "Software Developer of the Year, Python Consulting",
                 DateReceived = new DateTime(2019, 12, 1),
-                value = "nominal",
+                Value = "nominal",
                 Order = 1,
             };
             returnedAwards.Add(testAward);
@@ -411,7 +411,7 @@ namespace cpsc_471_project.Test
                 ResumeId = 1,
                 Name = "1st Place, Algorithm Development Competition",
                 DateReceived = new DateTime(2018, 12, 1),
-                value = "$750",
+                Value = "$750",
                 Order = 2,
             };
             returnedAwards.Add(testAward1);

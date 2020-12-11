@@ -30,7 +30,7 @@ namespace cpsc_471_project.Models
 
     public class SimplifiedRecruiterDTO
     {
-        public string RecruiterId { get; set; }
+        public string UserId { get; set; }
         public long CompanyId { get; set; }
     }
 }
