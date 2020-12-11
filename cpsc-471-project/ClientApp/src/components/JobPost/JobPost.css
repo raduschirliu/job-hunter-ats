@@ -1,0 +1,17 @@
+.jobpost-container {
+  background: white;
+  padding: 10px;
+  margin: auto;
+}
+
+.jobpost-segment {
+  margin-bottom: 15px;
+}
+
+.jobpost-segment > p {
+  margin: 0;
+}
+
+.jobpost-title {
+  font-weight: bold;
+}

@@ -1,0 +1,23 @@
+.users-container {
+  background: white;
+  padding: 10px;
+  margin: auto;
+}
+
+.users-container > a {
+  text-decoration: none;
+  color: black;
+}
+
+.user-card {
+  border: 1px solid rgb(235, 235, 235);
+  border-radius: 2px;
+  margin: 10px;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.user-card:hover {
+  background-color: rgba(235, 235, 235, 0.25);
+  opacity: 0.8;
+}

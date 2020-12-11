@@ -1,0 +1,15 @@
+.register-container {
+  background: white;
+  padding: 10px;
+  margin: auto;
+  max-width: 40%;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-form > * {
+  margin: 2px 0px 2px 0px;
+}

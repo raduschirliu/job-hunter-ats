@@ -10,27 +10,42 @@ This was based on the <span>ASP.NET</span> Web API Template in Visual Studio. Al
    - Then, in VS, go to Tools > NuGet Package Manager > Manage Nuget Packages For Solution
    - If the packages listed under "ItemGroup" in cpsc-471-project.csproj have not already been installed, then install them.
 
-2. The database is sqlite
+2. To properly run the frontend, you will also need a recent version of [NodeJS](https://nodejs.org/en/) installed. When debugging from within VS, all required
+dependencies _should_ be automatically installed.
+   - The frontend is developed using [NodeJS](https://nodejs.org/en/), [React](https://reactjs.org/), and [TypeScript](https://www.typescriptlang.org/).
+   - The [Material-UI library](https://material-ui.com/) was also used extensively to build the forms.
+
+3. The database is sqlite
    - To download debugging tools for sqlite, go to https://www.sqlite.org/download.html (you will likely need this for development)
    - Download the command line shell program, sqldiff.exe program, and sqlite3_analyzer.exe program as these will come in handy later
    - You may want to download these to the same directory as the location where your sqlite database will be created
 
-3. The database of this project is named `"JobHunterDb.sqlite"` and by default, it will be located in the root directory of the project.
+4. The database of this project is named `"JobHunterDb.sqlite"` and by default, it will be located in the root directory of the project.
 The location can be changed by changing the following code in `cpsc-471-project\cpsc-471-project\Startup.cs`
    ```cs
    public const string DBLocation = "Data Source='{DESIRED_LOCATION}'"
    ```
 
-4. Upon initially opening the project or changing Git branches, you will need to set up the database.  
+5. Upon initially opening the project or changing Git branches, you will need to set up the database.  
    - This should be relatively straighforward, simply follow the [Creating and Upgrading your Database](#Creating-and-Upgrading-your-Database) instructions later in this document.
 
-5. During development, each time you change any of the models (in `cpsc-471-project\cpsc-471-project\Models`), you will need to create a database migration.  
+6. During development, each time you change any of the models (in `cpsc-471-project\cpsc-471-project\Models`), you will need to create a database migration.  
    - A "Migration" is essentially an instruction that allows the database to automatically upgrade. Our project will end up having many migrations,
    which will be applied sequentially to create our full, up-to-date database.
    To learn more, go to the [Updating Models and creating Migrations](#Updating-Models-and-Creating-Migrations) section.
 
-6. Some sample data already exists in the `SampleData.cs` file in the `cpsc-471-project\cpsc-471-project\Test` directory, visit that file for an easy way to add sample data.
+7. Some sample data already exists in the `SampleData.cs` file in the `cpsc-471-project\cpsc-471-project\Test` directory, visit that file for an easy way to add sample data.
 
+### Running the Frontend
+- In order for the frontend to run, a recent version of NodeJS should be installed.
+- Upon debugging the project from within VS, the frontend should also be automatically started and hosted at http://localhost:5001.
+- If VS fails to install npm dependencies or fails with an error relating to `react-scripts` not existing, open a terminal within the
+`cpsc-471-project/ClientApp` folder, and run the following command to manually update npm dependencies
+   ```bash
+   npm install
+   ```
+- The frontend requires the backend REST API in order to properly function, and will throw 404 errors if it is not found when making requests.
+- The backend should be running locally on the same machine as the frontend.
 
 ### Creating and Upgrading your Database
 

@@ -1,0 +1,17 @@
+.user-container {
+  background: white;
+  padding: 10px;
+  margin: auto;
+}
+
+.user-segment {
+  margin-bottom: 15px;
+}
+
+.user-segment > p {
+  margin: 0;
+}
+
+.user-title {
+  font-weight: bold;
+}

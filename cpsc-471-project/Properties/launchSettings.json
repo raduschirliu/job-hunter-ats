@@ -11,7 +11,7 @@
   "profiles": {
     "cpsc_471_project": {
       "commandName": "Project",
-      "launchUrl": "api/users",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

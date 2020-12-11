@@ -99,12 +99,18 @@ namespace cpsc_471_project.Controllers
 
             if (user != null && await userManager.CheckPasswordAsync(user, login.Password))
             {
+                IList<string> roles = await userManager.GetRolesAsync(user);
                 JwtSecurityToken token = await GenerateToken(user);
 
-                return Ok(new AuthResponse()
+                return Ok(new UserAuthResponse()
                 {
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    Expiration = token.ValidTo
+                    User = UserToDTO(user),
+                    Auth = new AuthResponse()
+                    {
+                        Token = new JwtSecurityTokenHandler().WriteToken(token),
+                        Roles = roles as List<string>,
+                        Expiration = token.ValidTo
+                    }
                 });
             }
 
@@ -137,15 +143,17 @@ namespace cpsc_471_project.Controllers
 
             User user = await userManager.FindByNameAsync(register.UserName);
             await userManager.AddToRoleAsync(user, UserRoles.Candidate);
+            IList<string> roles = await userManager.GetRolesAsync(user);
 
             JwtSecurityToken token = await GenerateToken(user);
 
-            return Ok(new RegistrationResponse()
+            return Ok(new UserAuthResponse()
             {
                 User = UserToDTO(user),
                 Auth = new AuthResponse()
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Roles = roles as List<string>,
                     Expiration = token.ValidTo
                 }
             });
