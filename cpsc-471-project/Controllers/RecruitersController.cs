@@ -115,10 +115,10 @@ namespace cpsc_471_project.Controllers
             return CreatedAtAction("PutRecruiter", new { recruiter.UserId, recruiter.CompanyId }, await RecruiterToDTO(recruiter));
         }
 
-        // DELETE: api/companies/{companyId}/recruiters/{usersId}
+        // DELETE: api/companies/{companyId}/recruiters/{userId}
         // Deletes an existing recruiter from a company
         [Authorize(Roles = UserRoles.Admin)]
-        [HttpDelete("companies/{companyId}/recruiters/{usersId}")]
+        [HttpDelete("companies/{companyId}/recruiters/{userId}")]
         public async Task<ActionResult<SimplifiedRecruiterDTO>> DeleteRecruiter(long companyId, string userId)
         {
             Recruiter recruiter = await _context.Recruiters.FindAsync(userId, companyId);
