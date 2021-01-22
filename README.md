@@ -1,13 +1,12 @@
-This was based on the <span>ASP.NET</span> Web API Template in Visual Studio. All Models are our own.
-  
-# cpsc-471-project
+# job-hunter-ats
+A convenient hub to apply for and post jobs effectively, decreasing the amount of time wasted that would normally be lost to the notoriously exhausting process of job hunting.  
 
 ### Important General Info (Read me first)
 1. In order to run this project, you will need Visual Studio 2019 Community (hereafter referred to as VS). Any recent version should work.
    - You will need the <span>ASP.NET</span> package to run this project
-   - After downloading VS and the above package(s), open the cpsc-471-project.sln project/solution in VS
+   - After downloading VS and the above package(s), open the job-hunter-ats.sln project/solution in VS
    - Then, in VS, go to Tools > NuGet Package Manager > Manage Nuget Packages For Solution
-   - If the packages listed under "ItemGroup" in cpsc-471-project.csproj have not already been installed, then install them.
+   - If the packages listed under "ItemGroup" in job-hunter-ats.csproj have not already been installed, then install them.
 
 2. To properly run the frontend, you will also need a recent version of [NodeJS](https://nodejs.org/en/) installed. When debugging from within VS, all required
 dependencies _should_ be automatically installed.
@@ -22,7 +21,7 @@ dependencies _should_ be automatically installed.
    - You may want to download these to the same directory as the location where your sqlite database will be created
 
 4. The database of this project is named `"JobHunterDb.sqlite"` and by default, it will be located in the root directory of the project.
-The location can be changed by changing the following code in `cpsc-471-project\cpsc-471-project\Startup.cs`
+The location can be changed by changing the following code in `job-hunter-ats\job-hunter-ats\Startup.cs`
    ```cs
    public const string DBLocation = "Data Source='{DESIRED_LOCATION}'"
    ```
@@ -30,18 +29,18 @@ The location can be changed by changing the following code in `cpsc-471-project\
 5. Upon initially opening the project or changing Git branches, you will need to set up the database.  
    - This should be relatively straighforward, simply follow the [Creating and Upgrading your Database](#Creating-and-Upgrading-your-Database) instructions later in this document.
 
-6. During development, each time you change any of the models (in `cpsc-471-project\cpsc-471-project\Models`), you will need to create a database migration.  
+6. During development, each time you change any of the models (in `job-hunter-ats\job-hunter-ats\Models`), you will need to create a database migration.  
    - A "Migration" is essentially an instruction that allows the database to automatically upgrade. Our project will end up having many migrations,
    which will be applied sequentially to create our full, up-to-date database.
    To learn more, go to the [Updating Models and creating Migrations](#Updating-Models-and-Creating-Migrations) section.
 
-7. Some sample data already exists in the `SampleData.cs` file in the `cpsc-471-project\cpsc-471-project\Test` directory, visit that file for an easy way to add sample data.
+7. Some sample data already exists in the `SampleData.cs` file in the `job-hunter-ats\job-hunter-ats\Test` directory, visit that file for an easy way to add sample data.
 
 ### Running the Frontend
 - In order for the frontend to run, a recent version of NodeJS should be installed.
 - Upon debugging the project from within VS, the frontend should also be automatically started and hosted at http://localhost:5001.
 - If VS fails to install npm dependencies or fails with an error relating to `react-scripts` not existing, open a terminal within the
-`cpsc-471-project/ClientApp` folder, and run the following command to manually update npm dependencies
+`job-hunter-ats/ClientApp` folder, and run the following command to manually update npm dependencies
    ```bash
    npm install
    ```
@@ -67,7 +66,7 @@ The location can be changed by changing the following code in `cpsc-471-project\
    > Add-Migration Helpful-Migration-Name
    > Update-Database
    ```
-- This will automatically create a migration for your database under `cpsc-471-project\cpsc-471-project\Migrations` (you will need to commit this file to Git)
+- This will automatically create a migration for your database under `job-hunter-ats\job-hunter-ats\Migrations` (you will need to commit this file to Git)
 - If you are updating the models/database schema, make sure to communicate with anyone else that is working on the database models, since
 working on multiple migrations simutaneously can cause requirement conflicts (and worse, these requirement conflicts do not show up as merge conflicts)
 
@@ -87,7 +86,7 @@ _Some notes about Migrations:_
 2. Sign in to the app (create an account if you haven't already)
 3. Turn off SSL certificate verification via File > Settings > SSL Certificate Verification 
    - Since the SSL certificate is local, it can't be verified. make sure to turn this setting back on if you are hitting public endpoints (we won't be for this project)
-4. Run cpsc_471_project using the play button in the 2nd toolbar (beside "Any CPU"). If the button is not visible, you may have to switch to Solution View in the Solution Explorer. The project may take a minute or two to start up.
+4. Run job_hunter_ats using the play button in the 2nd toolbar (beside "Any CPU"). If the button is not visible, you may have to switch to Solution View in the Solution Explorer. The project may take a minute or two to start up.
 5. Enter the desired endpoint URL in Postman and add the authorization info (more info in the [Authorizing Requests](#Authorizing-Requests) section)
 6. Enter the relevant parameters in the body section of Postman. For example, the POST endpoint `https://localhost:5001/api/companies` requires information in the following form
 ```json
@@ -102,7 +101,7 @@ _Some notes about Migrations:_
 
 ### Authorizing Requests
 1. Upon startup, three roles will be created: Admin, Recruiter, and User
-    (1.1. You can add some sample users to the roles via the instructions in the file in the `cpsc-471-project\cpsc-471-project\Test\SampleData.cs` files)
+    (1.1. You can add some sample users to the roles via the instructions in the file in the `job-hunter-ats\job-hunter-ats\Test\SampleData.cs` files)
 2. We are authenticating requests using Bearer Tokens. To get a bearer token, hit the endpoint `api/auth/login` with a request of the form:
 ```json
 {

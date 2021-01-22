@@ -7,5 +7,6 @@ sqldiff.exe
 sqlite3.exe
 sqlite3_analyzer.exe
 
-cpsc-471-project/bin
-cpsc-471-project/obj
+job-hunter-ats/bin
+job-hunter-ats/obj
+logs/
